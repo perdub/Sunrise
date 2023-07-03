@@ -1,0 +1,13 @@
+@page
+@model Forms.LoginUserModel
+@{
+    ViewData["Title"] = "Upload Post";
+}
+
+<h1>UploadPost</h1>
+
+<form action="/upload/image" method="post" enctype="multipart/form-data">
+        <input type="file" name="uploads"  /><br>
+        <input name="tags"  /><br>
+        <input type="submit" value="Upload" />
+</form>
