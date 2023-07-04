@@ -2,12 +2,24 @@ namespace Sunrise;
 using System.Web.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SixLabors.ImageSharp.Web;
+using SixLabors.ImageSharp.Web.Caching;
+using SixLabors.ImageSharp.Web.Commands;
+using SixLabors.ImageSharp.Web.DependencyInjection;
+using SixLabors.ImageSharp.Web.Processors;
+using SixLabors.ImageSharp.Web.Providers;
 
 public class AspnetHoster{
     WebApplication app;
 
     public async Task StartApp(){
         var builder = WebApplication.CreateBuilder();
+
+        builder.WebHost.ConfigureKestrel((x, y)=>{
+            y.ListenAnyIP(3268);
+            y.Limits.MaxRequestBodySize = (512*1024*1024);
+        });
+
         builder.Services.AddRazorPages();
         builder.Services.AddDbContext<SunriseContext>();
         
@@ -18,6 +30,8 @@ public class AspnetHoster{
                 y.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
             });
         });
+
+        
 
         
         app = builder.Build();
@@ -33,6 +47,17 @@ public class AspnetHoster{
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        app.UseStaticFiles(
+            new StaticFileOptions{
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                    Path.Combine(
+                        builder.Environment.ContentRootPath,
+                        "storage"
+                    )
+                ),
+                RequestPath = "/storage"
+            }
+        );
 
         app.UseRouting();
         app.UseCors("corslocalapi");

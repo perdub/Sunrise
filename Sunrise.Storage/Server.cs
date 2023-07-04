@@ -4,13 +4,13 @@ public class ContentServer
 {
     #region Singelton
     static ContentServer _singelton;
-    public static ContentServer Singelton {get{return _singelton;}}
-    
+    public static ContentServer Singelton { get { return _singelton; } }
+
     public ContentServer()
     {
         _singelton = this;
     }
-#endregion
+    #endregion
     public ContentServer(string folderName) : this()
     {
         var info = Directory.CreateDirectory(folderName);
@@ -20,7 +20,8 @@ public class ContentServer
     string globalStoragePath;
     List<Item> items = new List<Sunrise.Storage.Item>();
 
-    string buildpath(Guid id){
+    string buildpath(Guid id)
+    {
         return $"{globalStoragePath}//{id.ToString()}//";
     }
 
@@ -29,11 +30,21 @@ public class ContentServer
         string path = buildpath(id);
         Types.FileInfo info = new Types.FileInfo();
         info.ContentType = type;
-        File.WriteAllBytesAsync(path+"original."+fileExtension, f);
-        
+        Directory.CreateDirectory(path);
+        string imgpath = path + "original" + fileExtension;
+        await File.WriteAllBytesAsync(imgpath, f);
+        Sunrise.Utilities.Convert.AbstractConvert c = new Sunrise.Utilities.Convert.ImageConverter();
+        await c.Convert(imgpath);
+        info.Paths = new string[]{
+            Path.Combine(path, "base.jpg"),
+            Path.Combine(path, "preview.jpg"),
+            imgpath
+        };
+        return info;
     }
 
-    public IEnumerator<Item> GetItems(Guid id){
-        yield return new ImageItem();
+    public IEnumerator<Items.Item> GetItems(Guid id)
+    {
+        yield return new Items.ImageItem();
     }
 }

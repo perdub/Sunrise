@@ -8,9 +8,8 @@ public class Program
         Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
         l.Write("Enter in application.");
 
-        ContentServer s = new Server(
-                new Sunrise.Storage.FileStorage("storage")
-
+        ContentServer s = new ContentServer(
+                "storage"
         );
 
         AspnetHoster hoster = new AspnetHoster();

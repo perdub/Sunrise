@@ -22,7 +22,7 @@ public class Upload : Controller
         }
         var uploaded = HttpContext.Request.Form.Files;
         var tags = HttpContext.Request.Form["tags"];
-        var res = await Sunrise.Storage.ContentServer.Singelton.Save(Guid.NewGuid(), uploaded[0].OpenReadStream().ToByteArray(), Path.GetExtension(uploaded[0].FileName));
+        var res = await Sunrise.Storage.ContentServer.Singelton.SaveImage(Guid.NewGuid(), uploaded[0].OpenReadStream().ToByteArray(), Sunrise.Types.ContentType.Image, Path.GetExtension(uploaded[0].FileName));
         Types.Post newPost = new Types.Post(HttpContext.Items.UserId(), res.Id);
         db.Posts.Add(newPost);
         db.Files.Add(res);
