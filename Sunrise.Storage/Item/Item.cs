@@ -1,4 +1,4 @@
-namespace Sunrise.Storage;
+namespace Sunrise.Storage.Items;
 
 public abstract class Item
 {
