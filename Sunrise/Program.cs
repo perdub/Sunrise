@@ -8,7 +8,7 @@ public class Program
         Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
         l.Write("Enter in application.");
 
-        Server s = new Server(
+        ContentServer s = new Server(
                 new Sunrise.Storage.FileStorage("storage")
 
         );

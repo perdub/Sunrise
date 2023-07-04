@@ -1,32 +1,36 @@
 ﻿namespace Sunrise.Storage;
 
-public class Server
+public class ContentServer
 {
     #region Singelton
-    static Server _singelton;
-    public static Server Singelton {get{return _singelton;}}
+    static ContentServer _singelton;
+    public static ContentServer Singelton {get{return _singelton;}}
     
-    public Server()
+    public ContentServer()
     {
         _singelton = this;
     }
 #endregion
-    public List<Storage> Storages {get;private set;}= new List<Storage>();
-
-    public Server(params Storage[] storage) : this()
+    public ContentServer(string folderName) : this()
     {
-        Storages = storage.ToList();
+        var info = Directory.CreateDirectory(folderName);
+        globalStoragePath = Path.GetFullPath(folderName);
     }
 
-    public async Task<Types.FileInfo> Save(Guid id, byte[] f, string fileName)
+    string globalStoragePath;
+    List<Item> items = new List<Sunrise.Storage.Item>();
+
+    string buildpath(Guid id){
+        return $"{globalStoragePath}//{id.ToString()}//";
+    }
+
+    public async Task<Types.FileInfo> SaveImage(Guid id, byte[] f, Sunrise.Types.ContentType type, string fileExtension)
     {
-        Types.FileInfo res = new Types.FileInfo();
-        res.Id = id;
-        res.Paths = new string[Storages.Count];
-        for(int i = 0; i< res.Paths.Length; i++){
-            res.Paths[i] = await Storages[i].SaveAsync(id, f, fileName);
-        }
-        return res;
+        string path = buildpath(id);
+        Types.FileInfo info = new Types.FileInfo();
+        info.ContentType = type;
+        File.WriteAllBytesAsync(path+"original."+fileExtension, f);
+        
     }
 
     public IEnumerator<Item> GetItems(Guid id){
