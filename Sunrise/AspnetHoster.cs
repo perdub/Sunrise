@@ -1,4 +1,6 @@
 namespace Sunrise;
+
+using System.Net.Http.Headers;
 using System.Web.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +24,7 @@ public class AspnetHoster{
 
         builder.Services.AddRazorPages();
         builder.Services.AddDbContext<SunriseContext>();
+        builder.Services.AddSingleton<Random>(new Random());
         
         builder.Services.AddControllers();
 
@@ -55,7 +58,13 @@ public class AspnetHoster{
                         "storage"
                     )
                 ),
-                RequestPath = "/storage"
+                RequestPath = "/storage",
+                OnPrepareResponse = (x)=>{
+                    x.Context.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue{
+                        Public = true,
+                        MaxAge = TimeSpan.FromDays(30.5)
+                    };
+                }
             }
         );
 

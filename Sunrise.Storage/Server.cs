@@ -18,7 +18,6 @@ public class ContentServer
     }
 
     string globalStoragePath;
-    List<Item> items = new List<Sunrise.Storage.Item>();
 
     string buildpath(Guid id)
     {
@@ -30,21 +29,17 @@ public class ContentServer
         string path = buildpath(id);
         Types.FileInfo info = new Types.FileInfo();
         info.ContentType = type;
+        info.Id = id;
         Directory.CreateDirectory(path);
         string imgpath = path + "original" + fileExtension;
         await File.WriteAllBytesAsync(imgpath, f);
         Sunrise.Utilities.Convert.AbstractConvert c = new Sunrise.Utilities.Convert.ImageConverter();
         await c.Convert(imgpath);
         info.Paths = new string[]{
-            Path.Combine(path, "base.jpg"),
-            Path.Combine(path, "preview.jpg"),
-            imgpath
+            Path.Combine("storage", id.ToString(), "preview.jpg").Replace("\\","/"),
+            Path.Combine("storage", id.ToString(), "base.jpg").Replace("\\","/"),
+            Path.Combine("storage", id.ToString(), "original"+fileExtension).Replace("\\","/")
         };
         return info;
-    }
-
-    public IEnumerator<Items.Item> GetItems(Guid id)
-    {
-        yield return new Items.ImageItem();
     }
 }

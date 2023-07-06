@@ -12,7 +12,8 @@ public class Upload : Controller
         db=c;
     }
 
-    //получение пользователя через его имя
+    //загрузка картинки
+    [RequestSizeLimit(1024*1024*128)]
     [Route("image")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -30,7 +31,7 @@ public class Upload : Controller
 
         
 
-        return Ok(new {message="sussesful"});
+        return Ok(new {message="sussesful", post = newPost, file=res});
     }
 
     
