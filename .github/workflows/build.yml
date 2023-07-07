@@ -23,6 +23,9 @@ jobs:
       with:
         dotnet-version: 7.x
         
+    - name: Set directory
+      run: cd Sunrise
+        
     - name: Build
       run: dotnet build -c ${{ matrix.configuration }}
 
