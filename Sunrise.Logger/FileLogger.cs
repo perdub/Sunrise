@@ -12,7 +12,7 @@ public class FileLogger : ILogger
 logFileName+=DateTime.Now.ToString("yyyyMMddhhmmss")+".log";
         #endif
         #if RELEASE
-logFileName += "lastlog.log"
+logFileName += "lastlog.log";
         #endif
 
         _writer = new StreamWriter(logFileName);
