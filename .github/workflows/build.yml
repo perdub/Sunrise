@@ -17,11 +17,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
         
-    - name: Set directory
-      run: cd Sunrise/
-      shell: cmd
-        
     - name: Build
-      run: dotnet build Sunrise.csproj -c ${{ matrix.configuration }}
+      run: dotnet build Sunrise/Sunrise.csproj -c ${{ matrix.configuration }}
 
 
