@@ -25,6 +25,7 @@ jobs:
         
     - name: Set directory
       run: dir /s & cd Sunrise/
+      shell: cmd
         
     - name: Build
       run: dotnet build -c ${{ matrix.configuration }}
