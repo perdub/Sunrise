@@ -24,10 +24,10 @@ jobs:
         dotnet-version: 7.x
         
     - name: Set directory
-      run: dir /s & cd Sunrise/
+      run: cd Sunrise/
       shell: cmd
         
     - name: Build
-      run: dotnet build -c ${{ matrix.configuration }}
+      run: dotnet build Sunrise.csproj -c ${{ matrix.configuration }}
 
 
