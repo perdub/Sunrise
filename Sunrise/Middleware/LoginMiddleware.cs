@@ -10,7 +10,7 @@ public class LoginMiddleware
         next = rd;
     }
 
-    public async Task InvokeAsync(HttpContext context, SunriseContext db, ILogger<LoginMiddleware> _logger)
+    public async Task InvokeAsync(HttpContext context, CacheService cs, ILogger<LoginMiddleware> _logger)
     {
         string? token;
         if (context.Request.Cookies.TryGetValue("suntoken", out token))
@@ -21,7 +21,7 @@ public class LoginMiddleware
                 return;
             }
             //todo: открыть токен и добавить пользователя
-            var s = db.Sessions.Find(token);
+            var s = await cs.GetSessionAsync(token);
             if (s == null)
             {
                 _logger.Log(LogLevel.Trace, "Fall to find session.", token);
@@ -32,18 +32,18 @@ public class LoginMiddleware
             if (!s.IsActive())
             {
                 context.Items.Add("tokenExpired", true);
-                db.Sessions.Remove(s);
+                cs.dbcontext.Sessions.Remove(s);
             }
             else
             {
                 //метод обновления сессии
-                s.UpdateActivity(()=>{
-                    db.Sessions.Update(s);
+                await cs.UpdateSessionActivityInCache(s, ()=>{
+                    cs.dbcontext.Sessions.Update(s);
                 });
                 context.Items.Add("isUser", true);
                 context.Items.Add("userId", s.UserId);
             }
-            db.SaveChanges();
+            await cs.dbcontext.SaveChangesAsync();
         }
         else
         {

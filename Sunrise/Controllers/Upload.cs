@@ -6,10 +6,10 @@ namespace Sunrise.Controllers;
 public class Upload : Controller
 {
     //сохранение доступа к контексту дб локально
-    SunriseContext db;
-    public Upload(SunriseContext c)
+    CacheService cs;
+    public Upload(CacheService c)
     {
-        db=c;
+        cs=c;
     }
 
     //загрузка картинки
@@ -24,10 +24,19 @@ public class Upload : Controller
         var uploaded = HttpContext.Request.Form.Files;
         var tags = HttpContext.Request.Form["tags"];
         var res = await Sunrise.Storage.ContentServer.Singelton.SaveImage(Guid.NewGuid(), uploaded[0].OpenReadStream().ToByteArray(), Sunrise.Types.ContentType.Image, Path.GetExtension(uploaded[0].FileName));
+        var tagsArr = await (new Api.TagsApi(cs).GetTagsAsync(tags[0].Split(), cs));
         Types.Post newPost = new Types.Post(HttpContext.Items.UserId(), res.Id);
-        db.Posts.Add(newPost);
-        db.Files.Add(res);
-        await db.SaveChangesAsync();
+
+        foreach(var tag in tagsArr)
+        {
+            newPost.Tags.Add(tag);
+            tag.Post.Add(newPost);
+            tag.PostCount++;
+        }
+        cs.dbcontext.Tags.UpdateRange(tagsArr);
+        cs.dbcontext.Posts.Add(newPost);
+        cs.dbcontext.Files.Add(res);
+        await cs.dbcontext.SaveChangesAsync();
 
         
 

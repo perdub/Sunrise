@@ -6,38 +6,76 @@ namespace Sunrise.Api;
 public class TagsApi : Controller
 {
     //сохранение доступа к контексту дб локально
-    SunriseContext db;
-    public TagsApi(SunriseContext c)
+    CacheService cs;
+    public TagsApi(CacheService c)
     {
-        db=c;
+        cs = c;
     }
 
     //получение пользователя через его имя
-    [Route("get/{id:int}")]
+    [Route("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Types.Tag))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult GetTag(int id){
+    public async Task<IActionResult> GetTag(int id)
+    {
         try
         {
-            return Ok(db.GetTagInfo(id));
+            return Ok(await cs.GetTagAsync(id));
         }
-        catch(Sunrise.Types.Exceptions.NotFoundObjectException)
+        catch (Sunrise.Types.Exceptions.NotFoundObjectException)
         {
             return NotFound();
         }
     }
 
-    [Route("get/{name}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Types.Tag))]
+    [Route("convert")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Types.Tag[]))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult GetTag(string name){
-        try
+    public async Task<IActionResult> GetTag()
+    {
+        //метод который возвращает теги по их поисковому запросу
+
+        //чтение тела и разбивка его на отдельные теги (оно следующего формата (тег1 тег2 ... тегN))
+        var q = new StreamReader(HttpContext.Request.Body);
+        var raw = await q.ReadToEndAsync();
+        string[] arr = raw.Split();
+        q.Dispose();
+
+        var tags = await GetTagsAsync(arr, cs);
+
+        return Ok(tags);
+    }
+    //получение тегов через бд
+    public async Task<Types.Tag[]> GetTagsAsync(string[] search, CacheService cs)
+    {//создание массивов для результата и тасков
+        //массив тасков больше потомучто он последний элемент это таск асинхронного сохранения изменений в бд
+        
+        Types.Tag[] resultArr = new Types.Tag[search.Length];
+        Task[] taskArr = new Task[search.Length + 1];
+
+        for (int i = 0; i < search.Length; i++)
         {
-            return Ok(db.GetTagInfo(name));
+            //цикл создающий и запускающий задачи
+            taskArr[i] = getorcreatetag(i);
         }
-        catch(Sunrise.Types.Exceptions.NotFoundObjectException)
+        //добавление таска сохранения
+        taskArr[^1] = cs.dbcontext.SaveChangesAsync();
+        await Task.WhenAll(taskArr);
+
+        return resultArr;
+        async Task getorcreatetag(int i)
         {
-            return NotFound();
+            //получение тега
+            var res = await cs.GetTagAsync(search[i]);
+            if (res == null)
+            {
+                //если результат нулл, то мы создаём новый тег и добавляем его в бд
+                res = new Types.Tag(search[i]);
+                cs.dbcontext.Tags.Add(res);
+            }
+            //добавление в массив результатов
+            resultArr[i] = res;
+
         }
     }
 }

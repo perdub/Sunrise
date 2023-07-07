@@ -21,6 +21,6 @@ async function setUserButton(){
     if(a.ok===true){
         var b = document.getElementById('topbarloginuser').children[0];
         b.href = "/users/"+a.id;
-        b.text = a.name;
+        b.children[0].innerText  = a.name;
     }
 }

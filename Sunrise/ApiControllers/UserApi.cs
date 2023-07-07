@@ -6,20 +6,20 @@ namespace Sunrise.Api;
 public class UserApi : Controller
 {
     //сохранение доступа к контексту дб локально
-    SunriseContext db;
-    public UserApi(SunriseContext c)
+    CacheService cs;
+    public UserApi(CacheService c)
     {
-        db=c;
+        cs=c;
     }
 
     //получение пользователя через его имя
     [Route("getuser/{name}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Types.User))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult GetUser(string name){
+    public async Task<IActionResult> GetUser(string name){
         try
         {
-            return Ok(db.GetUserApiView(name));
+            return Ok((await cs.GetUserAsync(name))?.GetApiView());
         }
         catch(Sunrise.Types.Exceptions.NotFoundObjectException)
         {
@@ -31,10 +31,10 @@ public class UserApi : Controller
     [Route("getuser/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Types.User))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult GetUser(Guid id){
+    public async Task<IActionResult> GetUser(Guid id){
         try
         {
-            return Ok(db.GetUserApiView(id));
+            return Ok(await cs.GetUserAsync(id));
         }
         catch(Sunrise.Types.Exceptions.NotFoundObjectException)
         {
@@ -46,15 +46,15 @@ public class UserApi : Controller
     [Route("getuser")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Types.User))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult GetUser(){
+    public async Task<IActionResult> GetUser(){
         object isUser;
+        //получение булевого значения которое указывает на то пользователь ли мы
         if(HttpContext.Items.TryGetValue("isUser", out isUser)){
             if((bool)isUser){
                 object id;
                 HttpContext.Items.TryGetValue("userId", out id);
-                Guid user = (Guid)id;
-                var sessions = db.Sessions.Where(x=>x.UserId==user).FirstOrDefault();
-                var u = db.GetUser(sessions.UserId);
+                Guid user = (Guid)id;//получение айди пользователя и юзера, после чего возврат api представления
+                var u = await cs.GetUserAsync(user);
                 return Ok(u.GetApiView());
             }
             Unauthorized("need sing in");
@@ -69,7 +69,7 @@ public class UserApi : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult CreateNewUser([FromBody] Types.UserRegistrationInfo uri)
     {
-        var w = db.CreateNewUser(uri);
+        var w = cs.dbcontext.CreateNewUser(uri);
         if(!w){
             return BadRequest("User already exsist.");
         }

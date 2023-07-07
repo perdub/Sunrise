@@ -1,15 +1,6 @@
 namespace Sunrise;
 
 using System.Net.Http.Headers;
-using System.Web.Http;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using SixLabors.ImageSharp.Web;
-using SixLabors.ImageSharp.Web.Caching;
-using SixLabors.ImageSharp.Web.Commands;
-using SixLabors.ImageSharp.Web.DependencyInjection;
-using SixLabors.ImageSharp.Web.Processors;
-using SixLabors.ImageSharp.Web.Providers;
 
 public class AspnetHoster{
     WebApplication app;
@@ -25,6 +16,7 @@ public class AspnetHoster{
         builder.Services.AddRazorPages();
         builder.Services.AddDbContext<SunriseContext>();
         builder.Services.AddSingleton<Random>(new Random());
+        builder.Services.AddTransient<CacheService>();
         
         builder.Services.AddControllers();
 
