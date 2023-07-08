@@ -1,0 +1,33 @@
+@page "{postid?}"
+@model PostModel
+
+<div class="horizontal-center">
+    <div style="height: 15px;"></div>
+    <div class="flex-center">
+        <img class="image-post" src=/@Model.baseImageUrl />
+    </div>
+    <div style="height: 20px;"></div>
+    <div id="postinfo">
+        <div class="text">
+            <a href="/@Model.originalImageUrl">Original</a>
+        </div>
+        <div class="text">
+            Upload at @Model.createTime
+        </div>
+        <div class="text">
+            Author: <a href="/users/@Model.authorId">@Model.authorName</a>
+        </div>
+        <div id="tags">
+            <h1 class="text">Tags:</h1>
+            <div id="tag-flexbox" class="tags-flex">
+                @foreach(var tag in @Model.tags){
+                    <a href="/@tag.SearchText">
+                        <p class="text">
+                            @tag.FullText
+                        </p>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
