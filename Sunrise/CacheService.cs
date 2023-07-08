@@ -4,7 +4,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Sunrise.Types;
 using FileInfo = Sunrise.Storage.Types.FileInfo;
-
+using Microsoft.EntityFrameworkCore;
 namespace Sunrise;
 
 public class CacheService
@@ -100,7 +100,7 @@ public class CacheService
         bool r = l1cache.TryGetValue<Post>(postId, out Post? u);
 
         if(r==false){
-            u = await dbcontext.Posts.FindAsync(postId);
+            u = await dbcontext.Posts.Include(x => x.Tags).Where(y => y.Id == postId).FirstOrDefaultAsync();
             if(u!=null){
                 l1cache.Set<Post>(postId, u, userCacheOptions);
             }
