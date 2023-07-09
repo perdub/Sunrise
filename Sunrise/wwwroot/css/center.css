@@ -1,0 +1,8 @@
+/*стили для цетрирования*/
+.horizontal-center{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    background-color: rgb(28 28 28 / 72%);
+}

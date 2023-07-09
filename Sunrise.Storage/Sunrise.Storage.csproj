@@ -5,6 +5,10 @@
     <ProjectReference Include="..\Sunrise.Logger\Sunrise.Logger.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MemoryPack" Version="1.9.16" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

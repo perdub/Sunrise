@@ -1,3 +1,6 @@
 [Bb]in/
 [Ll]og/
 [Oo]bj/
+app.db
+storage/
+[Ll]ogs/

@@ -8,9 +8,10 @@ public class SunriseContext : DbContext
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Session> Sessions => Set<Session>();
     public DbSet<Sunrise.Storage.Types.FileInfo> Files => Set<Sunrise.Storage.Types.FileInfo>();
-    public SunriseContext()
+    public SunriseContext(bool ensureCreated = false)
     {
-        Database.EnsureCreated();
+        if(ensureCreated)
+            Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -69,14 +70,6 @@ public class SunriseContext : DbContext
         return true;
     }
 
-    public Tag GetTagInfo(int id)
-    {
-        return Tags.Find(id) ?? throw new Sunrise.Types.Exceptions.NotFoundObjectException("Tag not found.");
-    }
-    public Tag GetTagInfo(string name)
-    {
-        return Tags.Where(x => x.SearchText == name).FirstOrDefault() ?? throw new Sunrise.Types.Exceptions.NotFoundObjectException("Tag not found.");
-    }
 
     protected override void OnModelCreating(ModelBuilder bld){
         bld.Entity<Sunrise.Storage.Types.FileInfo>().Property(x => x.Paths)

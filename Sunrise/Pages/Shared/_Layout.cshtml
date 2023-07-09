@@ -1,17 +1,60 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="/css/background.css">
+    <link rel="stylesheet" href="/css/topbar.css">
+    <link rel="stylesheet" href="/css/center.css">
+    <link rel="stylesheet" href="/css/default.css">
+    <link rel="icon" type="image/x-icon" href="/favicon3.ico">
+    <title>Sunrise - @ViewData["Title"]</title>
 </head>
-<body>
-    <header>
-        ddd
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+<div class="background-image" id="background"></div>
+
+<body id="body" style="margin: 0px;">
+    <div class="content">
+        <div class="topbar flex">
+            <div id="topbarcenter" class="flex center">
+                <div id="tohomepage" class="center">
+                    <a href="/">
+                        <img src="/images/icon.png" />
+                    </a>
+                </div>
+            </div>
+            <div id=topbarleft class="flex left">
+                <div id="touploadform" class="left">
+                    <a href="/forms/uploadpost">
+                        <p class="text">
+                            To Upload Form
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div id="topbarright" class="flex right">
+                <div id="topbarloginuser" class="flex right">
+                    <a href="/forms/loginuser">
+                        <p class="text">
+                            Login
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="container horizontal-center">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 </body>
+
+<script src="/js/mainfunctions.js"></script>
+<script src="/js/api.js"></script>
+<script>
+    setUserButton();
+    getRandomBackground();
+</script>
+
 </html>

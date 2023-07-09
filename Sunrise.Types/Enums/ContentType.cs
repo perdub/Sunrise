@@ -3,5 +3,6 @@ namespace Sunrise.Types;
 public enum ContentType
 {
     Image = 0,
-    Video = 1
+    Video = 1,
+    Unknown = Int32.MaxValue
 }

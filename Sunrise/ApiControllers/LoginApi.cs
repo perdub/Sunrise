@@ -7,20 +7,20 @@ namespace Sunrise.Api;
 public class LoginApi : Controller
 {
     //сохранение доступа к контексту дб локально
-    SunriseContext db;
-    public LoginApi(SunriseContext c)
+    CacheService cs;
+    public LoginApi(CacheService c)
     {
-        db=c;
+        cs=c;
     }
 
     //создание сессии
     [Route("login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserLoginResult))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UserLoginResult))]
-    public IActionResult Login([FromBody] UserLoginInfo uli)
+    public async Task<IActionResult> Login([FromBody] UserLoginInfo uli)
     {
         UserLoginResult res;
-        var u = db.GetUser(uli.name);
+        var u = await cs.GetUserAsync(uli.name);
         if(!u.CheckPassword(uli.password)){
             res = new UserLoginResult(LoginResult.InvalidCredentials, "incorrect login or password", "");
             return BadRequest(res);
@@ -34,8 +34,8 @@ public class LoginApi : Controller
         {
             newSession = new Session(u, TimeSpan.FromMinutes(20));
         }
-        db.Sessions.Add(newSession);
-        db.SaveChanges();
+        cs.dbcontext.Sessions.Add(newSession);
+        cs.dbcontext.SaveChanges();
 
         HttpContext.Response.Cookies.Append("suntoken", newSession.SessionId);
 
@@ -54,7 +54,8 @@ public class LoginApi : Controller
                 object id;
                 HttpContext.Items.TryGetValue("userId", out id);
                 Guid user = (Guid)id;
-                var sessions = db.Sessions.Where(x=>x.UserId==user).ToArray();
+                //todo: добавить работу с кешированием!!!
+                var sessions = cs.dbcontext.Sessions.Where(x=>x.UserId==user).ToArray();
                 return Ok(sessions);
             }
             Unauthorized("need sing in");
