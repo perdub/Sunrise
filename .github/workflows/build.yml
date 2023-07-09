@@ -21,7 +21,7 @@ jobs:
       run: dotnet build Sunrise/Sunrise.csproj -c ${{ matrix.configuration }}
 
     - name: Upload
-    - uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3
       with:
         name: Binarys
         path: bin/${{ matrix.configuration }}/net7.0/ # or path/to/artifact
