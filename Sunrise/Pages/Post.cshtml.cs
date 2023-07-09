@@ -27,7 +27,7 @@ public class PostModel : PageModel
         var file = await _cache.GetFileAsync(post.FileId);
         baseImageUrl = file.Paths[1];
         originalImageUrl = file.Paths[2];
-        createTime = post.PostCreationTime.ToString();
+        createTime = post.PostCreationTime.ToString("o")+'Z';
         var author = await _cache.GetUserAsync(post.AuthorId);
         authorName = author.Name;
         authorId = author.Id.ToString();

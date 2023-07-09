@@ -1,3 +1,4 @@
+using Sunrise.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Sunrise.Api;
@@ -66,11 +67,11 @@ public class TagsApi : Controller
         async Task getorcreatetag(int i)
         {
             //получение тега
-            var res = await cs.GetTagAsync(search[i]);
-            if (res == null)
+            var res = await cs.GetTagAsync(search[i].Process());
+            if (res == null)                //.Process() - метод-расширение для сжатия и привода тегов к стандартизированному виду
             {
                 //если результат нулл, то мы создаём новый тег и добавляем его в бд
-                res = new Types.Tag(search[i]);
+                res = new Types.Tag(search[i].Process());
                 cs.dbcontext.Tags.Add(res);
             }
             //добавление в массив результатов

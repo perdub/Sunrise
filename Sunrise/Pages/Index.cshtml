@@ -5,6 +5,30 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="text">Sunrise</h1>
+    <div style="display: flex; justify-content: center;">
+        <input type="text" id="find">
+        <input type="button" id="search" value="Find">
+        <script>
+            document.getElementById("search").onclick = ()=>{
+                var geturl = "/?";
+document.getElementById("find").value.split(' ').forEach((i)=>{
+    geturl+="tags="+i+"&";
+});
+window.open(geturl, "_self");
+            };
+        </script>
+    </div>
+    <div id="result">
+        <div class="tags-flex" style="justify-content: space-around;">
+            @foreach (var item in Model.posts)
+            {
+                <div style="">
+                    <a href="/post/@item.Id">
+                        <img src="@Model.getPreview(item.FileId)">
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
 </div>

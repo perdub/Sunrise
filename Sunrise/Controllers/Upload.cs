@@ -15,7 +15,7 @@ public class Upload : Controller
     //загрузка картинки
     [RequestSizeLimit(1024*1024*128)]
     [Route("image")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status301MovedPermanently)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> UploadImage(){
         if(!HttpContext.Items.IsUser()){
@@ -37,10 +37,10 @@ public class Upload : Controller
         cs.dbcontext.Posts.Add(newPost);
         cs.dbcontext.Files.Add(res);
         await cs.dbcontext.SaveChangesAsync();
+        //проверка на нужен ли редирект на домашнюю страницу
+        var r = String.IsNullOrEmpty(HttpContext.Request.Query["redirecttohome"]);
 
-        
-
-        return Ok(new {message="sussesful", post = newPost, file=res});
+        return r ? Ok(new {message="sussesful", post = newPost, file=res}) : RedirectPermanent("/");
     }
 
     
