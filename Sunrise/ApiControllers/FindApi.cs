@@ -7,8 +7,8 @@ namespace Sunrise.Api;
 public class FindApi : Controller
 {
     //сохранение доступа к контексту дб локально
-    CacheService cs;
-    public FindApi(CacheService c)
+    SunriseContext cs;
+    public FindApi(SunriseContext c)
     {
         cs = c;
     }
@@ -22,11 +22,11 @@ public class FindApi : Controller
         Types.Tag[] tags = new Types.Tag[tagsSearch.Length];
         for (int i = 0; i < tagsSearch.Length; i++)
         {
-            tags[i] = await cs.GetTagAsync(tagsSearch[i]);
+            tags[i] = await cs.Tags.Where(a=>a.SearchText==tagsSearch[i]).FirstOrDefaultAsync();
         }
         var idrep = tags.Select(a => a.TagId).ToArray();
         tags = tags.OrderBy(x => x.PostCount).ToArray();
-        var r = cs.dbcontext.Posts.Include(q => q.Tags)
+        var r = cs.Posts.Include(q => q.Tags)
             .OrderByDescending(g => g.PostCreationTime)
             .AsEnumerable()
             .Where((x) =>

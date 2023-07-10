@@ -16,7 +16,6 @@ public class AspnetHoster{
         builder.Services.AddRazorPages();
         builder.Services.AddDbContext<SunriseContext>((x)=>{}, ServiceLifetime.Transient, ServiceLifetime.Scoped);
         builder.Services.AddSingleton<Random>(new Random());
-        builder.Services.AddTransient<CacheService>();
         
         builder.Services.AddControllers();
 
