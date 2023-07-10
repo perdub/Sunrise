@@ -24,6 +24,6 @@ public class Program
         );
 
         AspnetHoster hoster = new AspnetHoster();
-        await hoster.StartApp();
+        await hoster.StartApp(args);
     }
 }

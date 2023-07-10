@@ -19,6 +19,9 @@ public class SunriseContext : DbContext
         Sunrise.Logger.Logger.Singelton.Write("Init connection to database...");
         optionsBuilder.UseSqlite("Data Source=app.db");
         Sunrise.Logger.Logger.Singelton.Write("Connected!");
+        #if DEBUG
+        optionsBuilder.EnableSensitiveDataLogging();
+        #endif
     }
 
 

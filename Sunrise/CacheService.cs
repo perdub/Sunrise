@@ -21,9 +21,12 @@ public class CacheService
 
     public SunriseContext dbcontext {get;private set;}
     IMemoryCache l1cache;
-
-    public CacheService(SunriseContext sc, IMemoryCache memc)
+    IConfiguration config;
+    bool disableCache = false;
+    public CacheService(SunriseContext sc, IMemoryCache memc, IConfiguration appConfig)
     {
+        config=appConfig;
+        disableCache = ("true" == config["disableCache"]);
         dbcontext = sc;
         l1cache = memc;
     }
@@ -35,7 +38,7 @@ public class CacheService
 
         if(r==false){
             u = await dbcontext.Users.FindAsync(id);
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<User>(id, u, userCacheOptions);
             }
         }
@@ -47,7 +50,7 @@ public class CacheService
 
         if(r==false){
             u = dbcontext.Users.Where(x => x.Name==username).FirstOrDefault();
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<User>(username, u, userCacheOptions);
             }
         }
@@ -60,7 +63,7 @@ public class CacheService
 
         if(r==false){
             u = await dbcontext.Sessions.FindAsync(sessionId);
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<Session>(sessionId, u, sessionCacheOptions);
             }
         }
@@ -72,7 +75,7 @@ public class CacheService
 
         if(r==false){
             u = dbcontext.Sessions.Where(x => x.SessionId == session).FirstOrDefault();
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<Session>(session, u, sessionCacheOptions);
             }
         }
@@ -89,7 +92,7 @@ public class CacheService
 
         if(r==false){
             u = await dbcontext.Files.FindAsync(fileId);
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<FileInfo>(fileId, u, userCacheOptions);
             }
         }
@@ -101,7 +104,7 @@ public class CacheService
 
         if(r==false){
             u = await dbcontext.Posts.Include(x => x.Tags).Where(y => y.Id == postId).FirstOrDefaultAsync();
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<Post>(postId, u, userCacheOptions);
             }
         }
@@ -114,7 +117,7 @@ public class CacheService
 
         if(r==false){
             u = await dbcontext.Tags.FindAsync(id);
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<Tag>(id, u, userCacheOptions);
             }
         }
@@ -126,7 +129,7 @@ public class CacheService
 
         if(r==false){
             u = dbcontext.Tags.Where(x=>x.SearchText == SearchText).FirstOrDefault();
-            if(u!=null){
+            if(u!=null && disableCache){
                 l1cache.Set<Tag>(SearchText, u, userCacheOptions);
             }
         }
