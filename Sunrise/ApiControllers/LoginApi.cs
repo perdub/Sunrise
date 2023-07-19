@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sunrise.Types;
-
+using Sunrise.Utilities;
 namespace Sunrise.Api;
 
 [Route("api")]
@@ -10,7 +10,7 @@ public class LoginApi : Controller
     SunriseContext cs;
     public LoginApi(SunriseContext c)
     {
-        cs=c;
+        cs = c;
     }
 
     //создание сессии
@@ -21,13 +21,15 @@ public class LoginApi : Controller
     {
         UserLoginResult res;
         var u = cs.GetUser(uli.name);
-        if(!u.CheckPassword(uli.password)){
+        if (!u.CheckPassword(uli.password))
+        {
             res = new UserLoginResult(LoginResult.InvalidCredentials, "incorrect login or password", "");
             return BadRequest(res);
         }
 
         Session newSession;
-        if(uli.rememberMe){
+        if (uli.rememberMe)
+        {
             newSession = new Session(u);
         }
         else
@@ -37,9 +39,9 @@ public class LoginApi : Controller
         cs.Sessions.Add(newSession);
         cs.SaveChanges();
 
-        HttpContext.Response.Cookies.Append("suntoken", newSession.SessionId);
+        HttpContext.Response.Cookies.Append(Constants.SESSION_COOKIE_NAME, newSession.SessionId);
 
-        return Ok(new UserLoginResult(LoginResult.OK,"",newSession.SessionId));
+        return Ok(new UserLoginResult(LoginResult.OK, "", newSession.SessionId));
     }
 
     [Route("sessions")]
@@ -49,18 +51,39 @@ public class LoginApi : Controller
     public IActionResult GetSessions()
     {
         object isUser;
-        if(HttpContext.Items.TryGetValue("isUser", out isUser)){
-            if((bool)isUser){
+        if (HttpContext.Items.TryGetValue("isUser", out isUser))
+        {
+            if ((bool)isUser)
+            {
                 object id;
                 HttpContext.Items.TryGetValue("userId", out id);
                 Guid user = (Guid)id;
                 //todo: добавить работу с кешированием!!!
-                var sessions = cs.Sessions.Where(x=>x.UserId==user).ToArray();
+                var sessions = cs.Sessions.Where(x => x.UserId == user).ToArray();
                 return Ok(sessions);
             }
             Unauthorized("need sing in");
         }
 
         return Unauthorized();
+    }
+
+    [Route("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        if (!HttpContext.Items.IsUser())
+        {
+            return Ok();
+        }
+        if (HttpContext.Request.Cookies.TryGetValue(Constants.SESSION_COOKIE_NAME, out string? token)
+            && token!=null)
+        {
+            var session = await cs.Sessions.FindAsync(token);
+            if(session!=null){
+                cs.Sessions.Remove(session);
+                await cs.SaveChangesAsync();
+            }
+        }
+        return Ok();
     }
 }

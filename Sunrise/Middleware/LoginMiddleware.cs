@@ -13,7 +13,7 @@ public class LoginMiddleware
     public async Task InvokeAsync(HttpContext context, SunriseContext cs, ILogger<LoginMiddleware> _logger)
     {
         string? token;
-        if (context.Request.Cookies.TryGetValue("suntoken", out token))
+        if (context.Request.Cookies.TryGetValue(Constants.SESSION_COOKIE_NAME, out token))
         {
             if (string.IsNullOrEmpty(token))
             {
