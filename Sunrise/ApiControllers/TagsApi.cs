@@ -7,8 +7,8 @@ namespace Sunrise.Api;
 public class TagsApi : Controller
 {
     //сохранение доступа к контексту дб локально
-    CacheService cs;
-    public TagsApi(CacheService c)
+    SunriseContext cs;
+    public TagsApi(SunriseContext c)
     {
         cs = c;
     }
@@ -21,7 +21,7 @@ public class TagsApi : Controller
     {
         try
         {
-            return Ok(await cs.GetTagAsync(id));
+            return Ok(cs.Tags.Where(q => q.TagId == id).FirstOrDefault());
         }
         catch (Sunrise.Types.Exceptions.NotFoundObjectException)
         {
@@ -47,7 +47,7 @@ public class TagsApi : Controller
         return Ok(tags);
     }
     //получение тегов через бд
-    public async Task<Types.Tag[]> GetTagsAsync(string[] search, CacheService cs)
+    public async Task<Types.Tag[]> GetTagsAsync(string[] search, SunriseContext cs)
     {//создание массивов для результата и тасков
         //массив тасков больше потомучто он последний элемент это таск асинхронного сохранения изменений в бд
         
@@ -60,19 +60,19 @@ public class TagsApi : Controller
             taskArr[i] = getorcreatetag(i);
         }
         //добавление таска сохранения
-        taskArr[^1] = cs.dbcontext.SaveChangesAsync();
+        taskArr[^1] = cs.SaveChangesAsync();
         await Task.WhenAll(taskArr);
 
         return resultArr;
         async Task getorcreatetag(int i)
         {
             //получение тега
-            var res = await cs.GetTagAsync(search[i].Process());
+            var res = cs.Tags.Where(q => q.SearchText == search[i].Process()).FirstOrDefault();
             if (res == null)                //.Process() - метод-расширение для сжатия и привода тегов к стандартизированному виду
             {
                 //если результат нулл, то мы создаём новый тег и добавляем его в бд
                 res = new Types.Tag(search[i].Process());
-                cs.dbcontext.Tags.Add(res);
+                cs.Tags.Add(res);
             }
             //добавление в массив результатов
             resultArr[i] = res;
