@@ -6,8 +6,8 @@ namespace Sunrise.Controllers;
 public class Upload : Controller
 {
     //сохранение доступа к контексту дб локально
-    CacheService cs;
-    public Upload(CacheService c)
+    SunriseContext cs;
+    public Upload(SunriseContext c)
     {
         cs=c;
     }
@@ -33,10 +33,12 @@ public class Upload : Controller
             tag.Post.Add(newPost);
             tag.PostCount++;
         }
-        cs.dbcontext.Tags.UpdateRange(tagsArr);
-        cs.dbcontext.Posts.Add(newPost);
-        cs.dbcontext.Files.Add(res);
-        await cs.dbcontext.SaveChangesAsync();
+        cs.Tags.UpdateRange(tagsArr);
+        cs.Posts.Add(newPost);
+        cs.Files.Add(res);
+        
+        Sunrise.Logger.Logger.Singelton.Write($"Tags in json: {System.Text.Json.JsonSerializer.Serialize<Types.Tag[]>(tagsArr)}");
+        await cs.SaveChangesAsync();
         //проверка на нужен ли редирект на домашнюю страницу
         var r = String.IsNullOrEmpty(HttpContext.Request.Query["redirecttohome"]);
 

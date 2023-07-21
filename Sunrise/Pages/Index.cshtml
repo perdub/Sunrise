@@ -10,12 +10,12 @@
         <input type="text" id="find">
         <input type="button" id="search" value="Find">
         <script>
-            document.getElementById("search").onclick = ()=>{
+            document.getElementById("search").onclick = () => {
                 var geturl = "/?";
-document.getElementById("find").value.split(' ').forEach((i)=>{
-    geturl+="tags="+i+"&";
-});
-window.open(geturl, "_self");
+                document.getElementById("find").value.split(' ').forEach((i) => {
+                    geturl += "tags=" + i + "&";
+                });
+                window.open(geturl, "_self");
             };
         </script>
     </div>
@@ -30,5 +30,19 @@ window.open(geturl, "_self");
                 </div>
             }
         </div>
+    </div>
+    <div class="page-change-flex">
+        @if (Model.Page > 0)
+        {
+            <a href="@Model.BuildUrl(Model.Page-1)">
+                <p class="text">&#8592;</p>
+            </a>
+        }
+        @if (!Model.IsLastPage(Model.Page))
+        {
+            <a href="@Model.BuildUrl(Model.Page+1)">
+                <p class="text">&#8594;</p>
+            </a>
+        }
     </div>
 </div>

@@ -8,6 +8,8 @@ public class SunriseContext : DbContext
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Session> Sessions => Set<Session>();
     public DbSet<Sunrise.Storage.Types.FileInfo> Files => Set<Sunrise.Storage.Types.FileInfo>();
+
+    public DbSet<Verify> Verify => Set<Verify>();
     public SunriseContext(bool ensureCreated = false)
     {
         if(ensureCreated)
@@ -19,6 +21,9 @@ public class SunriseContext : DbContext
         Sunrise.Logger.Logger.Singelton.Write("Init connection to database...");
         optionsBuilder.UseSqlite("Data Source=app.db");
         Sunrise.Logger.Logger.Singelton.Write("Connected!");
+        #if DEBUG
+        optionsBuilder.EnableSensitiveDataLogging();
+        #endif
     }
 
 
