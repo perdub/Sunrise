@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sunrise;
 
@@ -10,9 +11,11 @@ using Sunrise;
 namespace Sunrise.Migrations
 {
     [DbContext(typeof(SunriseContext))]
-    partial class SunriseContextModelSnapshot : ModelSnapshot
+    [Migration("20230720174932_AddTelegramAccountIdFiled")]
+    partial class AddTelegramAccountIdFiled
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
@@ -135,9 +138,6 @@ namespace Sunrise.Migrations
                     b.Property<DateTime>("AccountCreationTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("CheckedUser")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -156,32 +156,9 @@ namespace Sunrise.Migrations
                     b.Property<long>("TelegramAccountId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("VerifyUser")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Sunrise.Types.Verify", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Verify");
                 });
 
             modelBuilder.Entity("PostTag", b =>
@@ -204,17 +181,6 @@ namespace Sunrise.Migrations
                     b.HasOne("Sunrise.Types.User", null)
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Sunrise.Types.Verify", b =>
-                {
-                    b.HasOne("Sunrise.Types.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Sunrise.Types.User", b =>

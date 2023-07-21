@@ -52,6 +52,8 @@ public class IndexModel : PageModel
 
     public bool IsLastPage(int page)
     {
-        return cs.Posts.Count() < page+1 * Constants.POST_PER_PAGE;
+        int a = (page+1) * Constants.POST_PER_PAGE;
+        _logger.Log(LogLevel.Information, $"IsLastPage: a is {a}");
+        return cs.Posts.Count() < a;
     }
 }

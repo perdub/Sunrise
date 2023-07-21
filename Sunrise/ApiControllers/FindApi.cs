@@ -15,7 +15,7 @@ public class FindApi : Controller
 
     
     //поиск
-    public async Task<Types.Post[]> Find(string[] tagsSearch, int offset = 0, int count = 50)
+    public async Task<Types.Post[]> Find(string[] tagsSearch, int offset = 0, int count = Constants.POST_PER_PAGE)
     {
         Sunrise.Logger.Logger.Singelton.Write("Start find in db!");
         //todo: rewrite this shit!!!

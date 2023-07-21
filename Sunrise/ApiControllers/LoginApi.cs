@@ -69,11 +69,12 @@ public class LoginApi : Controller
     }
 
     [Route("logout")]
+    [Route("/logout")]
     public async Task<IActionResult> Logout()
     {
         if (!HttpContext.Items.IsUser())
         {
-            return Ok();
+            return Redirect("/");
         }
         if (HttpContext.Request.Cookies.TryGetValue(Constants.SESSION_COOKIE_NAME, out string? token)
             && token!=null)
@@ -84,6 +85,6 @@ public class LoginApi : Controller
                 await cs.SaveChangesAsync();
             }
         }
-        return Ok();
+        return Redirect("/");
     }
 }

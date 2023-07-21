@@ -8,7 +8,9 @@ public class User : IApiView
     //пароль (хеш)
     public string PasswordHash {get;private set;}
 
-    public string Email {get;private set;}
+    public string Email {get;set;} = "";
+    //айди телеграмм аккаунта(если нет то -1)
+    public long TelegramAccountId {get;set;} = -1;
 
     public Guid Id {get;private set;}
     //дата создания аккаунта
@@ -16,13 +18,19 @@ public class User : IApiView
     //уровень доступа
     public PrivilegeLevel Level {get; private set;}
 
+    //два значения которые отвечают за уровнь доступа
+    public bool CheckedUser {get;private set;} //true если пользователь прошёл верификацию по емайлу или телеграму
+    public bool VerifyUser {get;private set;} //true когда пользователь загрузил некоторое количество постов и вызывает доверие
+
+
     public List<Post> Posts {get;private set;}
 
-    public User(string name, string password, string email)
+    public User(string name, string password, string email = "", long telegramUser = -1)
     {
         Name = name;
         PasswordHash = password.GetSha512();
         Email = email;
+        TelegramAccountId = telegramUser;
         addData();
     }
 
@@ -44,6 +52,7 @@ public class User : IApiView
         Id = Guid.NewGuid();
         AccountCreationTime = DateTime.UtcNow;
         Level = PrivilegeLevel.Default;
+        CheckedUser = VerifyUser = false;
     }
 
     public ApiView GetApiView()
@@ -65,3 +74,6 @@ public record class UserRegistrationInfo(string name, string password, string em
 public record class UserLoginInfo(string name, string password, bool rememberMe = false);
 //клаасс-запись возвращающий результат попытки входа
 public record class UserLoginResult(LoginResult result, string message, string sessionId);
+
+//класс-запись для представления запроса для регистрации 
+public record class UserRegistrationInfov2(string username, string password, int type, string verifyFiled);

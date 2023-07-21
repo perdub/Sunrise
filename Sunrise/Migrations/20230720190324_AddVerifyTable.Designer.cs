@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sunrise;
 
@@ -10,9 +11,11 @@ using Sunrise;
 namespace Sunrise.Migrations
 {
     [DbContext(typeof(SunriseContext))]
-    partial class SunriseContextModelSnapshot : ModelSnapshot
+    [Migration("20230720190324_AddVerifyTable")]
+    partial class AddVerifyTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
@@ -179,8 +182,6 @@ namespace Sunrise.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Verify");
                 });
 
@@ -204,17 +205,6 @@ namespace Sunrise.Migrations
                     b.HasOne("Sunrise.Types.User", null)
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Sunrise.Types.Verify", b =>
-                {
-                    b.HasOne("Sunrise.Types.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Sunrise.Types.User", b =>

@@ -8,6 +8,8 @@ public class SunriseContext : DbContext
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Session> Sessions => Set<Session>();
     public DbSet<Sunrise.Storage.Types.FileInfo> Files => Set<Sunrise.Storage.Types.FileInfo>();
+
+    public DbSet<Verify> Verify => Set<Verify>();
     public SunriseContext(bool ensureCreated = false)
     {
         if(ensureCreated)
