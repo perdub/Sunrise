@@ -13,6 +13,10 @@ public class AspnetHoster{
             y.Limits.MaxRequestBodySize = (512*1024*1024);
         });
 
+        builder.Services.AddLogging((a)=>{
+            a.AddFile("logs/app.log");
+        });
+
         builder.Services.AddRazorPages();
         builder.Services.AddDbContext<SunriseContext>((x)=>{}, ServiceLifetime.Transient, ServiceLifetime.Scoped);
         builder.Services.AddSingleton<Random>(new Random());

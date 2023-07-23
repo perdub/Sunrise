@@ -19,8 +19,8 @@ public class User : IApiView
     public PrivilegeLevel Level {get; private set;}
 
     //два значения которые отвечают за уровнь доступа
-    public bool CheckedUser {get;private set;} //true если пользователь прошёл верификацию по емайлу или телеграму
-    public bool VerifyUser {get;private set;} //true когда пользователь загрузил некоторое количество постов и вызывает доверие
+    public bool CheckedUser {get;set;} //true если пользователь прошёл верификацию по емайлу или телеграму
+    public bool VerifyUser {get;set;} //true когда пользователь загрузил некоторое количество постов и вызывает доверие
 
 
     public List<Post> Posts {get;private set;}
