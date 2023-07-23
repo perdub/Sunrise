@@ -24,11 +24,11 @@ public class ContentServer
         return $"{globalStoragePath}//{id.ToString()}//";
     }
 
-    public async Task<Types.FileInfo> SaveImage(Guid id, byte[] f, Sunrise.Types.ContentType type, string fileExtension)
+    public async Task<Types.FileInfo> SaveImage(Guid id, byte[] f, string fileExtension)
     {
         string path = buildpath(id);
         Types.FileInfo info = new Types.FileInfo();
-        info.ContentType = type;
+        info.ContentType = Sunrise.Types.ContentType.Image;
         info.Id = id;
         Directory.CreateDirectory(path);
         string imgpath = path + "original" + fileExtension;
