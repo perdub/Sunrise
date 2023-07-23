@@ -43,6 +43,7 @@ public class IndexModel : PageModel
             else{
                 sb.Append($"{a.Key}={a.Value}");
             }
+            sb.Append('&');
         }
         if(isPageNotSet){
             sb.Append($"pageid={page+1}");

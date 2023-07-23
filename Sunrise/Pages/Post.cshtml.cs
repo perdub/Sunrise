@@ -30,7 +30,7 @@ public class PostModel : PageModel
         originalImageUrl = file.Paths[2];
         createTime = post.PostCreationTime.ToString("o")+'Z';
         var author = await _context.Users.FindAsync(post.AuthorId);
-        authorName = author.Name;
+        authorName = author?.Name;
         authorId = author.Id.ToString();
         tags = post.Tags.ToArray();
     }

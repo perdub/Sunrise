@@ -4,10 +4,18 @@
     ViewData["Title"] = "Upload Post";
 }
 
-<h1>UploadPost</h1>
+<h1>UploadPost(Old version)</h1>
 
 <form action="/upload/image?redirecttohome=1" method="post" enctype="multipart/form-data">
         <input type="file" name="uploads"  /><br>
+        <input name="tags"  /><br>
+        <input type="submit" value="Upload" />
+</form>
+
+<h1>UploadPost(New version)</h1>
+
+<form action="/upload/items?redirecttohome=1" method="post" enctype="multipart/form-data">
+        <input type="file" name="uploads" multiple /><br>
         <input name="tags"  /><br>
         <input type="submit" value="Upload" />
 </form>

@@ -1,6 +1,7 @@
 namespace Sunrise;
 using Microsoft.EntityFrameworkCore;
 using Sunrise.Types;
+using Sunrise.Utilities;
 public class SunriseContext : DbContext
 {
     public DbSet<User> Users => Set<User>();
@@ -75,7 +76,51 @@ public class SunriseContext : DbContext
         return true;
     }
 
+    public async Task Upload(Guid userId, byte[] raw,string filename, string tags)
+    {
+        ContentType type = raw.CheckType();
+        Guid fileId = Guid.NewGuid();
+        var st = Sunrise.Storage.ContentServer.Singelton;
+        Storage.Types.FileInfo fi;
+        switch(type){
+            case ContentType.Image:
+                fi = await st.SaveImage(fileId, raw, filename);
+                break;
+            default:
+                throw new Types.Exceptions.InvalidObjectTypeException($"Unknown type. Header: {raw.TryGrabHeader()}");
+        }
+        
+        Post newPost = new Post(userId, fileId);
+        var tagsArr = GetOrCreateTags(tags.Split(' '));
 
+        foreach(var tag in tagsArr){
+            newPost.Tags.Add(tag);
+            tag.Post.Add(newPost);
+            tag.PostCount++;
+        }
+
+        Tags.UpdateRange(tagsArr);
+        Posts.Add(newPost);
+        Files.Add(fi);
+
+        await SaveChangesAsync();
+    }
+
+    Tag[] GetOrCreateTags(string[] tags){
+        Tag[] result = new Tag[tags.Length];
+        for (int i = 0; i < tags.Length; i++)
+        {
+            string fr = tags[i].Process();
+            var a = Tags.Where(a => a.SearchText == fr).FirstOrDefault();
+            if(a == null){
+                a = new Tag(fr);
+                Tags.Add(a);
+            }
+            result[i] = a;
+        }
+        SaveChanges();
+        return result;
+    }
     protected override void OnModelCreating(ModelBuilder bld){
         bld.Entity<Sunrise.Storage.Types.FileInfo>().Property(x => x.Paths)
             .HasConversion(

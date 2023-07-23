@@ -6,22 +6,33 @@ using Sunrise.Storage;
 public class Program
 {
     const string VERSION = "0.1.0";
+    public static readonly DateTime StartTime = DateTime.UtcNow;
     #region Config
-    readonly static string CONFIG = 
-    #if DEBUG
+    readonly static string CONFIG =
+#if DEBUG
     "debug";
-    #endif
-    #if RELEASE
+#endif
+#if RELEASE
     "release";
-    #endif
+#endif
     #endregion
     public async static Task Main(string[] args)
     {
+        IConfiguration tempConfig = new ConfigurationBuilder()
+            .AddJsonFile("tokens.json")
+            .AddEnvironmentVariables()
+            .AddCommandLine(args)
+            .Build();
+
+        if (tempConfig.GetValue<bool>("active_telegram_bot"))
+        {
+            new Sunrise.Integrations.Bots.TelegramBot(tempConfig.GetValue<string>("telegram_bot"));
+        }
+
         Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
         l.Write($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
         l.Write("Enter in application.");
 
-        enableTelegramBot();
 
         ContentServer s = new ContentServer(
                 "storage"
@@ -29,14 +40,5 @@ public class Program
 
         AspnetHoster hoster = new AspnetHoster();
         await hoster.StartApp(args);
-    }
-    static async Task enableTelegramBot(){
-        IBot q = new Sunrise.Integrations.TelegramBot();
-        await q.Initialization(()=>{return "6328214388:AAGvPxAZxzk6zbKES1q4v-c-Ih-_gKTMZFk";});
-        q.OnInputEvent += (message, id)=>{
-            q.Send(()=>{
-                return id;
-            }, message.Reverse().ToString());
-        };
     }
 }
