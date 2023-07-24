@@ -103,7 +103,12 @@ public class SunriseContext : DbContext
         Posts.Add(newPost);
         Files.Add(fi);
 
+        try{
         await SaveChangesAsync();
+        }
+        catch(Microsoft.EntityFrameworkCore.DbUpdateException due){
+            Sunrise.Logger.Logger.Singelton.Write(due.ToString());
+        }
     }
 
     Tag[] GetOrCreateTags(string[] tags){
