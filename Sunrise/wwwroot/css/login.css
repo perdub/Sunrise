@@ -1,0 +1,27 @@
+.top-grid{
+    display: grid;
+    row-gap: 20px;
+    justify-items: center;
+    align-content: space-evenly;
+}
+.item-grid{
+    /* transform: translateX(-70%); */
+}
+
+.top-flex{
+    display: flex;
+    justify-content: space-around;
+}
+.top-divide-line{
+    border: 1px solid #5159516b;
+}
+
+.box{
+    backdrop-filter: blur(8px);
+    background-color: #3e3e3e45;
+    outline: 1px solid #a0a8a145;
+}
+
+.verify-method-div{
+    display: none;
+}

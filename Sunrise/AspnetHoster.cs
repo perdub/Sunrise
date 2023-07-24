@@ -5,18 +5,21 @@ using System.Net.Http.Headers;
 public class AspnetHoster{
     WebApplication app;
 
-    public async Task StartApp(){
-        var builder = WebApplication.CreateBuilder();
+    public async Task StartApp(string[] args){
+        var builder = WebApplication.CreateBuilder(args);
 
         builder.WebHost.ConfigureKestrel((x, y)=>{
             y.ListenAnyIP(3268);
             y.Limits.MaxRequestBodySize = (512*1024*1024);
         });
 
+        builder.Services.AddLogging((a)=>{
+            a.AddFile("logs/app.log");
+        });
+
         builder.Services.AddRazorPages();
-        builder.Services.AddDbContext<SunriseContext>();
+        builder.Services.AddDbContext<SunriseContext>((x)=>{}, ServiceLifetime.Transient, ServiceLifetime.Scoped);
         builder.Services.AddSingleton<Random>(new Random());
-        builder.Services.AddTransient<CacheService>();
         
         builder.Services.AddControllers();
 

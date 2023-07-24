@@ -7,25 +7,30 @@ version: 2
 updates:
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/Sunrise" # Location of package manifests
+    target-branch: "dev"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/Sunrise.Storage" # Location of package manifests
+    target-branch: "dev"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/Sunrise.Types" # Location of package manifests
+    target-branch: "dev"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/Sunrise.Utilities" # Location of package manifests
+    target-branch: "dev"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "nuget" # See documentation for possible values
     directory: "/Sunrise.Logger" # Location of package manifests
+    target-branch: "dev"
     schedule:
       interval: "daily"

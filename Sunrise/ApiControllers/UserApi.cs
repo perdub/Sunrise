@@ -6,11 +6,13 @@ namespace Sunrise.Api;
 public class UserApi : Controller
 {
     //сохранение доступа к контексту дб локально
-    CacheService cs;
-    public UserApi(CacheService c)
+    SunriseContext cs;
+    public UserApi(SunriseContext c)
     {
         cs=c;
     }
+
+
 
     //получение пользователя через его имя
     [Route("getuser/{name}")]
@@ -19,7 +21,7 @@ public class UserApi : Controller
     public async Task<IActionResult> GetUser(string name){
         try
         {
-            return Ok((await cs.GetUserAsync(name))?.GetApiView());
+            return Ok(cs.GetUserApiView(name));
         }
         catch(Sunrise.Types.Exceptions.NotFoundObjectException)
         {
@@ -34,7 +36,7 @@ public class UserApi : Controller
     public async Task<IActionResult> GetUser(Guid id){
         try
         {
-            return Ok(await cs.GetUserAsync(id));
+            return Ok(cs.GetUserApiView(id));
         }
         catch(Sunrise.Types.Exceptions.NotFoundObjectException)
         {
@@ -54,8 +56,8 @@ public class UserApi : Controller
                 object id;
                 HttpContext.Items.TryGetValue("userId", out id);
                 Guid user = (Guid)id;//получение айди пользователя и юзера, после чего возврат api представления
-                var u = await cs.GetUserAsync(user);
-                return Ok(u.GetApiView());
+                var u = cs.GetUserApiView(user);
+                return Ok(u);
             }
             Unauthorized("need sing in");
         }
@@ -69,7 +71,7 @@ public class UserApi : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult CreateNewUser([FromBody] Types.UserRegistrationInfo uri)
     {
-        var w = cs.dbcontext.CreateNewUser(uri);
+        var w = cs.CreateNewUser(uri);
         if(!w){
             return BadRequest("User already exsist.");
         }

@@ -18,3 +18,10 @@
     flex-wrap: wrap;
     gap: 15px;
 }
+
+.page-change-flex{
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}

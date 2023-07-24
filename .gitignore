@@ -4,3 +4,6 @@
 app.db
 storage/
 [Ll]ogs/
+app.db-shm
+app.db-wal
+Sunrise/tokens.json
