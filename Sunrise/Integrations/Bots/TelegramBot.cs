@@ -9,6 +9,7 @@ using Sunrise.Utilities;
 
 public class TelegramBot
 {
+    ILogger<TelegramBot> _logger;
     TelegramBotClient _bot;
     //буфер для всех обновлений
     Dictionary<long, Queue<Update>> _temp = new Dictionary<long, Queue<Update>>();
@@ -35,8 +36,9 @@ public class TelegramBot
         _bot.SendTextMessageAsync(id, text).Wait();
     }
 
-    public TelegramBot(string token)
+    public TelegramBot(string token, ILogger<TelegramBot> logger)
     {
+        _logger=logger;
         _bot = new TelegramBotClient(token);
         _bot.StartReceiving(Update, Error);
     }
@@ -193,6 +195,6 @@ public class TelegramBot
 
     async Task Error(ITelegramBotClient client, Exception u, CancellationToken token)
     {
-
+        _logger.Log(LogLevel.Error, u, u.Message);
     }
 }

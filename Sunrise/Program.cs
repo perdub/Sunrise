@@ -18,6 +18,12 @@ public class Program
     #endregion
     public async static Task Main(string[] args)
     {
+        //создание логгера
+        var lb = LoggerFactory.Create((x)=>{
+            x.AddConsole();
+        });
+        var logger = lb.CreateLogger<Sunrise.Integrations.Bots.TelegramBot>();
+        //создание временной конфигурации
         var configBuilder = new ConfigurationBuilder();
         if (File.Exists("tokens.json"))
         {
@@ -35,7 +41,7 @@ public class Program
         IConfiguration tempConfig = configBuilder.Build();
         if (tempConfig.GetValue<bool>("active_telegram_bot"))
         {
-            new Sunrise.Integrations.Bots.TelegramBot(tempConfig.GetValue<string>("telegram_bot"));
+            new Sunrise.Integrations.Bots.TelegramBot(tempConfig.GetValue<string>("telegram_bot"), logger);
         }
 
         Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());

@@ -28,17 +28,17 @@ public static class ContentTypeChecker
         if(arr.Length > 12 && arr[0]==0x52 && arr[1]==0x49 && arr[2]==0x46 && arr[3]==0x46)
         {
             //webp (header is 0x 52 49 46 46 X X X X 57 45 42 50 where X X X X is file size)
-            if(arr[8]==0x57 && arr[9]==45 && arr[10]==0x42 && arr[11]==0x50){
+            if(arr[8]==0x57 && arr[9]==0x45 && arr[10]==0x42 && arr[11]==0x50){
                 return ContentType.Image;
             }
 
             //avi (header is 0x 52 49 46 46 X X X X 41 56 49 20 where X X X X is file size)
-            if(arr[8]==0x41 && arr[9]==56 && arr[10]==0x49 && arr[11]==0x20){
+            if(arr[8]==0x41 && arr[9]==0x56 && arr[10]==0x49 && arr[11]==0x20){
                 return ContentType.Video;
             }
 
             //wav (header is 0x 52 49 46 46 X X X X 57 41 56 45 where X X X X is file size)
-            if(arr[8]==0x57 && arr[9]==41 && arr[10]==0x56 && arr[11]==0x45){
+            if(arr[8]==0x57 && arr[9]==0x41 && arr[10]==0x56 && arr[11]==0x45){
                 return ContentType.Audio;
             }
         }
