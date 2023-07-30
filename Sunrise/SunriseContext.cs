@@ -82,9 +82,13 @@ public class SunriseContext : DbContext
         Guid fileId = Guid.NewGuid();
         var st = Sunrise.Storage.ContentServer.Singelton;
         Storage.Types.FileInfo fi;
+        Sunrise.Logger.Logger.Singelton.Write($"File {fileId} has {raw.TryGrabHeader()} header.");
         switch(type){
             case ContentType.Image:
                 fi = await st.SaveImage(fileId, raw, filename);
+                break;
+            case ContentType.Video:
+                fi = await st.SaveVideo(fileId, raw, filename);
                 break;
             default:
                 throw new Types.Exceptions.InvalidObjectTypeException($"Unknown type. Header: {raw.TryGrabHeader()}");
@@ -104,7 +108,7 @@ public class SunriseContext : DbContext
         Files.Add(fi);
 
         try{
-        await SaveChangesAsync();
+            await SaveChangesAsync();
         }
         catch(Microsoft.EntityFrameworkCore.DbUpdateException due){
             Sunrise.Logger.Logger.Singelton.Write(due.ToString());

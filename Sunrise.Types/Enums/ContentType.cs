@@ -1,3 +1,6 @@
+/* If you want to understand how it works, then several links will help you
+    https://en.wikipedia.org/wiki/List_of_file_signatures
+*/
 using System.Text;
 namespace Sunrise.Types;
 //в теории можно добавть кучу всего: аудио, текст, файлы и так далее и тому подобное
@@ -47,6 +50,17 @@ public static class ContentTypeChecker
         //gif (header is 0x47 49 46 38 39 61 OR 0x47 49 46 38 37 61)
         if(arr.Length>6 && arr[0]==0x47 && arr[1]==0x49 && arr[2]==0x46 && arr[3]==0x38 && (arr[4]==0x39 || arr[4]==0x37) && arr[5]==0x61){
             return ContentType.Gif;
+        }
+
+        //mp4 (header is 0xX X X X 66 74 79 70 where X X X X is block offset)
+        if(arr.Length>8 && arr[4]==0x66 && arr[5]==0x74 && arr[6]==0x79 && arr[7]==0x70){
+            return ContentType.Video;
+        }
+
+        //matroska media container(mkv, webm, mka, mks, mk3d)
+        //header is 0x1A 45 DF A3
+        if(arr.Length>4 && arr[0]==0x1A && arr[1]==0x45 && arr[2]==0xDF && arr[3]==0xA3){
+            return ContentType.Video;
         }
 
         return ContentType.Unknown;

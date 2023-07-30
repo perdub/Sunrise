@@ -4,7 +4,20 @@
 <div class="horizontal-center">
     <div style="height: 15px;"></div>
     <div class="flex-center">
-        <img class="image-post" src=/@Model.baseImageUrl />
+        @switch (Model.ContentType)
+        {
+            case Types.ContentType.Image:
+                <img class="image-post" src=/@Model.baseImageUrl />
+                break;
+            case Types.ContentType.Video:
+                <video controls class="image-post" autoplay muted loop >
+                    <source src="/@Model.baseImageUrl" type="video/mp4">
+                </video>
+                break;
+            default:
+                break;
+        }
+        
     </div>
     <div style="height: 20px;"></div>
     <div id="postinfo">

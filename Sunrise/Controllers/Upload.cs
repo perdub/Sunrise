@@ -68,7 +68,9 @@ public class Upload : Controller
             {
                 try
                 {
-                    await cs.Upload(userid, i.OpenReadStream().ToByteArray(), Path.GetExtension(i.FileName), tags);
+                    //здесь создается новый контекст бд для каждого файла ибо они конфилктуют
+                    var db = new SunriseContext();
+                    await db.Upload(userid, i.OpenReadStream().ToByteArray(), Path.GetExtension(i.FileName), tags);
                 }
                 catch (Sunrise.Types.Exceptions.InvalidObjectTypeException iot)
                 {

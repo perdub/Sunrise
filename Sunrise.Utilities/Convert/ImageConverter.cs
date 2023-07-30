@@ -4,7 +4,6 @@ namespace Sunrise.Utilities.Convert;
 
 public class ImageConverter : AbstractConvert
 {
-    const int PREVIEWSIZE = 200;
     public override async Task Convert(string globalPath)
     {
         var img = await Image.LoadAsync(globalPath);
@@ -13,13 +12,13 @@ public class ImageConverter : AbstractConvert
         img.Mutate((x)=>{
             x.Resize(basesize);
         });
-        await img.SaveAsJpegAsync(Path.Combine(Path.GetDirectoryName(globalPath), "base.jpg"));
+        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, "base.jpg"));
 
         img.Mutate((x)=>{
             x.Resize(getPreviewSize(img.Size));
         });
 
-        await img.SaveAsJpegAsync(Path.Combine(Path.GetDirectoryName(globalPath), "preview.jpg"));
+        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, "preview.jpg"));
         
         img.Dispose();
     }
@@ -38,8 +37,8 @@ public class ImageConverter : AbstractConvert
     }
     Size getPreviewSize(Size s){
         if(s.Height>s.Width){
-            return new Size(0,PREVIEWSIZE);
+            return new Size(0,Constants.PREVIEW_SIZE);
         }
-        return new Size(PREVIEWSIZE,0);
+        return new Size(Constants.PREVIEW_SIZE,0);
     }
 }

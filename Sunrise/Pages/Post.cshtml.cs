@@ -7,6 +7,9 @@ namespace Sunrise.Pages;
 
 public class PostModel : PageModel
 {
+    public ContentType ContentType {get; set;}
+
+
     public string baseImageUrl {get;private set;}
     public string originalImageUrl {get;private set;}
     public string createTime{get;private set;}
@@ -25,7 +28,9 @@ public class PostModel : PageModel
     {
         //todo: rewrite this shit
         var post = await _context.Posts.Include(a=>a.Tags).Where( b=> b.Id == postid).FirstOrDefaultAsync();
+        
         var file = await _context.Files.FindAsync(post.FileId);
+        ContentType = file.ContentType;
         baseImageUrl = file.Paths[1];
         originalImageUrl = file.Paths[2];
         createTime = post.PostCreationTime.ToString("o")+'Z';
