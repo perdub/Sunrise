@@ -19,3 +19,6 @@ public class Post
         WaitForReview = true;
     }
 }
+
+//представляет один обьект для ленты, содержит айди поста, ссылку на базовую версию и тип контента
+public record class ScrollItem(Guid postId, string baseLink, int contentType);

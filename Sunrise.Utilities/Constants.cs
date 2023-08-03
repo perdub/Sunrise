@@ -10,6 +10,6 @@ public static class Constants
     public const int PREVIEW_SIZE = 200;
     //потоков для ffmpeg
     public const int FFMPEG_THREADS_COUNT = 2;
-
-    
+    //количество постов для подзагрузки ленты с постами
+    public const int POST_PER_SCROLL = 5;
 }

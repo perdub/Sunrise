@@ -7,3 +7,5 @@ storage/
 app.db-shm
 app.db-wal
 Sunrise/tokens.json
+Sunrise/telegram.json
+Sunrise/binarys/telegram-bot-server/

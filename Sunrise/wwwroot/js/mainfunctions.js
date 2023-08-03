@@ -1,3 +1,12 @@
+function loopVideoPreview(time){
+    
+}
+function grabQueryString(){
+    if(window.location.search===''){
+        return '?';
+    }
+    return window.location.search;
+}
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
