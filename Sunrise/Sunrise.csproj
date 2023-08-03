@@ -15,6 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TelegramLocalBotApi Include="Integrations/Telegram/LocalBotApiServer/binarys/**/*.*"/>
+  </ItemGroup>
+
+  <Target Name="TelegramLocalBotApiBinarys" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(TelegramLocalBotApi)" DestinationFolder="$(OutDir)/binarys/telegram-bot-server/%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <ItemGroup>
     <None Include="wwwroot\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

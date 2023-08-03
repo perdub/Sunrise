@@ -18,31 +18,8 @@ public class Program
     #endregion
     public async static Task Main(string[] args)
     {
-        //создание логгера
-        var lb = LoggerFactory.Create((x)=>{
-            x.AddConsole();
-        });
-        var logger = lb.CreateLogger<Sunrise.Integrations.Bots.TelegramBot>();
-        //создание временной конфигурации
-        var configBuilder = new ConfigurationBuilder();
-        if (File.Exists("tokens.json"))
-        {
-            configBuilder.AddJsonFile("tokens.json");
-        }
-        else if(File.Exists("tokens.Example.json"))
-        {
-            configBuilder.AddJsonFile("tokens.Example.json");
-        }
-        configBuilder
-            .AddEnvironmentVariables()
-            .AddCommandLine(args);
+        RunTelegramBot(args);
 
-
-        IConfiguration tempConfig = configBuilder.Build();
-        if (tempConfig.GetValue<bool>("active_telegram_bot"))
-        {
-            new Sunrise.Integrations.Bots.TelegramBot(tempConfig.GetValue<string>("telegram_bot"), logger);
-        }
 
         Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
         l.Write($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
@@ -55,5 +32,51 @@ public class Program
 
         AspnetHoster hoster = new AspnetHoster();
         await hoster.StartApp(args);
+    }
+
+    static void RunTelegramBot(string[] args){
+#pragma warning disable CS8604
+        //создание логгера
+        var lb = LoggerFactory.Create((x)=>{
+            x.AddConsole();
+        });
+        var logger = lb.CreateLogger<Sunrise.Integrations.Telegram.TelegramBot>();
+        //создание временной конфигурации
+        var configBuilder = new ConfigurationBuilder();
+        if (File.Exists("telegram.json"))
+        {
+            configBuilder.AddJsonFile("telegram.json");
+        }
+        else if(File.Exists("telegram.Example.json"))
+        {
+            configBuilder.AddJsonFile("telegram.Example.json");
+        }
+        configBuilder
+            .AddEnvironmentVariables()
+            .AddCommandLine(args);
+
+
+        IConfiguration tempConfig = configBuilder.Build();
+        if (tempConfig.GetValue<bool>("active_telegram_bot"))
+        {
+            bool useLocalServer = tempConfig.GetValue<bool>("localServer:useServer");
+            if(useLocalServer){
+                Sunrise.Integrations.Telegram.LocalServer.Run(
+                    logger,
+                    tempConfig.GetValue<string>("localServer:api_id"),
+                    tempConfig.GetValue<string>("localServer:api_hash"),
+                    tempConfig.GetValue<string>("localServer:workingDir"),
+                    tempConfig.GetValue<string>("localServer:tempDir"),
+                    tempConfig.GetValue<int>("localServer:httpPort"),
+                    tempConfig.GetValue<int>("localServer:httpStatPort"),
+                    tempConfig.GetValue<bool>("localServer:hideConsole"));
+            }
+            new Sunrise.Integrations.Telegram.TelegramBot(
+                tempConfig.GetValue<string>("telegram_bot"),
+                logger,
+                useLocalServer,
+                $"http://localhost:{tempConfig.GetValue<int>("localServer:httpPort")}");
+        }
+#pragma warning restore
     }
 }
