@@ -1,4 +1,5 @@
 {
     "commentTranslate.targetLanguage": "ru",
-    "commentTranslate.hover.enabled": false
+    "commentTranslate.hover.enabled": false,
+    "sqltools.useNodeRuntime": true
 }

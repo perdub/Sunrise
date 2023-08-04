@@ -9,3 +9,4 @@ app.db-wal
 Sunrise/tokens.json
 Sunrise/telegram.json
 Sunrise/binarys/telegram-bot-server/
+Sunrise/settings.json

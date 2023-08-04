@@ -1,9 +1,17 @@
 @page
 @model ScrollModel
 
-<div class="horizontal-center">
+<div class="horizontal-center" id="scroll-parent">
     <div class="" id="scroll">
         
     </div>
 </div>
 <script src="/js/scroll/fill.js" defer></script>
+<script>
+    let parent = document.getElementById('scroll-parent');
+    function resize(){
+        parent.style.width = (100*((window.innerWidth/window.innerHeight)*(-125/741)+(15097/14820)))+'%';
+    }
+    window.onresize = resize;
+    resize();
+</script>

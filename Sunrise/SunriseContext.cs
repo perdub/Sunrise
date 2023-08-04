@@ -11,20 +11,22 @@ public class SunriseContext : DbContext
     public DbSet<Sunrise.Storage.Types.FileInfo> Files => Set<Sunrise.Storage.Types.FileInfo>();
 
     public DbSet<Verify> Verify => Set<Verify>();
+
     public SunriseContext(bool ensureCreated = false)
     {
-        if(ensureCreated)
+        if (ensureCreated)
             Database.EnsureCreated();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        string connectionString = Program.Config.GetValue<string>("dbConnectionString");
         Sunrise.Logger.Logger.Singelton.Write("Init connection to database...");
-        optionsBuilder.UseSqlite("Data Source=app.db");
+        optionsBuilder.UseSqlite(string.IsNullOrWhiteSpace(connectionString) ? "Data Source=app.db" : connectionString);
         Sunrise.Logger.Logger.Singelton.Write("Connected!");
-        #if DEBUG
+#if DEBUG
         optionsBuilder.EnableSensitiveDataLogging();
-        #endif
+#endif
     }
 
 
@@ -76,14 +78,15 @@ public class SunriseContext : DbContext
         return true;
     }
 
-    public async Task Upload(Guid userId, byte[] raw,string filename, string tags)
+    public async Task Upload(Guid userId, byte[] raw, string filename, string tags)
     {
         ContentType type = raw.CheckType();
         Guid fileId = Guid.NewGuid();
         var st = Sunrise.Storage.ContentServer.Singelton;
         Storage.Types.FileInfo fi;
         Sunrise.Logger.Logger.Singelton.Write($"File {fileId} has {raw.TryGrabHeader()} header.");
-        switch(type){
+        switch (type)
+        {
             case ContentType.Image:
                 fi = await st.SaveImage(fileId, raw, filename);
                 break;
@@ -93,11 +96,12 @@ public class SunriseContext : DbContext
             default:
                 throw new Types.Exceptions.InvalidObjectTypeException($"Unknown type. Header: {raw.TryGrabHeader()}");
         }
-        
+
         Post newPost = new Post(userId, fileId);
         var tagsArr = GetOrCreateTags(tags.Split(' '));
 
-        foreach(var tag in tagsArr){
+        foreach (var tag in tagsArr)
+        {
             newPost.Tags.Add(tag);
             tag.Post.Add(newPost);
             tag.PostCount++;
@@ -107,21 +111,25 @@ public class SunriseContext : DbContext
         Posts.Add(newPost);
         Files.Add(fi);
 
-        try{
+        try
+        {
             await SaveChangesAsync();
         }
-        catch(Microsoft.EntityFrameworkCore.DbUpdateException due){
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException due)
+        {
             Sunrise.Logger.Logger.Singelton.Write(due.ToString());
         }
     }
 
-    Tag[] GetOrCreateTags(string[] tags){
+    Tag[] GetOrCreateTags(string[] tags)
+    {
         Tag[] result = new Tag[tags.Length];
         for (int i = 0; i < tags.Length; i++)
         {
             string fr = tags[i].Process();
             var a = Tags.Where(a => a.SearchText == fr).FirstOrDefault();
-            if(a == null){
+            if (a == null)
+            {
                 a = new Tag(fr);
                 Tags.Add(a);
             }
@@ -130,7 +138,8 @@ public class SunriseContext : DbContext
         SaveChanges();
         return result;
     }
-    protected override void OnModelCreating(ModelBuilder bld){
+    protected override void OnModelCreating(ModelBuilder bld)
+    {
         bld.Entity<Sunrise.Storage.Types.FileInfo>().Property(x => x.Paths)
             .HasConversion(
                 a => System.Text.Json.JsonSerializer.Serialize(a, System.Text.Json.JsonSerializerOptions.Default),
