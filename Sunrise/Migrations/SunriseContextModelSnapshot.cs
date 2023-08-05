@@ -65,6 +65,9 @@ namespace Sunrise.Migrations
                     b.Property<DateTime>("PostCreationTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("TEXT");
 

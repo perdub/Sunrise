@@ -11,8 +11,8 @@ using Sunrise;
 namespace Sunrise.Migrations
 {
     [DbContext(typeof(SunriseContext))]
-    [Migration("20230721103300_FixVerifyUser")]
-    partial class FixVerifyUser
+    [Migration("20230804193004_AddRatingToPosts")]
+    partial class AddRatingToPosts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,9 @@ namespace Sunrise.Migrations
 
                     b.Property<DateTime>("PostCreationTime")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("TEXT");

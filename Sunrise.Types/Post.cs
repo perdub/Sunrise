@@ -8,6 +8,7 @@ public class Post
     public List<Tag> Tags {get;private set;}
     public Guid FileId {get;private set;}
     public bool WaitForReview {get;private set;}
+    public Rating Rating {get;set;}
     private Post(){}
 
     public Post(Guid authorId, Guid fileId){
@@ -17,6 +18,7 @@ public class Post
         this.AuthorId = authorId;
         FileId=fileId;
         WaitForReview = true;
+        Rating = Rating.Unset;
     }
 }
 
