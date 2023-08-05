@@ -16,10 +16,12 @@
 
   <ItemGroup>
     <TelegramLocalBotApi Include="Integrations/Telegram/LocalBotApiServer/binarys/**/*.*"/>
+    <NgrokTunnel Include="Tunnels/Ngrok/binarys/**/*.*"/>
   </ItemGroup>
 
-  <Target Name="TelegramLocalBotApiBinarys" AfterTargets="AfterBuild">
+  <Target Name="CopyBinarys" AfterTargets="AfterBuild">
     <Copy SourceFiles="@(TelegramLocalBotApi)" DestinationFolder="$(OutDir)/binarys/telegram-bot-server/%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(NgrokTunnel)" DestinationFolder="$(OutDir)/binarys/ngrok-tunnel/%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
 
   <ItemGroup>

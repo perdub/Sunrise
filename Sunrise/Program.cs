@@ -22,6 +22,8 @@ public class Program
 
         ApplySettings();
 
+        BuildTunnels();
+
         Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
         l.Write($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
         l.Write("Enter in application.");
@@ -38,7 +40,20 @@ public class Program
         await hoster.StartApp(args);
     }
 
+
+    static void BuildTunnels(){
+        Tunnels.TunnelsManager m = new Tunnels.TunnelsManager(
+            LoggerBuilder<Tunnels.TunnelsManager>(),
+            Config
+        );
+
+        m.BuildTunnels(
+            new Tunnels.Ngrok.NgrokTunnel()
+        );
+    }
     static void ApplySettings(){
+
+
         
     }
 
@@ -120,6 +135,16 @@ public class Program
         else if(File.Exists("telegram.Example.json"))
         {
             configBuilder.AddJsonFile("telegram.Example.json");
+        }
+        #endregion
+        #region Tunnels Config
+        if (File.Exists("tunnels.json"))
+        {
+            configBuilder.AddJsonFile("tunnels.json");
+        }
+        else if(File.Exists("tunnels.Example.json"))
+        {
+            configBuilder.AddJsonFile("tunnels.Example.json");
         }
         #endregion
         configBuilder
