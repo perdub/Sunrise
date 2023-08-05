@@ -41,6 +41,18 @@ public class PostModel : PageModel
         authorId = author.Id.ToString();
         tags = post.Tags.ToArray();
 
+        ViewData["RenderOpenGraph"] = true;
+
         return Page();
+    }
+
+    public string BaseItemAbsoluteUrl(){
+        return string.Concat(
+            HttpContext.Request.Scheme,
+            "s://",
+            HttpContext.Request.Host,
+            '/',
+            baseImageUrl
+        );
     }
 }

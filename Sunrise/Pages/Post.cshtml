@@ -51,5 +51,13 @@
                 }
             </div>
         </div>
+
+        @section OpenGraph
+        {
+            <meta property="og:image" content="@Model.BaseItemAbsoluteUrl()" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:image" content="@Model.BaseItemAbsoluteUrl()" />
+        }
+
     </div>
 </div>
