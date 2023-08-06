@@ -16,7 +16,8 @@ public class StatisticsController : Controller{
             post = sc.Posts.Count(),
             tags = sc.Tags.Count(),
             users = sc.Users.Count(),
-            uptime = (DateTime.UtcNow-Program.StartTime)
+            uptime = (DateTime.UtcNow-Program.StartTime),
+            version = $"{Program.VERSION}-{Program.CONFIG}"
         });
     }
 }

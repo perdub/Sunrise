@@ -5,10 +5,10 @@ using Sunrise.Logger;
 using Sunrise.Storage;
 public class Program
 {
-    const string VERSION = "0.4.0";
+    public const string VERSION = "0.4.0";
     public static readonly DateTime StartTime = DateTime.UtcNow;
     #region Config
-    readonly static string CONFIG =
+    public readonly static string CONFIG =
 #if DEBUG
     "debug";
 #endif
