@@ -8,6 +8,6 @@ app.db-shm
 app.db-wal
 Sunrise/tokens.json
 Sunrise/telegram.json
-Sunrise/binarys/telegram-bot-server/
+Sunrise/binarys/
 Sunrise/settings.json
 Sunrise/tunnels.json

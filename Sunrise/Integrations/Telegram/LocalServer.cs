@@ -27,8 +27,8 @@ public static class LocalServer{
         //создание строки с параметрами
         StringBuilder sb = new ();
         sb.Append($"--local ");
-        sb.Append($"--dir={workdir} ");
-        sb.Append($"--temp-dir={tempdir} ");
+        sb.Append($"--dir={Path.Combine(Environment.CurrentDirectory,workdir)} ");
+        sb.Append($"--temp-dir={Path.Combine(Environment.CurrentDirectory, tempdir)} ");
         sb.Append($"--http-port={port} ");
         sb.Append($"--http-stat-port={statPort} ");
 

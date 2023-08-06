@@ -43,8 +43,9 @@ public class FindController : Controller
             tags = tags.OrderBy(a => a.PostCount).ToArray();
             //извлечение всех постов и сортировка
             List<Post> posts = new List<Post>(tags[0].Post);
+            Random r = new ();
             if(randomOrder){
-                posts = posts.OrderBy(a => EF.Functions.Random()).ToList();
+                posts = posts.OrderBy(a => r.NextDouble()).ToList();
             }
             else{
                 posts = posts.OrderByDescending(a=>a.PostCreationTime).ToList();

@@ -7,8 +7,8 @@
         "httpStatPort" : 5678,
         "api_id" : "YOUR_API_ID",
         "api_hash" : "YOUR_API_HASH",
-        "workingDir" : "/localTelegramBotServer",
-        "tempDir" : "/tempTelegramBotServer",
+        "workingDir" : "localTelegramBotServer",
+        "tempDir" : "tempTelegramBotServer",
         "hideConsole" : true
     }
 }

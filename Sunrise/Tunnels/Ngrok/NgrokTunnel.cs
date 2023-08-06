@@ -9,7 +9,7 @@ public class NgrokTunnel : ITunnel
     Process ngrok;
     const string WINDOWS_BIN_PATH = "/binarys/ngrok-tunnel/Windows/ngrok.exe";
     const string LINUX_BIN_PATH = "/binarys/ngrok-tunnel/Linux/ngrok.exe";
-    public void StartTunnel(ILogger logger, IConfiguration config)
+    public async void StartTunnel(ILogger logger, IConfiguration config)
     {
         if(config.GetValue<bool>("ngrok:useNgrok")==false){
             logger.LogWarning($"\"useNgrok\" is false, ngrok agent will not start.");
@@ -65,5 +65,13 @@ public class NgrokTunnel : ITunnel
         ngrok.Start();
 
         logger.LogInformation($"Ngrok tunnel started, PID is {ngrok.Id}");
+
+        string addres = await Sunrise.Utilities.HttpExtensions.GetNgrokTunnelUrl();
+        logger.LogInformation($"Ngrok tunnel addres is {addres}");
+    }
+
+    public async Task<string> GetTunnelUrl(ILogger logger, IConfiguration config)
+    {
+        return await Sunrise.Utilities.HttpExtensions.GetNgrokTunnelUrl();
     }
 }
