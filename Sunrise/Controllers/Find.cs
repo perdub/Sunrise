@@ -45,10 +45,16 @@ public class FindController : Controller
             List<Post> posts = new List<Post>(tags[0].Post);
             Random r = new ();
             if(randomOrder){
-                posts = posts.OrderBy(a => r.NextDouble()).ToList();
+                posts = posts
+                    .Where(a=>a.WaitForReview==false)
+                    .OrderBy(a => r.NextDouble())
+                    .ToList();
             }
             else{
-                posts = posts.OrderByDescending(a=>a.PostCreationTime).ToList();
+                posts = posts
+                    .Where(a=>a.WaitForReview==false)
+                    .OrderByDescending(a=>a.PostCreationTime)
+                    .ToList();
             }
 
             for (int i = 0; i < posts.Count(); i++)
@@ -87,9 +93,11 @@ public class FindController : Controller
         else
         {
             //если нет, мы просто сортируем посты, пропускаем и забираем их
-            var posts = sc.Posts;
+            var posts = sc.Posts
+                .Where(a=>a.WaitForReview==false);
             System.Linq.IOrderedQueryable<Sunrise.Types.Post> tempQuery;
             System.Linq.IQueryable<Sunrise.Types.Post> finalCol;
+
             //сортировка
             if(randomOrder){
                 //в случайном порядке
