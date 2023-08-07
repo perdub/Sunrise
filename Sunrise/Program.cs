@@ -18,15 +18,17 @@ public class Program
     #endregion
     public async static Task Main(string[] args)
     {
+        Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
+        l.Write($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
+        l.Write($"Host process PID is {System.Diagnostics.Process.GetCurrentProcess().Id}.");
+        l.Write("Enter in application.");
+
         ConfigurationBuilder(args);
 
         ApplySettings();
 
         BuildTunnels();
 
-        Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
-        l.Write($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
-        l.Write("Enter in application.");
         
         TestDbConnection(Config.GetValue<bool>("createDbIfFall"));
 
