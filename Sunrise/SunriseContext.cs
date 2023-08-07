@@ -12,6 +12,8 @@ public class SunriseContext : DbContext
 
     public DbSet<Verify> Verify => Set<Verify>();
 
+
+
     public SunriseContext(bool ensureCreated = false)
     {
         if (ensureCreated)
@@ -138,6 +140,42 @@ public class SunriseContext : DbContext
         SaveChanges();
         return result;
     }
+
+    public async Task<bool> UpdatePostTag(Guid postId, string newTags)
+    {
+        //todo: rewrite this
+
+        //вполне можно не удалять сначала все теги и потом добавлять новые, а проходить по всем тегам и удалять/добавлять их
+        var post = Posts.Include(a=>a.Tags).Where(a=>a.Id==postId).FirstOrDefault();
+        if(post == null){
+            return false; 
+        }
+
+        int cv = post.Tags.Count();
+        for(int i = 0;i<cv;i++){
+            post.Tags[i].PostCount--;
+            post.Tags[i].Post.Remove(post);
+        }
+
+        post.Tags = new List<Tag>();
+
+        Tag[] arr = GetOrCreateTags(newTags.Split());
+        for(int i = 0; i<arr.Length;i++){
+            post.Tags.Add(arr[i]);
+            arr[i].Post.Add(post);
+            arr[i].PostCount++;
+        }
+
+        await SaveChangesAsync();
+        
+        return true;
+    }
+
+    public async void DeletePost(Guid postID)
+    {
+        
+    }
+
     protected override void OnModelCreating(ModelBuilder bld)
     {
         bld.Entity<Sunrise.Storage.Types.FileInfo>().Property(x => x.Paths)
