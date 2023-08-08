@@ -2,6 +2,9 @@ namespace Sunrise;
 using Microsoft.EntityFrameworkCore;
 using Sunrise.Types;
 using Sunrise.Utilities;
+
+using Log = ILogger<SunriseContext>;
+
 public class SunriseContext : DbContext
 {
     public DbSet<User> Users => Set<User>();
@@ -12,10 +15,12 @@ public class SunriseContext : DbContext
 
     public DbSet<Verify> Verify => Set<Verify>();
 
+    Log? _logger;
 
-
-    public SunriseContext(bool ensureCreated = false)
+    public SunriseContext(Log? logger = null, bool ensureCreated = false)
     {
+        _logger = logger;
+
         if (ensureCreated)
             Database.EnsureCreated();
     }
@@ -23,9 +28,9 @@ public class SunriseContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string connectionString = Program.Config.GetValue<string>("dbConnectionString");
-        Sunrise.Logger.Logger.Singelton.Write("Init connection to database...");
+        _logger?.LogDebug("Init connection to database...");
         optionsBuilder.UseSqlite(string.IsNullOrWhiteSpace(connectionString) ? "Data Source=app.db" : connectionString);
-        Sunrise.Logger.Logger.Singelton.Write("Connected!");
+        _logger?.LogDebug("Connected!");
 #if DEBUG
         optionsBuilder.EnableSensitiveDataLogging();
 #endif
@@ -86,7 +91,7 @@ public class SunriseContext : DbContext
         Guid fileId = Guid.NewGuid();
         var st = Sunrise.Storage.ContentServer.Singelton;
         Storage.Types.FileInfo fi;
-        Sunrise.Logger.Logger.Singelton.Write($"File {fileId} has {raw.TryGrabHeader()} header.");
+        _logger?.LogDebug($"File {fileId} has {raw.TryGrabHeader()} header.");
         switch (type)
         {
             case ContentType.Image:
@@ -119,7 +124,7 @@ public class SunriseContext : DbContext
         }
         catch (Microsoft.EntityFrameworkCore.DbUpdateException due)
         {
-            Sunrise.Logger.Logger.Singelton.Write(due.ToString());
+            _logger?.LogError(due.ToString());
         }
     }
 
