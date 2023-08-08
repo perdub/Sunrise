@@ -8,7 +8,7 @@ public class SunriseContext : DbContext
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Session> Sessions => Set<Session>();
-    public DbSet<Sunrise.Storage.Types.FileInfo> Files => Set<Sunrise.Storage.Types.FileInfo>();
+    public DbSet<FileInfo> Files => Set<FileInfo>();
 
     public DbSet<Verify> Verify => Set<Verify>();
 
@@ -85,7 +85,7 @@ public class SunriseContext : DbContext
         ContentType type = raw.CheckType();
         Guid fileId = Guid.NewGuid();
         var st = Sunrise.Storage.ContentServer.Singelton;
-        Storage.Types.FileInfo fi;
+        FileInfo fi;
         Sunrise.Logger.Logger.Singelton.Write($"File {fileId} has {raw.TryGrabHeader()} header.");
         switch (type)
         {
@@ -99,7 +99,7 @@ public class SunriseContext : DbContext
                 throw new Types.Exceptions.InvalidObjectTypeException($"Unknown type. Header: {raw.TryGrabHeader()}");
         }
 
-        Post newPost = new Post(userId, fileId);
+        Post newPost = new Post(userId, fi);
         var tagsArr = GetOrCreateTags(tags.Split(' '));
 
         foreach (var tag in tagsArr)
@@ -178,7 +178,7 @@ public class SunriseContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder bld)
     {
-        bld.Entity<Sunrise.Storage.Types.FileInfo>().Property(x => x.Paths)
+        bld.Entity<FileInfo>().Property(x => x.Paths)
             .HasConversion(
                 a => System.Text.Json.JsonSerializer.Serialize(a, System.Text.Json.JsonSerializerOptions.Default),
                 b => System.Text.Json.JsonSerializer.Deserialize<string[]>(b, System.Text.Json.JsonSerializerOptions.Default)

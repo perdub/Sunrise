@@ -29,7 +29,7 @@ public class Upload : Controller
         var tags = HttpContext.Request.Form["tags"];
         var res = await Sunrise.Storage.ContentServer.Singelton.SaveImage(Guid.NewGuid(), uploaded[0].OpenReadStream().ToByteArray(), Path.GetExtension(uploaded[0].FileName));
         var tagsArr = await (new Api.TagsApi(cs).GetTagsAsync(tags[0].Split(), cs));
-        Types.Post newPost = new Types.Post(HttpContext.Items.UserId(), res.Id);
+        Types.Post newPost = new Types.Post(HttpContext.Items.UserId(), res);
 
         foreach (var tag in tagsArr)
         {

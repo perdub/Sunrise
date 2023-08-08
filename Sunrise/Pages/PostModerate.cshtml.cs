@@ -36,7 +36,7 @@ public class PostModeratePage : SecurePageModel
 
         //todo: add check for null
 
-        var file = _context.Files.Find(p.FileId);
+        var file = _context.Files.Find(p.File);
 
         PostId = p.Id;
         Tags = p.Tags.ToArray();

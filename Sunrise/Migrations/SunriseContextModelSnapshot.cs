@@ -32,7 +32,7 @@ namespace Sunrise.Migrations
                     b.ToTable("PostTag");
                 });
 
-            modelBuilder.Entity("Sunrise.Storage.Types.FileInfo", b =>
+            modelBuilder.Entity("Sunrise.Types.FileInfo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,6 +76,8 @@ namespace Sunrise.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FileId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
@@ -99,6 +101,8 @@ namespace Sunrise.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("SessionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Sessions");
                 });
@@ -182,6 +186,8 @@ namespace Sunrise.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Verify");
                 });
 
@@ -202,14 +208,46 @@ namespace Sunrise.Migrations
 
             modelBuilder.Entity("Sunrise.Types.Post", b =>
                 {
+                    b.HasOne("Sunrise.Types.FileInfo", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Sunrise.Types.User", null)
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("File");
+                });
+
+            modelBuilder.Entity("Sunrise.Types.Session", b =>
+                {
+                    b.HasOne("Sunrise.Types.User", "User")
+                        .WithMany("Sessions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Sunrise.Types.Verify", b =>
+                {
+                    b.HasOne("Sunrise.Types.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Sunrise.Types.User", b =>
                 {
                     b.Navigation("Posts");
+
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,4 @@
-namespace Sunrise.Storage.Types;
+namespace Sunrise.Types;
 
 public class FileInfo
 {

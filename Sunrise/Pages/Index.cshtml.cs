@@ -23,8 +23,8 @@ public class IndexModel : PageModel
         //page*POST_PER_PAGE даёт нужное смещение
         posts = await find.Find(tags, Page*Constants.POST_PER_PAGE);
     }
-    public string getPreview(Guid fileId){
-        return cs.Files.Find(fileId).Paths[0];
+    public string getPreview(Sunrise.Types.FileInfo fileId){
+        return fileId.Paths[0];
     }
 
     //этот метод создаёт адрес для страницы и сохраняет теги и тому подобное

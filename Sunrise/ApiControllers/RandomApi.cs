@@ -15,7 +15,7 @@ public class RandomApi: Controller
         r=rand;
     }
 
-    Storage.Types.FileInfo? loadRandom(){
+    Types.FileInfo? loadRandom(){
         var files = db.Files.Where(x => x.ContentType == Types.ContentType.Image);
         int allimg = files.Count();
         int t = r.Next(allimg);

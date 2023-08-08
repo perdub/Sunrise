@@ -6,17 +6,17 @@ public class Post
     public Guid AuthorId{get;private set;}
     public DateTime PostCreationTime {get;private set;}
     public List<Tag> Tags {get; set;}
-    public Guid FileId {get;private set;}
+    public FileInfo File {get;private set;}
     public bool WaitForReview {get; set;}
     public Rating Rating {get;set;}
     private Post(){}
 
-    public Post(Guid authorId, Guid fileId){
+    public Post(Guid authorId, FileInfo fileId){
         PostCreationTime = DateTime.UtcNow;
         Tags = new List<Tag>();
         Id = Guid.NewGuid();
         this.AuthorId = authorId;
-        FileId=fileId;
+        File=fileId;
         WaitForReview = true;
         Rating = Rating.Unset;
     }

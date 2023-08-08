@@ -1,5 +1,7 @@
 //часть конвеера которая будет проверять залогинен ли пользователь и его jwt токен
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Sunrise.Middleware;
 
 public class LoginMiddleware
@@ -21,7 +23,7 @@ public class LoginMiddleware
                 return;
             }
             //todo: открыть токен и добавить пользователя
-            var s = cs.Sessions.Where(a => a.SessionId == token).FirstOrDefault();
+            var s = cs.Sessions.Include(a=>a.User).Where(a => a.SessionId == token).FirstOrDefault();
             if (s == null)
             {
                 _logger.Log(LogLevel.Trace, "Fall to find session.", token);
@@ -37,9 +39,12 @@ public class LoginMiddleware
             else
             {
                 //метод обновления сессии
-                    cs.Sessions.Update(s);
+                cs.Sessions.Update(s);
                 context.Items.Add("isUser", true);
-                context.Items.Add("userId", s.UserId);
+                if (s != null && s.User != null)
+                {
+                    context.Items.Add("userId", s.User?.Id);
+                }
             }
             await cs.SaveChangesAsync();
         }
