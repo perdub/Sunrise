@@ -41,7 +41,7 @@ public class Upload : Controller
         cs.Posts.Add(newPost);
         cs.Files.Add(res);
 
-        Sunrise.Logger.Logger.Singelton.Write($"Tags in json: {System.Text.Json.JsonSerializer.Serialize<Types.Tag[]>(tagsArr)}");
+        _logger.LogDebug($"Tags in json: {System.Text.Json.JsonSerializer.Serialize<Types.Tag[]>(tagsArr)}");
         await cs.SaveChangesAsync();
         //проверка на нужен ли редирект на домашнюю страницу
         var r = String.IsNullOrEmpty(HttpContext.Request.Query["redirecttohome"]);

@@ -1,8 +1,8 @@
 namespace Sunrise;
 
 using Sunrise.Integrations;
-using Sunrise.Logger;
 using Sunrise.Storage;
+
 public class Program
 {
     public const string VERSION = "0.4.0";
@@ -18,15 +18,17 @@ public class Program
     #endregion
     public async static Task Main(string[] args)
     {
+        var l = LoggerBuilder<Program>();
+        l.LogInformation($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
+        l.LogInformation($"Host process PID is {System.Diagnostics.Process.GetCurrentProcess().Id}.");
+        l.LogInformation("Enter in application.");
+
         ConfigurationBuilder(args);
 
         ApplySettings();
 
         BuildTunnels();
 
-        Logger.Logger l = new Sunrise.Logger.Logger(new ConsoleLogger(), new FileLogger());
-        l.Write($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
-        l.Write("Enter in application.");
         
         TestDbConnection(Config.GetValue<bool>("createDbIfFall"));
 
