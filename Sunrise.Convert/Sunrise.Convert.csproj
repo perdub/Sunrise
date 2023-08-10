@@ -2,11 +2,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
-    <ProjectReference Include="..\Sunrise.Convert\Sunrise.Convert.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MemoryPack" Version="1.9.16" />
+    <PackageReference Include="FFMpegCore" Version="5.1.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
   </ItemGroup>
 
   <PropertyGroup>

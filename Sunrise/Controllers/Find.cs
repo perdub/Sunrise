@@ -94,7 +94,8 @@ public class FindController : Controller
         {
             //если нет, мы просто сортируем посты, пропускаем и забираем их
             var posts = sc.Posts
-                .Where(a=>a.WaitForReview==false);
+                .Where(a=>a.WaitForReview==false)
+                .Include(a=>a.File);
             System.Linq.IOrderedQueryable<Sunrise.Types.Post> tempQuery;
             System.Linq.IQueryable<Sunrise.Types.Post> finalCol;
 
@@ -116,11 +117,10 @@ public class FindController : Controller
         //создание промежуточных обьектов
         List<ScrollItem> items = new List<ScrollItem>(final.Capacity);
         foreach(var f in final){
-            Storage.Types.FileInfo fi = sc.Files.Find(f.FileId);
             items.Add(new ScrollItem(
                 f.Id,
-                fi.Paths[1],
-                (int)fi.ContentType
+                f.File.Paths[1],
+                (int)f.File.ContentType
             ));
         }
         return Ok(items);

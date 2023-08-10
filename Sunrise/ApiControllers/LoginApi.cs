@@ -36,7 +36,11 @@ public class LoginApi : Controller
         {
             newSession = new Session(u, TimeSpan.FromMinutes(20));
         }
+
+        newSession.User = u;
+
         cs.Sessions.Add(newSession);
+        u.Sessions.Add(newSession);
         cs.SaveChanges();
 
         HttpContext.Response.Cookies.Append(Constants.SESSION_COOKIE_NAME, newSession.SessionId);
@@ -59,7 +63,7 @@ public class LoginApi : Controller
                 HttpContext.Items.TryGetValue("userId", out id);
                 Guid user = (Guid)id;
                 //todo: добавить работу с кешированием!!!
-                var sessions = cs.Sessions.Where(x => x.UserId == user).ToArray();
+                var sessions = cs.Sessions.Where(x => x.User.Id == user).ToArray();
                 return Ok(sessions);
             }
             Unauthorized("need sing in");

@@ -30,13 +30,14 @@ public class PostModeratePage : SecurePageModel
 
         Post p = _context.Posts
             .Include(a => a.Tags)
+            .Include(a => a.File)
             .OrderBy(a => a.PostCreationTime)
             .Where(a => a.WaitForReview == true)
             .FirstOrDefault();
 
         //todo: add check for null
 
-        var file = _context.Files.Find(p.FileId);
+        var file = p.File;
 
         PostId = p.Id;
         Tags = p.Tags.ToArray();

@@ -24,6 +24,7 @@ public class User : IApiView
 
 
     public List<Post> Posts {get;private set;}
+    public List<Session> Sessions {get; private set;}
 
     public User(string name, string password, string email = "", long telegramUser = -1)
     {

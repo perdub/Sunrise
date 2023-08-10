@@ -7,17 +7,17 @@ public class Session
     //уникальный ид сессии
     public string SessionId{get;private set;}
     //ид пользователя
-    public Guid UserId{get;private set;}
+    public User User{get; set;}
     //может ли сессия закончится(включён ли флажок запомнить меня или чтото в этом роде)
     public bool CanExpires{get;private set;} = false;
     //дата и время последнего взаимодействия с сессией
-    public DateTime LastActivity {get;private set;}
+    public DateTime LastActivity {get; set;}
     //время до истечения сессии
     public TimeSpan SessionInactive {get;private set;}
     private Session(){}
     public Session(User user)
     {
-        UserId = user.Id;
+        User = user;
         SessionId = SunToken.GetToken();
         LastActivity = DateTime.UtcNow;
     }

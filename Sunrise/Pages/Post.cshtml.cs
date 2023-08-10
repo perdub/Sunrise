@@ -27,11 +27,11 @@ public class PostModel : PageModel
     public async Task<IActionResult> OnGetAsync(Guid postid)
     {
         //todo: rewrite this shit
-        var post = await _context.Posts.Include(a=>a.Tags).Where( b=> b.Id == postid).FirstOrDefaultAsync();
+        var post = await _context.Posts.Include(a=>a.File).Include(a=>a.Tags).Where( b=> b.Id == postid).FirstOrDefaultAsync();
         if(post==null){
             return NotFound();
         }
-        var file = await _context.Files.FindAsync(post.FileId);
+        var file = post.File;
         ContentType = file.ContentType;
         baseImageUrl = file.Paths[1];
         originalImageUrl = file.Paths[2];
