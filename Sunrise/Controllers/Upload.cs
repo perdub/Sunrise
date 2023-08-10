@@ -14,7 +14,7 @@ public class Upload : Controller
         _logger = logger;
     }
 
-    //загрузка картинки
+    /*загрузка картинки
     [RequestSizeLimit(1024 * 1024 * 128)]
     [Route("image")]
     [ProducesResponseType(StatusCodes.Status301MovedPermanently)]
@@ -47,7 +47,7 @@ public class Upload : Controller
         var r = String.IsNullOrEmpty(HttpContext.Request.Query["redirecttohome"]);
 
         return r ? Ok(new { message = "sussesful", post = newPost, file = res }) : RedirectPermanent("/");
-    }
+    }//*/
     [RequestSizeLimit(1024 * 1024 * 1024)]
     [Route("items")]
     public async Task<IActionResult> UploadEndpoint()

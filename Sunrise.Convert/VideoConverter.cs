@@ -1,11 +1,19 @@
 using FFMpegCore;
+using Sunrise.Types;
 
-namespace Sunrise.Utilities.Convert;
+namespace Sunrise.Convert;
 
 public class VideoConverter : AbstractConvert
 {
-    public override async Task Convert(string globalPath)
+    public override ContentType ContentType => ContentType.Video;
+
+    public override async Task<string[]> Convert(string globalPath, Func<string, string> nameGenerator)
     {
+        string[] fileNames = new string[]{
+            nameGenerator("jpg"),
+            nameGenerator("mp4"),
+            globalPath
+        };
         //анализ видеофайла
         var media = FFProbe.Analyse(globalPath);
         
@@ -32,7 +40,7 @@ public class VideoConverter : AbstractConvert
         await FFMpegArguments
             .FromFileInput(globalPath)
             .OutputToFile(
-                getNewFileDirection(globalPath, "base.mp4"),
+                fileNames[1],
                 true,
                 (options)=>{
                     options.UsingThreads(Constants.FFMPEG_THREADS_COUNT);
@@ -48,6 +56,8 @@ public class VideoConverter : AbstractConvert
             .ProcessAsynchronously();
 
         //сохранение превью
-        FFMpeg.Snapshot(globalPath, getNewFileDirection(globalPath, "preview.jpg"), s);
+        FFMpeg.Snapshot(globalPath, fileNames[0], s);
+
+        return fileNames;
     }
 }

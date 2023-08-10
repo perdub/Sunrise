@@ -1,26 +1,37 @@
 using SixLabors.ImageSharp;
+using Sunrise.Types;
 
-namespace Sunrise.Utilities.Convert;
+namespace Sunrise.Convert;
 
 public class ImageConverter : AbstractConvert
 {
-    public override async Task Convert(string globalPath)
+    public override ContentType ContentType => ContentType.Image;
+
+    public override async Task<string[]> Convert(string globalPath, Func<string, string> nameGenerator)
     {
+        string[] fileNames = new string[]{
+            nameGenerator("jpg"),
+            nameGenerator("jpg"),
+            globalPath
+        };
+
         var img = await Image.LoadAsync(globalPath);
         
         Size basesize = newSize(img.Size);
         img.Mutate((x)=>{
             x.Resize(basesize);
         });
-        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, "base.jpg"));
+        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, fileNames[1]));
 
         img.Mutate((x)=>{
             x.Resize(getPreviewSize(img.Size));
         });
 
-        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, "preview.jpg"));
+        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, fileNames[0]));
         
         img.Dispose();
+
+        return fileNames;
     }
 
     //проверка на размер изображения, если ислишко большой для базового - урезаем

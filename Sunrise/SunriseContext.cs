@@ -87,17 +87,20 @@ public class SunriseContext : DbContext
         var st = Sunrise.Storage.ContentServer.Singelton;
         FileInfo fi;
         Sunrise.Logger.Logger.Singelton.Write($"File {fileId} has {raw.TryGrabHeader()} header.");
+        Sunrise.Convert.AbstractConvert c;
         switch (type)
         {
             case ContentType.Image:
-                fi = await st.SaveImage(fileId, raw, filename);
+                c = new Sunrise.Convert.ImageConverter();
                 break;
             case ContentType.Video:
-                fi = await st.SaveVideo(fileId, raw, filename);
+                c = new Sunrise.Convert.VideoConverter();
                 break;
             default:
                 throw new Types.Exceptions.InvalidObjectTypeException($"Unknown type. Header: {raw.TryGrabHeader()}");
         }
+
+        fi = await st.SaveItem(c, fileId, raw, filename);
 
         Post newPost = new Post(userId, fi);
         var tagsArr = GetOrCreateTags(tags.Split(' '));
@@ -180,7 +183,9 @@ public class SunriseContext : DbContext
     {
         bld.Entity<FileInfo>().Property(x => x.Paths)
             .HasConversion(
-                a => System.Text.Json.JsonSerializer.Serialize(a, System.Text.Json.JsonSerializerOptions.Default),
+                a => System.Text.Json.JsonSerializer.Serialize(a, System.Text.Json.JsonSerializerOptions.Default)
+                    .Replace(@"\\","/")
+                    .Replace(@"//","/"),
                 b => System.Text.Json.JsonSerializer.Deserialize<string[]>(b, System.Text.Json.JsonSerializerOptions.Default)
             );
     }

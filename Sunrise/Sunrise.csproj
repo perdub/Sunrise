@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
     <ProjectReference Include="..\Sunrise.Logger\Sunrise.Logger.csproj" />
     <ProjectReference Include="..\Sunrise.Storage\Sunrise.Storage.csproj" />
+    <ProjectReference Include="..\Sunrise.Convert\Sunrise.Convert.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TelegramLocalBotApi Include="Integrations/Telegram/LocalBotApiServer/binarys/**/*.*"/>
-    <NgrokTunnel Include="Tunnels/Ngrok/binarys/**/*.*"/>
+    <TelegramLocalBotApi Include="Integrations/Telegram/LocalBotApiServer/binarys/**/*.*" />
+    <NgrokTunnel Include="Tunnels/Ngrok/binarys/**/*.*" />
   </ItemGroup>
 
   <Target Name="CopyBinarys" AfterTargets="AfterBuild">
