@@ -92,7 +92,7 @@ public class SunriseContext : DbContext
         var st = Sunrise.Storage.ContentServer.Singelton;
         
         Sunrise.Convert.AbstractConvert c;
-        Storage.Types.FileInfo fi;
+        Types.FileInfo fi;
         
         _logger?.LogDebug($"File {fileId} has {raw.TryGrabHeader()} header.");
         
