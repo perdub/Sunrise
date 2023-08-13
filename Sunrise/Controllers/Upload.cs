@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sunrise.Utilities;
+using Microsoft.AspNetCore.Http;
 namespace Sunrise.Controllers;
 
 [Route("upload")]
@@ -94,10 +95,21 @@ public class Upload : Controller
     {
         var userid = HttpContext.Items.UserId();
         var mem = new MemoryStream();
+       /* while(true){
+            byte[] buf = new byte[4096];
+
+            int r = await HttpContext.Request.Body.ReadAsync(buf,0,buf.Length);
+
+            mem.Write(buf,0,buf.Length);
+
+            if(r<4096){
+                break;
+            }
+        }*/
         await HttpContext.Request.Body.CopyToAsync(mem);
         mem.Position = 0;
         var rawItem = mem.ToByteArray(true);
-        var postid = await cs.Upload(userid, rawItem, "","");
+        var postid = await cs.Upload(userid, rawItem, '.'+HttpContext.Request.Query["extension"].ToString(),"");
         return Ok(new {postId=postid});
     }
 }

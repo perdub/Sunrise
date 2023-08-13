@@ -18,6 +18,9 @@ function createUpload()
 //загружает файл
 async function uploadFile(file, activeItems, domprogress) {
 
+    var n = file.name.split('.');
+    var ext = n[n.length-1];
+
     var config = {
         onUploadProgress: function(p){
             domprogress.value = Math.round((p.loaded * 100) / p.total);
@@ -29,7 +32,7 @@ async function uploadFile(file, activeItems, domprogress) {
     };
 
     var file = await axios.post(
-        "/upload/item", 
+        "/upload/item?extension="+ext, 
         file,
         config
     );

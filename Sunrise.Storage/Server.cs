@@ -29,9 +29,11 @@ public class ContentServer
         //hash[x].ToString() нужен из-за того что без этого язык пытается сложить два char и получает int
         var path = Path.Combine(
             globalStoragePath,
-            hash[0].ToString()+hash[1].ToString(),
-            hash[2].ToString()+hash[3].ToString(),
-            hash[4].ToString()+hash[5].ToString()
+            //создание подпапки
+            hash[0].ToString()
+            +hash[1].ToString()
+            +hash[2].ToString()
+            +hash[3].ToString()
         );
         Directory.CreateDirectory(path);
         return path;
@@ -47,7 +49,7 @@ public class ContentServer
         return string.Concat(
             Path.Combine(
                 buildpath(hash),
-                hash.Substring(6)
+                hash.Substring(4)
             ),
             '.',
             DateTime.UtcNow.Ticks,
@@ -73,7 +75,7 @@ public class ContentServer
 
         var originalFilePath = Path.Combine(
             path,
-            fileHash.Substring(6)+".o"+fileExtension
+            fileHash.Substring(4)+".o"+fileExtension
         );
 
         await File.WriteAllBytesAsync(originalFilePath, arr);
