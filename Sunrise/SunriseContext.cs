@@ -85,7 +85,7 @@ public class SunriseContext : DbContext
         return true;
     }
 
-    public async Task Upload(Guid userId, byte[] raw, string filename, string tags)
+    public async Task<Guid> Upload(Guid userId, byte[] raw, string filename, string tags)
     {
         ContentType type = raw.CheckType();
         Guid fileId = Guid.NewGuid();
@@ -110,7 +110,9 @@ public class SunriseContext : DbContext
 
         fi = await st.SaveItem(c, fileId, raw, filename);
 
-        Post newPost = new Post(userId, fi);
+        var user = Users.Find(userId);
+
+        Post newPost = new Post(userId, fi, user.CheckedUser);
         var tagsArr = GetOrCreateTags(tags.Split(' '));
 
         foreach (var tag in tagsArr)
@@ -132,6 +134,8 @@ public class SunriseContext : DbContext
         {
             _logger?.LogError(due.ToString());
         }
+
+        return newPost.Id;
     }
 
     Tag[] GetOrCreateTags(string[] tags)

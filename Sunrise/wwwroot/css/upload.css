@@ -1,0 +1,23 @@
+.upload-div{
+    height: 500px;
+    border: aqua;
+    background: #4f6f8e40;
+    display: flex;
+}
+.upload-div-text{
+    text-align: center;
+    margin: auto;
+}
+
+.upload-progress-div{
+    display: flex;
+    flex-direction: column;
+}
+.progress-bar-style{
+    width: 80%;
+    height: 18px;
+    accent-color: yellow;
+}
+.item-upload-progress{
+    width: 100%;
+}

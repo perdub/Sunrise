@@ -11,13 +11,13 @@ public class Post
     public Rating Rating {get;set;}
     private Post(){}
 
-    public Post(Guid authorId, FileInfo fileId){
+    public Post(Guid authorId, FileInfo fileId, bool waitForReview = true){
         PostCreationTime = DateTime.UtcNow;
         Tags = new List<Tag>();
         Id = Guid.NewGuid();
         this.AuthorId = authorId;
         File=fileId;
-        WaitForReview = true;
+        WaitForReview = waitForReview;
         Rating = Rating.Unset;
     }
 }

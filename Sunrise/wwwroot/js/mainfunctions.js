@@ -10,6 +10,9 @@ function grabQueryString(){
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 function getRandomBackground() {
     fetch("/random", {
         method: "POST",

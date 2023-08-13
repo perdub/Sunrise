@@ -87,4 +87,17 @@ public class Upload : Controller
 
         return r ? Ok(new { message = "sussesful" }) : RedirectPermanent("/");
     }
+
+    [Route("item")]
+    [RequestSizeLimit(1024 * 1024 * 1024)]
+    public async Task<IActionResult> UploadItem()
+    {
+        var userid = HttpContext.Items.UserId();
+        var mem = new MemoryStream();
+        await HttpContext.Request.Body.CopyToAsync(mem);
+        mem.Position = 0;
+        var rawItem = mem.ToByteArray(true);
+        var postid = await cs.Upload(userid, rawItem, "","");
+        return Ok(new {postId=postid});
+    }
 }
