@@ -112,17 +112,21 @@ public class SunriseContext : DbContext
 
         var user = Users.Find(userId);
 
-        Post newPost = new Post(userId, fi, user.CheckedUser);
+        Post newPost = new Post(userId, fi, !user.CheckedUser);
         var tagsArr = GetOrCreateTags(tags.Split(' '));
 
         foreach (var tag in tagsArr)
         {
+if(tag!=null){
             newPost.Tags.Add(tag);
             tag.Post.Add(newPost);
             tag.PostCount++;
+}
         }
 
+if(tagsArr!=null){
         Tags.UpdateRange(tagsArr);
+}
         Posts.Add(newPost);
         Files.Add(fi);
 
@@ -144,6 +148,10 @@ public class SunriseContext : DbContext
         for (int i = 0; i < tags.Length; i++)
         {
             string fr = tags[i].Process();
+            if(string.IsNullOrWhiteSpace(fr)){
+                //если финальная строка тега пустая или состоит только из пробелов то мы пропускаем этот тег(ибо он создаёт пустой тег а нахуя нам оно)
+                continue;
+            }
             var a = Tags.Where(a => a.SearchText == fr).FirstOrDefault();
             if (a == null)
             {
@@ -153,7 +161,7 @@ public class SunriseContext : DbContext
             result[i] = a;
         }
         SaveChanges();
-        return result;
+        return result.Where(a=>a!=null).ToArray();
     }
 
     public async Task<bool> UpdatePostTag(Guid postId, string newTags)

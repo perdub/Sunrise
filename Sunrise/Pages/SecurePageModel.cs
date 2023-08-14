@@ -20,7 +20,7 @@ public abstract class SecurePageModel : PageModel
         }
 
         var u = _context.Users.Find(HttpContext.Items.UserId());
-        if(u==null && (int)u.Level < (int)userPrivilege)
+        if(u==null || (int)u.Level < (int)userPrivilege)
         {
             return false;
         }

@@ -30,10 +30,7 @@ public class ContentServer
         var path = Path.Combine(
             globalStoragePath,
             //создание подпапки
-            hash[0].ToString()
-            +hash[1].ToString()
-            +hash[2].ToString()
-            +hash[3].ToString()
+            hash[0].ToString()+hash[1].ToString()
         );
         Directory.CreateDirectory(path);
         return path;
@@ -49,7 +46,7 @@ public class ContentServer
         return string.Concat(
             Path.Combine(
                 buildpath(hash),
-                hash.Substring(4)
+                hash.Substring(2)
             ),
             '.',
             DateTime.UtcNow.Ticks,
@@ -75,7 +72,7 @@ public class ContentServer
 
         var originalFilePath = Path.Combine(
             path,
-            fileHash.Substring(4)+".o"+fileExtension
+            fileHash.Substring(2)+".o"+fileExtension
         );
 
         await File.WriteAllBytesAsync(originalFilePath, arr);
@@ -90,43 +87,5 @@ public class ContentServer
         file.Paths = res;
 
         return file;
-    }   
-    /*
-    public async Task<Types.FileInfo> SaveImage(Guid id, byte[] f, string fileExtension)
-    {
-        string path = buildpath(id);
-        Types.FileInfo info = new Types.FileInfo();
-        info.ContentType = Sunrise.Types.ContentType.Image;
-        info.Id = id;
-        Directory.CreateDirectory(path);
-        string imgpath = path + "original" + fileExtension;
-        await File.WriteAllBytesAsync(imgpath, f);
-        Sunrise.Convert.AbstractConvert c = new Sunrise.Convert.ImageConverter();
-        await c.Convert(imgpath);
-        info.Paths = new string[]{
-            Path.Combine("storage", id.ToString(), "preview.jpg").Replace("\\","/"),
-            Path.Combine("storage", id.ToString(), "base.jpg").Replace("\\","/"),
-            Path.Combine("storage", id.ToString(), "original"+fileExtension).Replace("\\","/")
-        };
-        return info;
     }
-
-    public async Task<Types.FileInfo> SaveVideo(Guid id, byte[] raw, string fileExtension)
-    {
-        string path = buildpath(id);
-        Types.FileInfo info = new Types.FileInfo();
-        info.ContentType = Sunrise.Types.ContentType.Video;
-        info.Id = id;
-        Directory.CreateDirectory(path);
-        string itempath = path + "original" + fileExtension;
-        await File.WriteAllBytesAsync(itempath, raw);
-        Sunrise.Convert.AbstractConvert c = new Sunrise.Convert.VideoConverter();
-        await c.Convert(itempath);
-        info.Paths = new string[]{
-            Path.Combine("storage", id.ToString(), "preview.png").Replace("\\","/"),
-            Path.Combine("storage", id.ToString(), "base.mp4").Replace("\\","/"),
-            Path.Combine("storage", id.ToString(), "original"+fileExtension).Replace("\\","/")
-        };
-        return info;
-    }//*/
 }

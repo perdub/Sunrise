@@ -34,8 +34,10 @@ public class FindController : Controller
             Tag[] tags = new Tag[tag.Length];
             for (int i = 0; i < tags.Length; i++)
             {
+                //todo: change load type(from eager to lazy/explict)
                 tags[i] = sc.Tags
                     .Include(a => a.Post)
+                        .ThenInclude(b => b.File)
                     .Where(a => a.SearchText == tag[i])
                     .First();
             }
