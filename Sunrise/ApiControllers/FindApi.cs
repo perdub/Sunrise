@@ -31,7 +31,7 @@ public class FindApi : Controller
         var idrep = tags.Select(a => a.TagId).ToArray();
         tags = tags.OrderBy(x => x.PostCount).ToArray();
         var r = cs.Posts.Include(q => q.Tags).Include(a=>a.File)
-            .Where(a=>a.WaitForReview==false)
+            .Where(a=>(int)a.Status>0)
             .OrderByDescending(g => g.PostCreationTime)
             .AsEnumerable()
             .Where((x) =>

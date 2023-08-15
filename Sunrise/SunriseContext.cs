@@ -112,7 +112,13 @@ public class SunriseContext : DbContext
 
         var user = Users.Find(userId);
 
-        Post newPost = new Post(userId, fi, !user.CheckedUser);
+        Sunrise.Types.PostStatus status = PostStatus.WaitForReview;
+
+        if(user.CheckedUser){
+            status = PostStatus.WaitForModerate;
+        }
+
+        Post newPost = new Post(userId, fi, status);
         var tagsArr = GetOrCreateTags(tags.Split(' '));
 
         foreach (var tag in tagsArr)

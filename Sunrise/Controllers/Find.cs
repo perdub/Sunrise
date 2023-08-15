@@ -45,16 +45,16 @@ public class FindController : Controller
             tags = tags.OrderBy(a => a.PostCount).ToArray();
             //извлечение всех постов и сортировка
             List<Post> posts = new List<Post>(tags[0].Post);
-            Random r = new ();
             if(randomOrder){
+                Random r = new ();
                 posts = posts
-                    .Where(a=>a.WaitForReview==false)
+                    .Where(a=>(int)a.Status>0)
                     .OrderBy(a => r.NextDouble())
                     .ToList();
             }
             else{
                 posts = posts
-                    .Where(a=>a.WaitForReview==false)
+                    .Where(a=>(int)a.Status>0)
                     .OrderByDescending(a=>a.PostCreationTime)
                     .ToList();
             }
@@ -96,7 +96,7 @@ public class FindController : Controller
         {
             //если нет, мы просто сортируем посты, пропускаем и забираем их
             var posts = sc.Posts
-                .Where(a=>a.WaitForReview==false)
+                .Where(a=>(int)a.Status>0)
                 .Include(a=>a.File);
             System.Linq.IOrderedQueryable<Sunrise.Types.Post> tempQuery;
             System.Linq.IQueryable<Sunrise.Types.Post> finalCol;

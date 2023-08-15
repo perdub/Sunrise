@@ -32,7 +32,7 @@ public class PostModeratePage : SecurePageModel
             .Include(a => a.Tags)
             .Include(a => a.File)
             .OrderBy(a => a.PostCreationTime)
-            .Where(a => a.WaitForReview == true)
+            .Where(a => (int)a.Status<Int32.MaxValue)
             .FirstOrDefault();
 
         //todo: add check for null
@@ -66,7 +66,7 @@ public class PostModeratePage : SecurePageModel
                 }
                 var post = _context.Posts.Find(id);
                 post.Rating = (Rating)rating;
-                post.WaitForReview = false;
+                post.Status = PostStatus.ReadyToShow;
                 _context.SaveChanges();
                 break;
             case 2:

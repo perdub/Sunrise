@@ -7,17 +7,17 @@ public class Post
     public DateTime PostCreationTime {get;private set;}
     public List<Tag> Tags {get; set;}
     public FileInfo File {get;private set;}
-    public bool WaitForReview {get; set;}
+    public PostStatus Status {get; set;}
     public Rating Rating {get;set;}
     private Post(){}
 
-    public Post(Guid authorId, FileInfo fileId, bool waitForReview = true){
+    public Post(Guid authorId, FileInfo fileId, PostStatus waitForReview = PostStatus.WaitForReview){
         PostCreationTime = DateTime.UtcNow;
         Tags = new List<Tag>();
         Id = Guid.NewGuid();
         this.AuthorId = authorId;
         File=fileId;
-        WaitForReview = waitForReview;
+        Status = waitForReview;
         Rating = Rating.Unset;
     }
 }
