@@ -1,35 +1,91 @@
-﻿namespace Sunrise.Storage;
+﻿//todo: переписать это ибо тут дохуя дублирующегося кода
 
-public class Server
+namespace Sunrise.Storage;
+
+using Sunrise.Utilities;
+
+public class ContentServer
 {
     #region Singelton
-    static Server _singelton;
-    public static Server Singelton {get{return _singelton;}}
-    
-    public Server()
+    static ContentServer _singelton;
+    public static ContentServer Singelton { get { return _singelton; } }
+
+    public ContentServer()
     {
         _singelton = this;
     }
-#endregion
-    public List<Storage> Storages {get;private set;}= new List<Storage>();
-
-    public Server(params Storage[] storage) : this()
+    #endregion
+    public ContentServer(string folderName) : this()
     {
-        Storages = storage.ToList();
+        _folderName = folderName;
+        var info = Directory.CreateDirectory(folderName);
+        globalStoragePath = Path.GetFullPath(folderName);
     }
 
-    public async Task<Types.FileInfo> Save(Guid id, byte[] f, string fileName)
+    string globalStoragePath, _folderName;
+
+    string buildpath(string hash)
     {
-        Types.FileInfo res = new Types.FileInfo();
-        res.Id = id;
-        res.Paths = new string[Storages.Count];
-        for(int i = 0; i< res.Paths.Length; i++){
-            res.Paths[i] = await Storages[i].SaveAsync(id, f, fileName);
+        //hash[x].ToString() нужен из-за того что без этого язык пытается сложить два char и получает int
+        var path = Path.Combine(
+            globalStoragePath,
+            //создание подпапки
+            hash[0].ToString()+hash[1].ToString()
+        );
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
+    public string GenerateFileName(string extension)
+    {
+        //генерация случайного хеша
+        byte[] randHash = new byte[32];
+        Random.Shared.NextBytes(randHash);
+        var hash = randHash.GetSha1();
+
+        return string.Concat(
+            Path.Combine(
+                buildpath(hash),
+                hash.Substring(2)
+            ),
+            '.',
+            DateTime.UtcNow.Ticks,
+            '.',
+            extension
+        );
+    }
+
+    public async Task<Types.FileInfo> SaveItem(
+        Sunrise.Convert.AbstractConvert converter,
+        Guid id,
+        byte[] arr,
+        string fileExtension
+    ){
+        var fileHash = arr.GetSha1();
+        var path = buildpath(fileHash);
+
+        Types.FileInfo file = new Types.FileInfo();
+        
+        file.Id = id;
+        file.ContentType = converter.ContentType;
+        file.Sha1 = fileHash;
+
+        var originalFilePath = Path.Combine(
+            path,
+            fileHash.Substring(2)+".o"+fileExtension
+        );
+
+        await File.WriteAllBytesAsync(originalFilePath, arr);
+
+        var res = await converter.Convert(originalFilePath, GenerateFileName);
+
+        for(int i = 0;i<res.Length;i++)
+        {
+            res[i] = res[i].Substring(res[i].IndexOf(_folderName));
         }
-        return res;
-    }
 
-    public IEnumerator<Item> GetItems(Guid id){
-        yield return new ImageItem();
+        file.Paths = res;
+
+        return file;
     }
 }

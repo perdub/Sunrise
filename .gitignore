@@ -1,3 +1,14 @@
 [Bb]in/
 [Ll]og/
 [Oo]bj/
+app.db
+storage/
+[Ll]ogs/
+app.db-shm
+app.db-wal
+Sunrise/tokens.json
+Sunrise/telegram.json
+Sunrise/binarys/
+Sunrise/settings.json
+Sunrise/tunnels.json
+Sunrise/localTelegramBotServer/

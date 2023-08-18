@@ -1,15 +1,25 @@
 namespace Sunrise;
-using System.Web.Http;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+
+using System.Net.Http.Headers;
 
 public class AspnetHoster{
     WebApplication app;
 
-    public async Task StartApp(){
-        var builder = WebApplication.CreateBuilder();
+    public async Task StartApp(string[] args){
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.WebHost.ConfigureKestrel((x, y)=>{
+            y.ListenAnyIP(3268);
+            y.Limits.MaxRequestBodySize = (512*1024*1024);
+        });
+
+        builder.Services.AddLogging((a)=>{
+            a.AddFile("logs/app.log");
+        });
+
         builder.Services.AddRazorPages();
-        builder.Services.AddDbContext<SunriseContext>();
+        builder.Services.AddDbContext<SunriseContext>((x)=>{}, ServiceLifetime.Transient, ServiceLifetime.Scoped);
+        builder.Services.AddSingleton<Random>(new Random());
         
         builder.Services.AddControllers();
 
@@ -18,6 +28,8 @@ public class AspnetHoster{
                 y.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
             });
         });
+
+        
 
         
         app = builder.Build();
@@ -33,6 +45,23 @@ public class AspnetHoster{
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        app.UseStaticFiles(
+            new StaticFileOptions{
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                    Path.Combine(
+                        builder.Environment.ContentRootPath,
+                        "storage"
+                    )
+                ),
+                RequestPath = "/storage",
+                OnPrepareResponse = (x)=>{
+                    x.Context.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue{
+                        Public = true,
+                        MaxAge = TimeSpan.FromDays(30.5)
+                    };
+                }
+            }
+        );
 
         app.UseRouting();
         app.UseCors("corslocalapi");

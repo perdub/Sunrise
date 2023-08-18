@@ -1,0 +1,27 @@
+.text{
+    font-family: Arial, Helvetica, sans-serif;
+    color:rgb(180 184 188);
+}
+
+.image-post{
+    height: auto;
+    max-width: 90%;
+}
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+}
+
+.tags-flex{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-change-flex{
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}

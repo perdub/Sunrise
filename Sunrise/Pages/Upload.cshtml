@@ -1,0 +1,23 @@
+@page
+@model Pages.UploadPage
+
+<div>
+    <link href="/css/upload.css" type="text/css" rel="stylesheet" />
+
+    <input type="file" multiple hidden id="fileInput" />
+    <div class="upload-div" id="target"> 
+        <!--place to drop files-->
+        <p class="upload-div-text">Drop your images here or click on me to select it.</p>
+    </div>
+
+    <div id="upload-progress" class="upload-progress-div">
+        
+    </div>
+
+</div>
+<!--import axios to upload files on server-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/upload.js"></script>
+<script>
+    initUpload();
+</script>

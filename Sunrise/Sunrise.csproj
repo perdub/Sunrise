@@ -2,14 +2,35 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
-    <ProjectReference Include="..\Sunrise.Logger\Sunrise.Logger.csproj" />
     <ProjectReference Include="..\Sunrise.Storage\Sunrise.Storage.csproj" />
+    <ProjectReference Include="..\Sunrise.Convert\Sunrise.Convert.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
+    <PackageReference Include="NReco.Logging.File" Version="1.1.6" />
+    <PackageReference Include="Telegram.Bot" Version="19.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TelegramLocalBotApi Include="Integrations/Telegram/LocalBotApiServer/binarys/**/*.*" />
+    <NgrokTunnel Include="Tunnels/Ngrok/binarys/**/*.*" />
+  </ItemGroup>
+
+  <Target Name="CopyBinarys" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(TelegramLocalBotApi)" DestinationFolder="$(OutDir)/binarys/telegram-bot-server/%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(NgrokTunnel)" DestinationFolder="$(OutDir)/binarys/ngrok-tunnel/%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <ItemGroup>
+    <None Include="wwwroot\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="tokens*.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>

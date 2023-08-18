@@ -1,0 +1,58 @@
+@page
+@model Pages.PostModeratePage
+
+<div>
+    <h2>Post review</h2>
+    <div>
+        <img class="image-post" src="@Model.ItemUrl" />
+    </div>
+    <form action="" method="post">
+        <h4>Post rating</h4>
+        <div style="display: flex;">
+            <input type="radio" value="0" name="rating" checked>
+            <p>Safe</p>
+            </input>
+            <input type="radio" value="1" name="rating">
+            <p>Partial Safe</p>
+            </input>
+            <input type="radio" value="2" name="rating">
+            <p>Not Safe</p>
+            </input>
+            <input type="radio" value="3" name="rating">
+            <p>Dangerous</p>
+            </input>
+            <input type="radio" value="4" name="post-rating">
+            <p>Oh Shit</p>
+            </input>
+        </div>
+        <h4>Post tags</h4>
+            @{
+                System.Text.StringBuilder tags = new();
+                foreach (var tag in Model.Tags)
+                {
+                    tags.Append(tag.SearchText);
+                    tags.Append(' ');
+                }
+            }
+        <input type="hidden" name="id" value="@Model.PostId" />
+
+        <input type="hidden" name="mode" value="1" />
+
+        <textarea name="tags" id="tags" type="text" style="width: 90%;">
+            @tags.ToString().Trim()
+        </textarea>
+
+        <input type="submit" value="Resolve!" />
+    </form>
+    <br/>
+    <form>
+        <h4>Post delete</h4>
+        <input type="hidden" name="mode" value="1" />
+        <input type="hidden" name="id" value="@Model.PostId" />
+        <input type="submit" value="Delete" />
+    </form>
+</div>
+<script src="/js/moderate.js"></script>
+<script>
+    trackTags();
+</script>
