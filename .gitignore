@@ -12,3 +12,4 @@ src/Sunrise/binarys/
 src/Sunrise/settings.json
 src/Sunrise/tunnels.json
 src/Sunrise/localTelegramBotServer/
+tests/Sunrise.Tests/TestResults/
