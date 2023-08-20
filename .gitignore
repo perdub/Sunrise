@@ -6,9 +6,10 @@ storage/
 [Ll]ogs/
 app.db-shm
 app.db-wal
-Sunrise/tokens.json
-Sunrise/telegram.json
-Sunrise/binarys/
-Sunrise/settings.json
-Sunrise/tunnels.json
-Sunrise/localTelegramBotServer/
+src/Sunrise/tokens.json
+src/Sunrise/telegram.json
+src/Sunrise/binarys/
+src/Sunrise/settings.json
+src/Sunrise/tunnels.json
+src/Sunrise/localTelegramBotServer/
+tests/Sunrise.Tests/TestResults/
