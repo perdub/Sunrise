@@ -36,7 +36,7 @@ public class CheckTypeTests
 
         var result = Sunrise.Types.ContentTypeChecker.CheckType(arr);
 
-        Assert.Equal(Sunrise.Types.ContentType.Image, result);
+        Assert.Equal(Sunrise.Types.ContentType.Gif, result);
     }
     [Fact]
     public void CheckMp4()
