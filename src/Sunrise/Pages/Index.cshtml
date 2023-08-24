@@ -3,11 +3,17 @@
 @{
     ViewData["Title"] = "Sunrise";
 }
-
+<link href="/css/tagsautocomplete.css" type="text/css" rel="stylesheet" />
+<script src="/js/autocomplete.js"></script>
 <div class="text-center">
     <h1 class="text">Sunrise</h1>
     <div style="display: flex; justify-content: center;">
-        <input type="text" id="find">
+        <div>
+            <div>
+                <input type="text" id="find">
+            </div>
+            <div id="autocomplete" class="autocomplete-div-list"></div>
+        </div>
         <input type="button" id="search" value="Find">
         <script>
             document.getElementById("search").onclick = () => {
