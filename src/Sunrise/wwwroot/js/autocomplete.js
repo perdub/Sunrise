@@ -1,5 +1,5 @@
 function getRawTags(){
-    return document.getElementById('find').value.trim();
+    return tagInput.value.trim();
 }
 
 function getTagToComplete(){
@@ -10,7 +10,7 @@ function editTags(newTag){
     var raw = getRawTags().split(' ');
     raw.pop();
     let str = (raw.join(' ')+' '+newTag).trim();
-    document.getElementById('find').value = str;
+    tagInput.value = str;
 }
 
 async function complete(){
@@ -27,7 +27,7 @@ function clickHandler(){
 async function getSuggections(){
     showSuggections();
     var a = await complete();
-    let list = document.getElementById('autocomplete');
+    let list = tagsSuggections;
     list.innerHTML = '';
     for(let idx = 0; idx<a.length;idx++)
     {
@@ -40,19 +40,22 @@ async function getSuggections(){
 }
 
 function hideSuggections(){
-    document.getElementById('autocomplete').style.display = "none";
+    tagsSuggections.style.display = "none";
 }
 function showSuggections(){
-    document.getElementById('autocomplete').style.removeProperty('display');
+    tagsSuggections.style.removeProperty('display');
 }
 
 function eventSubscribe(){
-    var f = document.getElementById('find');
-    var list = document.getElementById('autocomplete');
+    tagInput = document.getElementById('find');
+    tagsSuggections = document.getElementById('autocomplete');
 
-    f.oninput = getSuggections;
-    f.onfocus = getSuggections;
-    f.onblur = hideSuggections;
+    tagInput.oninput = getSuggections;
+    tagInput.onfocus = getSuggections;
+    tagInput.onblur = hideSuggections;
 
-    list.style.width = f.offsetWidth+'px';
+    tagsSuggections.style.width = tagInput.offsetWidth+'px';
 }
+
+var tagInput=0;
+var tagsSuggections=0;
