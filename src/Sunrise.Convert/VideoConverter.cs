@@ -47,6 +47,7 @@ public class VideoConverter : AbstractConvert
                     options.WithVideoCodec(FFMpegCore.Enums.VideoCodec.LibX264);
                     options.WithFastStart();
                     options.WithSpeedPreset(FFMpegCore.Enums.Speed.VeryFast);
+                    options.WithCustomArgument($"-metadata comment=\"{getMetadata()}\"");
                     options.WithCustomArgument("-crf 28 -profile:v baseline -level 1 -vf \"scale=1280:720\"");
                 }
             )

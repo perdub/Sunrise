@@ -16,6 +16,14 @@ public class ImageConverter : AbstractConvert
         };
 
         var img = await Image.LoadAsync(globalPath);
+
+
+        var metadata = img.Metadata.IptcProfile;
+        if(metadata == null){
+            metadata = img.Metadata.IptcProfile = new SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcProfile();
+        }
+
+        metadata.SetValue(SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcTag.Source, getMetadata());
         
         Size basesize = newSize(img.Size);
         img.Mutate((x)=>{
