@@ -1,0 +1,8 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Sat Aug 26 19:50:26 GMT 2023","Sat Aug 26 19:50:26 GMT 2023","4","","","","Sunrise.Tests.CheckTypeTests","Test to check example webp file","Test to check example webp file",""
+"passed","Sat Aug 26 19:50:26 GMT 2023","Sat Aug 26 19:50:26 GMT 2023","0","","","","Sunrise.Tests.CheckTypeTests","Test to check example png file","Test to check example png file",""
+"passed","Sat Aug 26 19:50:26 GMT 2023","Sat Aug 26 19:50:26 GMT 2023","0","","","","Sunrise.Tests.CheckTypeTests","Test to check example avi file","Test to check example avi file",""
+"passed","Sat Aug 26 19:50:26 GMT 2023","Sat Aug 26 19:50:26 GMT 2023","0","","","","Sunrise.Tests.CheckTypeTests","Test to check example mp4 file","Test to check example mp4 file",""
+"passed","Sat Aug 26 19:50:26 GMT 2023","Sat Aug 26 19:50:26 GMT 2023","0","","","","Sunrise.Tests.CheckTypeTests","Test to check example gif file","Test to check example gif file",""
+"passed","Sat Aug 26 19:50:26 GMT 2023","Sat Aug 26 19:50:26 GMT 2023","4","","","","Sunrise.Tests.UnitTest1","Sunrise.Tests.UnitTest1.Test1","Sunrise.Tests.UnitTest1.Test1",""
+"passed","Sat Aug 26 19:50:26 GMT 2023","Sat Aug 26 19:50:26 GMT 2023","0","","","","Sunrise.Tests.CheckTypeTests","Test to check example jpg file","Test to check example jpg file",""
