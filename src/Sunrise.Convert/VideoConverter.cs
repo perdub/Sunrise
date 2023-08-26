@@ -32,14 +32,14 @@ public class VideoConverter : AbstractConvert
                 vid_w = Constants.VIDEO_CONVERTED_SIZE;
 
                 s.Height = (a.Height*Constants.PREVIEW_SIZE)/a.Width;
-                vid_h=(a.Height*Constants.VIDEO_CONVERTED_SIZE)/a.Width;
+                vid_h=global::System.Convert.ToInt32(Math.Round((a.Height*Constants.VIDEO_CONVERTED_SIZE)/(double)a.Width, MidpointRounding.ToEven));
             }
             else{
                 s.Height = Constants.PREVIEW_SIZE;
                 vid_h = Constants.VIDEO_CONVERTED_SIZE;
 
                 s.Width = (a.Width*Constants.PREVIEW_SIZE)/a.Height;
-                vid_w=(a.Width*Constants.VIDEO_CONVERTED_SIZE)/a.Height;
+                vid_w=global::System.Convert.ToInt32(Math.Round((a.Width*Constants.VIDEO_CONVERTED_SIZE)/(double)a.Height, MidpointRounding.ToEven));
             }
         }
 
