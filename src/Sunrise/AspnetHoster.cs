@@ -48,6 +48,8 @@ public class AspnetHoster{
         app.UseStaticFiles(
             new StaticFileOptions{
                 FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                    //выбор пути для хранилища если storagePath null то используется дефолтная папка в расположении приложения
+                    Program.Config.GetValue<string>("storagePath") ?? 
                     Path.Combine(
                         builder.Environment.ContentRootPath,
                         "storage"

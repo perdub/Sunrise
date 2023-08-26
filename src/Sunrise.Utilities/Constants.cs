@@ -12,4 +12,6 @@ public static class Constants
     public const int FFMPEG_THREADS_COUNT = 2;
     //количество постов для подзагрузки ленты с постами
     public const int POST_PER_SCROLL = 5;
+    //сколько символов будет убиратся из начала имени файла для соответствия структуре файловой системы
+    public const int FILE_NAME_SYMBOL_SLICE_COUNT = 4;
 }

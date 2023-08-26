@@ -35,7 +35,8 @@ public class PostModel : PageModel
         ContentType = file.ContentType;
         baseImageUrl = file.Paths[1];
         originalImageUrl = file.Paths[2];
-        createTime = post.PostCreationTime.ToString("o")+'Z';
+        //todo: if we use sqlite we need add a Z to and for right date formatting but with postgresql Z exsist in string(?)
+        createTime = post.PostCreationTime.ToString("o");
         var author = await _context.Users.FindAsync(post.AuthorId);
         authorName = author?.Name;
         authorId = author.Id.ToString();

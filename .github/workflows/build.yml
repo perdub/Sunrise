@@ -24,7 +24,7 @@ jobs:
       id: setup-ffmpeg
         
     - name: Build
-      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }}
+      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }} --logger "console;verbosity=detailed"
 
   build:
     needs: test
