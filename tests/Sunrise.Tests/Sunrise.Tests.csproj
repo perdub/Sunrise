@@ -23,6 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Convert\mp4converttest.mp4" />
+    <EmbeddedResource Include="Convert\jpgconverttest.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Sunrise\Sunrise.csproj" />
     <ProjectReference Include="..\..\src\Sunrise.Utilities\Sunrise.Utilities.csproj" />
   </ItemGroup>
