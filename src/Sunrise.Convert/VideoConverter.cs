@@ -40,8 +40,15 @@ public class VideoConverter : AbstractConvert
 
                 s.Width = (a.Width*Constants.PREVIEW_SIZE)/a.Height;
                 vid_w=global::System.Convert.ToInt32(Math.Round((a.Width*Constants.VIDEO_CONVERTED_SIZE)/(double)a.Height, MidpointRounding.ToEven));
+                
             }
         }
+                if(vid_w%2!=0){
+                    vid_w--;
+                }
+                if(vid_h%2!=0){
+                    vid_h--;
+                }
 
         Guid convertId = Guid.NewGuid();
         Console.WriteLine($"New convert task with id {convertId} started.");
