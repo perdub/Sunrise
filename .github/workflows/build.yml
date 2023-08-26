@@ -6,7 +6,6 @@ on:
 
 jobs:
 
-
   test:
     strategy:
       matrix:
@@ -24,7 +23,7 @@ jobs:
     - name: Upload Allure
       uses: actions/upload-artifact@v3
       with:
-        name: allure-${{github.ref_name}}-${{github.sha}}-${{ matrix.configuration }}
+        name: allure-${{github.sha}}-${{ matrix.configuration }}
         path: tests/Sunrise.Tests/bin/${{ matrix.configuration }}/net7.0/allure-results
 
   build:
@@ -58,7 +57,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: allure-${{github.ref_name}}-${{github.sha}}-${{ matrix.configuration }}
+        name: allure-${{github.sha}}-${{ matrix.configuration }}
         path: allure-results
 
 
