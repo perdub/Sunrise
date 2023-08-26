@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Allure.XUnit" Version="2.1.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -26,5 +27,11 @@
     <ProjectReference Include="..\..\src\Sunrise\Sunrise.csproj" />
     <ProjectReference Include="..\..\src\Sunrise.Utilities\Sunrise.Utilities.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+      <Content Include="allureConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 
 </Project>
