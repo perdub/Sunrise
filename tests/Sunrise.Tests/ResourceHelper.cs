@@ -4,6 +4,7 @@ namespace Sunrise.Tests;
 
 public static class ResourceHelper
 {
+    
     public static byte[] GetResource(string resourceName)
     {
         Assembly asm = Assembly.GetExecutingAssembly();

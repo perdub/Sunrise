@@ -1,8 +1,9 @@
 namespace Sunrise.Tests;
-
+[AllureOwner("perdub")]
+[AllureTag("TagProcess")]
 public class TagProcess
 {
-    [Fact]
+    [AllureXunit]
     public void TagsProcessTest1girl()
     {
         string tagInput = "1girl";
@@ -13,7 +14,7 @@ public class TagProcess
         Assert.Equal(tagExpected, result);
     }
 
-    [Fact]
+    [AllureXunit]
     public void TagsProcessTest1girlTrim()
     {
         string tagInput = "  1girl   \n";
@@ -24,7 +25,7 @@ public class TagProcess
         Assert.Equal(tagExpected, result);
     }
 
-    [Fact]
+    [AllureXunit]
     public void TagsProcessTest1girlRemoveSymbols()
     {
         string tagInput = "1girl!?_-a";

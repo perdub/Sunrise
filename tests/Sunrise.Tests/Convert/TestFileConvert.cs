@@ -1,7 +1,8 @@
 using Xunit.Abstractions;
 
 namespace Sunrise.Tests;
-
+[AllureOwner("perdub")]
+[AllureTag("FileConvert")]
 public class FileConvert
 {
     private readonly ITestOutputHelper output;
@@ -11,7 +12,7 @@ public class FileConvert
         this.output = output;
     }
 
-    [Fact]
+    [AllureXunit(DisplayName = "Test to convert image")]
     public void ConvertImage()
     {
         //act
@@ -38,7 +39,7 @@ public class FileConvert
         }
 
 
-[Fact]
+[AllureXunit(DisplayName = "Test to convert video")]
         public void ConvertVideo()
     {
         //act
