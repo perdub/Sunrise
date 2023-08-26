@@ -23,7 +23,7 @@ public class ImageConverter : AbstractConvert
             metadata = img.Metadata.IptcProfile = new SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcProfile();
         }
 
-        metadata.SetValue(SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcTag.Source, getMetadata());
+        metadata.SetValue(SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcTag.Caption, getMetadata());
         
         Size basesize = newSize(img.Size);
         img.Mutate((x)=>{

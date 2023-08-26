@@ -16,9 +16,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
+    #install ffmpeg to video convert
+    #todo: use precompiled binarys if not found
+    - uses: FedericoCarboni/setup-ffmpeg@v2
+      id: setup-ffmpeg
         
     - name: Build
-      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }}
+      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }} --logger "console;verbosity=detailed"
 
     - name: Upload Allure
       uses: actions/upload-artifact@v3
