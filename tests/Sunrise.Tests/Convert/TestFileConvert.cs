@@ -29,9 +29,9 @@ public class FileConvert
         //todo: change check method!
         Assert.Equal(3, result.Length);
 
-        Allure.XUnit.AllureAttachments.File("original", originalPath);
-        Allure.XUnit.AllureAttachments.File("preview", result[0]);
-        Allure.XUnit.AllureAttachments.File("base", result[1]);
+        Allure.XUnit.AllureAttachments.File("original", originalPath).Wait();
+        Allure.XUnit.AllureAttachments.File("preview", result[0]).Wait();
+        Allure.XUnit.AllureAttachments.File("base", result[1]).Wait();
 
         output.WriteLine("Converted images from Sunrise.Tests.FileConvert.ConvertImage()");
         foreach(var a in result){
@@ -59,6 +59,12 @@ public class FileConvert
         //if realy i dont know what we need check in this test so we look on count of output path
         //todo: change check method!
         Assert.Equal(3, result.Length);
+
+        //on this point test are passed and we only upload his results lol
+
+        Allure.XUnit.AllureAttachments.File("original", originalPath).Wait();
+        Allure.XUnit.AllureAttachments.File("preview", result[0]).Wait();
+        Allure.XUnit.AllureAttachments.File("base", result[1]).Wait();
 
         output.WriteLine("Converted video from Sunrise.Tests.FileConvert.ConvertVideo()");
         foreach(var a in result){
