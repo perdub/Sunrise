@@ -3,7 +3,7 @@ namespace Sunrise.Tests;
 [AllureTag("Sha1Test")]
 public class GetSha1Tests
 {
-    [AllureXunit(DisplayName = "Try to hash bytes")]
+    [AllureXunit]
     public void Sha1HashBytes_0x12()
     {
         byte[] byteInput = new byte[]{0x12};
@@ -14,7 +14,7 @@ public class GetSha1Tests
         Assert.Equal(hashString, strHash);
     }
 
-    [AllureXunit(DisplayName = "Try to hash bytes")]
+    [AllureXunit]
     public void Sha1HashBytes_0x88996584ff()
     {
         byte[] byteInput = new byte[]{0x88, 0x99, 0x65, 0x84, 0xff};

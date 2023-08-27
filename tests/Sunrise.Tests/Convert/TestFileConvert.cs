@@ -29,6 +29,10 @@ public class FileConvert
         //todo: change check method!
         Assert.Equal(3, result.Length);
 
+        Allure.XUnit.AllureAttachments.File("original", originalPath);
+        Allure.XUnit.AllureAttachments.File("preview", result[0]);
+        Allure.XUnit.AllureAttachments.File("base", result[1]);
+
         output.WriteLine("Converted images from Sunrise.Tests.FileConvert.ConvertImage()");
         foreach(var a in result){
             output.WriteLine(a);
