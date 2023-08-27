@@ -1,8 +1,10 @@
+
+
 namespace Sunrise.Tests;
 
 public class UnitTest1
 {
-    [Fact]
+    [AllureXunit]
     public void Test1()
     {
         

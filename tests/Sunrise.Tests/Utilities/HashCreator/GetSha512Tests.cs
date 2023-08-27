@@ -1,8 +1,9 @@
 namespace Sunrise.Tests;
-
+[AllureOwner("perdub")]
+[AllureTag("Sha512Test")]
 public class GetSha512Tests
 {
-    [Fact]
+    [AllureXunit]
     public void Sha512HashString_1girl()
     {
         string strInput = "1girl";
@@ -13,7 +14,7 @@ public class GetSha512Tests
         Assert.Equal(hashString, strHash);
     }
 
-    [Fact]
+    [AllureXunit]
     public void Sha512HashString_12345678()
     {
         string strInput = "12345678";

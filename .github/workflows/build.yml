@@ -6,7 +6,33 @@ on:
 
 jobs:
 
+  test:
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    #install ffmpeg to video convert
+    #todo: use precompiled binarys if not found
+    - uses: FedericoCarboni/setup-ffmpeg@v2
+      id: setup-ffmpeg
+        
+    - name: Build
+      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }} --logger "console;verbosity=detailed"
+
+    - name: Upload Allure
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure-${{github.sha}}-${{ matrix.configuration }}
+        path: tests/Sunrise.Tests/bin/${{ matrix.configuration }}/net7.0/allure-results
+
   build:
+    needs: test
     strategy:
       matrix:
         configuration: [Debug, Release]
@@ -18,26 +44,53 @@ jobs:
       uses: actions/checkout@v3
         
     - name: Build
-      run: dotnet build src/Sunrise/Sunrise.csproj -c ${{ matrix.configuration }}
+      run: dotnet publish src/Sunrise/Sunrise.csproj -c ${{ matrix.configuration }} --force
 
     - name: Upload
       uses: actions/upload-artifact@v3
       with:
         name: Binarys
-        path: src/Sunrise/bin/${{ matrix.configuration }}/net7.0/ # or path/to/artifact
-
-  test:
+        path: src/Sunrise/bin/${{ matrix.configuration }}/net7.0/publish # or path/to/artifact
+  
+  allure:
+    needs: test
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: [Release]
+    runs-on: ubuntu-latest
 
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-        
-    - name: Build
-      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }}
+    - uses: actions/download-artifact@v3
+      with:
+        name: allure-${{github.sha}}-${{ matrix.configuration }}
+        path: allure-results
 
 
+    - name: Get Allure Reports
+      uses: actions/checkout@v2
+      if: always()
+      continue-on-error: true
+      with:
+        ref: allure-reports
+        path: allure-reports
+
+    - name: Allure Report action from marketplace
+      uses: simple-elf/allure-report-action@master
+      if: always()
+      #id: allure-report
+      with:
+        allure_results: allure-results
+        gh_pages: allure-reports
+        #allure_report: allure-report
+        allure_history: allure-reports
+        keep_reports: 20
+
+    - name: Deploy report to Github Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v2
+      env:
+        PERSONAL_TOKEN: ${{ github.token }}
+        PUBLISH_BRANCH: allure-reports
+        PUBLISH_DIR: allure-reports
+
+    

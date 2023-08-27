@@ -15,14 +15,15 @@ public class ContentServer
         _singelton = this;
     }
     #endregion
-    public ContentServer(string folderName) : this()
+    public ContentServer(string folderName, string prefix) : this()
     {
         _folderName = folderName;
+        _prefix=prefix;
         var info = Directory.CreateDirectory(folderName);
         globalStoragePath = Path.GetFullPath(folderName);
     }
 
-    string globalStoragePath, _folderName;
+    string globalStoragePath, _folderName, _prefix;
 
     string buildpath(string hash)
     {
@@ -30,7 +31,8 @@ public class ContentServer
         var path = Path.Combine(
             globalStoragePath,
             //создание подпапки
-            hash[0].ToString()+hash[1].ToString()
+            hash[0].ToString()+hash[1].ToString(),
+            hash[2].ToString()+hash[3].ToString()
         );
         Directory.CreateDirectory(path);
         return path;
@@ -46,7 +48,7 @@ public class ContentServer
         return string.Concat(
             Path.Combine(
                 buildpath(hash),
-                hash.Substring(2)
+                hash.Substring(Constants.FILE_NAME_SYMBOL_SLICE_COUNT)
             ),
             '.',
             DateTime.UtcNow.Ticks,
@@ -61,29 +63,32 @@ public class ContentServer
         byte[] arr,
         string fileExtension
     ){
+        //подсчёт хеша
         var fileHash = arr.GetSha1();
         var path = buildpath(fileHash);
-
+        //создание обьекта файла и запись типа хеша и айди
         Types.FileInfo file = new Types.FileInfo();
         
         file.Id = id;
         file.ContentType = converter.ContentType;
         file.Sha1 = fileHash;
-
+        //создание имени оригинального файла
         var originalFilePath = Path.Combine(
             path,
-            fileHash.Substring(2)+".o"+fileExtension
+            fileHash.Substring(Constants.FILE_NAME_SYMBOL_SLICE_COUNT)+".o"+fileExtension
         );
-
+        //запись изходного файла
         await File.WriteAllBytesAsync(originalFilePath, arr);
-
+        //конвертация
         var res = await converter.Convert(originalFilePath, GenerateFileName);
-
+        //обрезка(?) путей
         for(int i = 0;i<res.Length;i++)
         {
-            res[i] = res[i].Substring(res[i].IndexOf(_folderName));
+            res[i] = res[i]
+                .Substring(res[i].IndexOf(_folderName))
+                .Replace(_folderName, _prefix);
         }
-
+        //присвоение путей обьекту
         file.Paths = res;
 
         return file;

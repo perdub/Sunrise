@@ -1,8 +1,10 @@
 namespace Sunrise.Tests;
-
+//todo:rewrite this from ftba to resources
+[AllureOwner("perdub")]
+[AllureTag("CheckTypes")]
 public class CheckTypeTests
 {
-    [Fact]
+    [AllureXunit(DisplayName = "Test to check example jpg file" )]
     public void CheckJpg()
     {
         var arr = ftba.Files.Files._test_jpg;
@@ -11,7 +13,7 @@ public class CheckTypeTests
 
         Assert.Equal(Sunrise.Types.ContentType.Image, result);
     }
-    [Fact]
+    [AllureXunit(DisplayName = "Test to check example png file" )]
     public void CheckPng()
     {
         var arr = ftba.Files.Files._test_png;
@@ -20,7 +22,7 @@ public class CheckTypeTests
 
         Assert.Equal(Sunrise.Types.ContentType.Image, result);
     }
-    [Fact]
+    [AllureXunit(DisplayName = "Test to check example webp file" )]
     public void CheckWebp()
     {
         var arr = ftba.Files.Files._test_webp;
@@ -29,7 +31,7 @@ public class CheckTypeTests
 
         Assert.Equal(Sunrise.Types.ContentType.Image, result);
     }
-    [Fact]
+    [AllureXunit(DisplayName = "Test to check example gif file" )]
     public void CheckGif()
     {
         var arr = ftba.Files.Files._test_gif;
@@ -38,7 +40,7 @@ public class CheckTypeTests
 
         Assert.Equal(Sunrise.Types.ContentType.Gif, result);
     }
-    [Fact]
+    [AllureXunit(DisplayName = "Test to check example mp4 file" )]
     public void CheckMp4()
     {
         var arr = ftba.Files.Files._testmp4_with_audio_mp4;
@@ -47,7 +49,7 @@ public class CheckTypeTests
 
         Assert.Equal(Sunrise.Types.ContentType.Video, result);
     }
-    [Fact]
+    [AllureXunit(DisplayName = "Test to check example avi file" )]
     public void CheckAvi()
     {
         var arr = ftba.Files.Files._testAudioVideoInterleave_avi;

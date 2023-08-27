@@ -1,4 +1,5 @@
 {
-    "dbConnectionString":"Data Source=app.db",
-    "createDbIfFall":true
+    "dbConnectionString":"Host=127.0.0.1;Port=5432;Database=Sunrise;Username=postgres;Password=password",
+    "createDbIfFall":true,
+    "storagePath":null
 }

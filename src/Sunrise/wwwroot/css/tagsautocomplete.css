@@ -1,0 +1,12 @@
+.tag_item{
+    margin: 0
+}
+
+.tag_item:hover{
+    background-color: #646ae4
+}
+
+.autocomplete-div-list{
+    position: absolute;
+    background-color: white;
+}

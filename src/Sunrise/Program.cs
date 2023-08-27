@@ -35,6 +35,7 @@ public class Program
         RunTelegramBot(args);
 
         ContentServer s = new ContentServer(
+                Config.GetValue<string>("storagePath") ?? "storage",
                 "storage"
         );
 
