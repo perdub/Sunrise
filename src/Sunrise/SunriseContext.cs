@@ -28,7 +28,7 @@ public class SunriseContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string? connectionString = Program.Config.GetValue<string>("dbConnectionString");
-        string defaultConnection = "Host=localhost;Port=5432;Database=Sunrise;Username=postgres;Password=password";
+        string defaultConnection = "Host=127.0.0.1;Port=5432;Database=Sunrise;Username=postgres;Password=password";
         _logger?.LogDebug("Init connection to database...");
         optionsBuilder.UseNpgsql(string.IsNullOrWhiteSpace(connectionString) ? defaultConnection : connectionString);
         _logger?.LogDebug("Connected!");

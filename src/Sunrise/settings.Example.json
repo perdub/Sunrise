@@ -1,5 +1,5 @@
 {
-    "dbConnectionString":"Host=localhost;Port=5432;Database=Sunrise;Username=postgres;Password=password",
+    "dbConnectionString":"Host=127.0.0.1;Port=5432;Database=Sunrise;Username=postgres;Password=password",
     "createDbIfFall":true,
     "storagePath":null
 }
