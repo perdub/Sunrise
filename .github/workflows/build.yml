@@ -21,9 +21,12 @@ jobs:
     #todo: use precompiled binarys if not found
     - uses: FedericoCarboni/setup-ffmpeg@v2
       id: setup-ffmpeg
+
+    - uses: ikalnytskyi/action-setup-postgres@v4
+      id: setup-postgresql
         
-    - name: Build
-      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }} --logger "console;verbosity=detailed"
+    - name: Test
+      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }} --logger "console;verbosity=detailed" -- --ConnectionStrings:PostgreSqlConnection="Host=127.0.0.1;Port=5432;Database=Sunrise.Tests-Test;Username=postgres;Password=postgres"
 
     - name: Upload Allure
       uses: actions/upload-artifact@v3
