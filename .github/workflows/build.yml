@@ -24,9 +24,17 @@ jobs:
 
     - uses: ikalnytskyi/action-setup-postgres@v4
       id: setup-postgresql
+
+    - name: Write config
+      uses: "DamianReeves/write-file-action@master"
+      with:
+        path: tests/Sunrise.Tests/appsettings.json
+        write-mode: overwrite
+        contents: |
+          {"ConnectionStrings": {"PostgreSqlConnection": "Host=127.0.0.1;Port=5432;Database=Sunrise.Tests-Test;Username=postgres;Password=postgres"}}
         
     - name: Test
-      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }} --logger "console;verbosity=detailed" -- --ConnectionStrings:PostgreSqlConnection="Host=127.0.0.1;Port=5432;Database=Sunrise.Tests-Test;Username=postgres;Password=postgres"
+      run: dotnet test tests/Sunrise.Tests/Sunrise.Tests.csproj -c ${{ matrix.configuration }} --logger "console;verbosity=detailed"
 
     - name: Upload Allure
       uses: actions/upload-artifact@v3
