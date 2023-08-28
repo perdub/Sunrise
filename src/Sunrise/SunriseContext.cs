@@ -19,22 +19,36 @@ public class SunriseContext : DbContext
 
     public SunriseContext(Log? logger = null, bool ensureCreated = false)
     {
+        ctor(logger, ensureCreated);
+    }
+
+    public SunriseContext(DbContextOptions<SunriseContext> options, Log? logger = null, bool ensureCreated = false) : base(options)
+    {
+        ctor(logger, ensureCreated);
+    }
+
+    void ctor(Log? logger = null, bool ensureCreated = false)
+    {
         _logger = logger;
 
         if (ensureCreated)
             Database.EnsureCreated();
+
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string? connectionString = Program.Config.GetValue<string>("dbConnectionString");
-        string defaultConnection = "Host=127.0.0.1;Port=5432;Database=Sunrise;Username=postgres;Password=password";
-        _logger?.LogDebug("Init connection to database...");
-        optionsBuilder.UseNpgsql(string.IsNullOrWhiteSpace(connectionString) ? defaultConnection : connectionString);
-        _logger?.LogDebug("Connected!");
+        if (!optionsBuilder.IsConfigured)
+        {
+            string? connectionString = Program.Config.GetValue<string>("dbConnectionString");
+            string defaultConnection = "Host=127.0.0.1;Port=5432;Database=Sunrise;Username=postgres;Password=password";
+            _logger?.LogDebug("Init connection to database...");
+            optionsBuilder.UseNpgsql(string.IsNullOrWhiteSpace(connectionString) ? defaultConnection : connectionString);
+            _logger?.LogDebug("Connected!");
 #if DEBUG
-        optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.EnableSensitiveDataLogging();
 #endif
+        }
     }
 
 
@@ -91,12 +105,12 @@ public class SunriseContext : DbContext
         ContentType type = raw.CheckType();
         Guid fileId = Guid.NewGuid();
         var st = Sunrise.Storage.ContentServer.Singelton;
-        
+
         Sunrise.Convert.AbstractConvert c;
         Types.FileInfo fi;
-        
+
         _logger?.LogDebug($"File {fileId} has {raw.TryGrabHeader()} header.");
-        
+
         switch (type)
         {
             case ContentType.Image:
@@ -115,7 +129,8 @@ public class SunriseContext : DbContext
 
         Sunrise.Types.PostStatus status = PostStatus.WaitForReview;
 
-        if(user.CheckedUser){
+        if (user.CheckedUser)
+        {
             status = PostStatus.WaitForModerate;
         }
 
@@ -124,16 +139,18 @@ public class SunriseContext : DbContext
 
         foreach (var tag in tagsArr)
         {
-if(tag!=null){
-            newPost.Tags.Add(tag);
-            tag.Post.Add(newPost);
-            tag.PostCount++;
-}
+            if (tag != null)
+            {
+                newPost.Tags.Add(tag);
+                tag.Post.Add(newPost);
+                tag.PostCount++;
+            }
         }
 
-if(tagsArr!=null){
-        Tags.UpdateRange(tagsArr);
-}
+        if (tagsArr != null)
+        {
+            Tags.UpdateRange(tagsArr);
+        }
         Posts.Add(newPost);
         Files.Add(fi);
 
@@ -155,7 +172,8 @@ if(tagsArr!=null){
         for (int i = 0; i < tags.Length; i++)
         {
             string fr = tags[i].Process();
-            if(string.IsNullOrWhiteSpace(fr)){
+            if (string.IsNullOrWhiteSpace(fr))
+            {
                 //если финальная строка тега пустая или состоит только из пробелов то мы пропускаем этот тег(ибо он создаёт пустой тег а нахуя нам оно)
                 continue;
             }
@@ -168,7 +186,7 @@ if(tagsArr!=null){
             result[i] = a;
         }
         SaveChanges();
-        return result.Where(a=>a!=null).ToArray();
+        return result.Where(a => a != null).ToArray();
     }
 
     public async Task<bool> UpdatePostTag(Guid postId, string newTags)
@@ -176,13 +194,15 @@ if(tagsArr!=null){
         //todo: rewrite this
 
         //вполне можно не удалять сначала все теги и потом добавлять новые, а проходить по всем тегам и удалять/добавлять их
-        var post = Posts.Include(a=>a.Tags).Where(a=>a.Id==postId).FirstOrDefault();
-        if(post == null){
-            return false; 
+        var post = Posts.Include(a => a.Tags).Where(a => a.Id == postId).FirstOrDefault();
+        if (post == null)
+        {
+            return false;
         }
 
         int cv = post.Tags.Count();
-        for(int i = 0;i<cv;i++){
+        for (int i = 0; i < cv; i++)
+        {
             post.Tags[i].PostCount--;
             post.Tags[i].Post.Remove(post);
         }
@@ -190,20 +210,21 @@ if(tagsArr!=null){
         post.Tags = new List<Tag>();
 
         Tag[] arr = GetOrCreateTags(newTags.Split());
-        for(int i = 0; i<arr.Length;i++){
+        for (int i = 0; i < arr.Length; i++)
+        {
             post.Tags.Add(arr[i]);
             arr[i].Post.Add(post);
             arr[i].PostCount++;
         }
 
         await SaveChangesAsync();
-        
+
         return true;
     }
 
     public async void DeletePost(Guid postID)
     {
-        
+
     }
 
     protected override void OnModelCreating(ModelBuilder bld)
@@ -211,8 +232,8 @@ if(tagsArr!=null){
         bld.Entity<FileInfo>().Property(x => x.Paths)
             .HasConversion(
                 a => System.Text.Json.JsonSerializer.Serialize(a, System.Text.Json.JsonSerializerOptions.Default)
-                    .Replace(@"\\","/")
-                    .Replace(@"//","/"),
+                    .Replace(@"\\", "/")
+                    .Replace(@"//", "/"),
                 b => System.Text.Json.JsonSerializer.Deserialize<string[]>(b, System.Text.Json.JsonSerializerOptions.Default)
             );
     }

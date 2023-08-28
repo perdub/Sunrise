@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Sunrise.Types;
 
 namespace Sunrise.Controllers;
 
@@ -12,12 +13,13 @@ public class StatisticsController : Controller{
     
     [Route("/stats")]
     public IActionResult GetStatistic(){
-        return Ok(new {
-            post = sc.Posts.Count(),
+        ServerStats s = new ServerStats{
+            posts = sc.Posts.Count(),
             tags = sc.Tags.Count(),
             users = sc.Users.Count(),
-            uptime = (DateTime.UtcNow-Program.StartTime),
+            uptime = DateTime.UtcNow - Program.StartTime,
             version = $"{Program.VERSION}-{Program.CONFIG}"
-        });
+        };
+        return Ok(s);
     }
 }
