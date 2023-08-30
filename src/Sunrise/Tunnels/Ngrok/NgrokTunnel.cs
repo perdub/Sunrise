@@ -13,6 +13,7 @@ public class NgrokTunnel : ITunnel
     {
         if(config.GetValue<bool>("ngrok:useNgrok")==false){
             logger.LogWarning($"\"useNgrok\" is false, ngrok agent will not start.");
+            return;
         }
         ngrok = new Process();
 
