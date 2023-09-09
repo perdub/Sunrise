@@ -6,15 +6,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-
+public partial class TopLevelLongPollResult{
+    [JsonProperty("response")]
+    public LongPollResult response{get;set;}
+}
 public partial class LongPollResult
 {
     [JsonProperty("key")]
-    public string Key { get; set; }
+    public string key { get; set; }
 
     [JsonProperty("server")]
-    public Uri Server { get; set; }
+    public string server { get; set; }
 
     [JsonProperty("ts")]
-    public string Ts { get; set; }
+    public string ts { get; set; }
 }

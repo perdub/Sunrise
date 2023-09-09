@@ -8,7 +8,7 @@ namespace Sunrise.Integrations.Vk.Types
     using System.Globalization;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
-
+[System.Diagnostics.DebuggerStepThrough]
     public partial class UpdateResult
     {
         [JsonProperty("failed")]
@@ -115,6 +115,8 @@ namespace Sunrise.Integrations.Vk.Types
 
         [JsonProperty("wall")]
         public Wall Wall { get; set; }
+        [JsonProperty("photo")]
+        public Photo Photo {get;set;}
     }
 
     public partial class Wall
