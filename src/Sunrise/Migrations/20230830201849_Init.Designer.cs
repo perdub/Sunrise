@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Sunrise;
 
 #nullable disable
@@ -11,22 +12,26 @@ using Sunrise;
 namespace Sunrise.Migrations
 {
     [DbContext(typeof(SunriseContext))]
-    [Migration("20230804193004_AddRatingToPosts")]
-    partial class AddRatingToPosts
+    [Migration("20230830201849_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("PostTag", b =>
                 {
                     b.Property<Guid>("PostId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("TagsTagId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("PostId", "TagsTagId");
 
@@ -35,18 +40,22 @@ namespace Sunrise.Migrations
                     b.ToTable("PostTag");
                 });
 
-            modelBuilder.Entity("Sunrise.Storage.Types.FileInfo", b =>
+            modelBuilder.Entity("Sunrise.Types.FileInfo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("ContentType")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Paths")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
+
+                    b.Property<string>("Sha1")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -57,27 +66,29 @@ namespace Sunrise.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AuthorId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("FileId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("PostCreationTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("WaitForReview")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FileId");
 
                     b.HasIndex("UserId");
 
@@ -87,21 +98,23 @@ namespace Sunrise.Migrations
             modelBuilder.Entity("Sunrise.Types.Session", b =>
                 {
                     b.Property<string>("SessionId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<bool>("CanExpires")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastActivity")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<TimeSpan>("SessionInactive")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("interval");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("SessionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Sessions");
                 });
@@ -110,22 +123,24 @@ namespace Sunrise.Migrations
                 {
                     b.Property<int>("TagId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TagId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullText")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int>("PostCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("SearchText")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("TagId");
 
@@ -136,34 +151,37 @@ namespace Sunrise.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("AccountCreationTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("CheckedUser")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int>("Level")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<long>("TelegramAccountId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("VerifyUser")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("VkAccountId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -174,16 +192,18 @@ namespace Sunrise.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Verify");
                 });
@@ -205,14 +225,46 @@ namespace Sunrise.Migrations
 
             modelBuilder.Entity("Sunrise.Types.Post", b =>
                 {
+                    b.HasOne("Sunrise.Types.FileInfo", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Sunrise.Types.User", null)
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("File");
+                });
+
+            modelBuilder.Entity("Sunrise.Types.Session", b =>
+                {
+                    b.HasOne("Sunrise.Types.User", "User")
+                        .WithMany("Sessions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Sunrise.Types.Verify", b =>
+                {
+                    b.HasOne("Sunrise.Types.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Sunrise.Types.User", b =>
                 {
                     b.Navigation("Posts");
+
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

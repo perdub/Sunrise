@@ -11,6 +11,8 @@ public class User : IApiView
     public string Email {get;set;} = "";
     //айди телеграмм аккаунта(если нет то -1)
     public long TelegramAccountId {get;set;} = -1;
+    //айди вк аккаунта
+    public long VkAccountId {get;set;} = 0;
 
     public Guid Id {get;private set;}
     //дата создания аккаунта
