@@ -1,4 +1,4 @@
-@page
+@page "/login"
 @model RegistrationModel
 @{
     ViewData["Title"] = "Registration";
@@ -45,18 +45,8 @@
                 <input type="password" id="password" />
             </div>
             <div class="item-grid">
-                <select onchange="changeitem()" id="verifytype">
-                    <option value="" id="select_info">Please, select account verify method.</option>
-                    <option value="email">Email</option>
-                    <option value="telegram">Telegram</option>
-                </select>
-            </div>
-            <div data-type="0" class="item-grid verify-method-div" id="email">
-                <p class="text">You must enter your e-mail, and then for verification you will have to enter the resulting code.</p>
+                <p class="text">Email</p>
                 <input type="email" id="input-email">
-            </div>
-            <div data-type="1" class="item-grid verify-method-div" id="telegram">
-                <p class="text">You will be redirected in our telegram-boat for verification through its launch.</p>
             </div>
 
             <div class="item-grid">
@@ -78,30 +68,14 @@
         window.open("/", "_self");
     };
 
-    //код управления селектом для верификации
-    let infodel = false;
-    let lastitem = 0;
-    function changeitem(){
-        if(infodel===false){
-            document.getElementById('select_info').remove();
-            infodel = true;
-        }
-        var next = document.getElementById(document.getElementById('verifytype').value);
-        if(lastitem!=0){
-            lastitem.style.display = 'none';
-        }
-        next.style.display = 'inline';
-        lastitem = next;
-    }
+    
     //обработчик регистрации пользователя
     document.getElementById('registrationbutton').onclick = async () => {
         var r = await registry(
             document.getElementById('name').value,
             document.getElementById('password').value,
-            lastitem.dataset.type,
-
             document.getElementById('input-email').value //todo: переделать это для получения информации и с других полей
         );
-        window.open(r.open);
+        window.open(r.open, "_self");
     };
 </script>

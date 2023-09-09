@@ -14,22 +14,11 @@ public class AuthenficationController : Controller
     }
     
     [Route("registry")]
-    public async Task<IActionResult> Registry([FromBody] UserRegistrationInfov2 data)
+    public async Task<IActionResult> Registry(string username, string password, string email)
     {
-        VerifyType type = (VerifyType)data.type;
         //создание пользователя и задания для верификации
-        User u = new User(data.username, data.password);
+        User u = new User(username, password, email);
         Verify v = new Verify(u);
-
-        string tgboturl = null;
-        switch(type){
-            case VerifyType.Email:
-                u.Email = data.verifyFiled;
-                break;
-            case VerifyType.TelegramBot:
-                tgboturl = "http://t.me/SunriseImageBoardBot/?start="+v.Key;
-                break;
-        }
 
         Session s = new Session(u, TimeSpan.FromDays(10));
 
@@ -40,7 +29,6 @@ public class AuthenficationController : Controller
         cs.Sessions.Add(s);
         cs.SaveChanges();
 
-
-        return Ok(new {open=tgboturl ?? "/"});
+        return Ok(new {open="/"});
     }
 }

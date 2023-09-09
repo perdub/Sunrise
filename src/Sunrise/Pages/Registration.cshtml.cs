@@ -15,7 +15,7 @@ public class RegistrationModel : PageModel
     public async Task<IActionResult> OnGet()
     {
         if(HttpContext.Items.IsUser()){
-            return RedirectToPage($"/users/{HttpContext.Items.UserId()}/");
+            //return RedirectToPage($"/users/{HttpContext.Items.UserId()}/");
         }
         
 

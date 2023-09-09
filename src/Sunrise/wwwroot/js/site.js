@@ -19,13 +19,12 @@ async function login(login, password, remember) {
     return await res.json();
 }
 
-async function registry(username, password, verifytype, verifyfiled)
+async function registry(username, password, email)
 {
     var a = new Object();
     a.username = username.trim();
     a.password = password.trim();
-    a.type = verifytype;
-    a.verifyFiled = verifyfiled;
+    a.email=email.trim();
     var res = await fetch("/auth/registry/", {
         method: "POST",
         headers: {
