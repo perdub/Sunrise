@@ -20,6 +20,7 @@ public class StatisticsController : Controller{
             uptime = DateTime.UtcNow - Program.StartTime,
             version = $"{Program.VERSION}-{Program.CONFIG}"
         };
-        return Ok(s);
+        string result = Newtonsoft.Json.JsonConvert.SerializeObject(s);
+        return Ok(result);
     }
 }
