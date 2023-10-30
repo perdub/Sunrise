@@ -91,7 +91,7 @@ public class SunriseContext : DbContext
 
     public bool CreateNewUser(UserRegistrationInfo uri)
     {
-        if (GetUser(uri.name, true) != null)
+        if (GetUser(uri.username, true) != null)
         {
             return false;
         }

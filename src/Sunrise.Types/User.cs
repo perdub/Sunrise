@@ -37,10 +37,10 @@ public class User : IApiView
     }
 
     public User(UserRegistrationInfo uri){
-        if(string.IsNullOrWhiteSpace(uri.name) || string.IsNullOrWhiteSpace(uri.password) || string.IsNullOrWhiteSpace(uri.email)){
+        if(string.IsNullOrWhiteSpace(uri.username) || string.IsNullOrWhiteSpace(uri.password) || string.IsNullOrWhiteSpace(uri.email)){
             throw new Exceptions.InvalidParamsException("Fall to create user.");
         }
-        Name = uri.name;
+        Name = uri.username;
         PasswordHash = uri.password.GetSha512();
         Email = uri.email;
         addData();
@@ -71,7 +71,7 @@ public class User : IApiView
     }
 }
 //класс-запись для представление данных для регистрации в json
-public record class UserRegistrationInfo(string name, string password, string email);
+public record class UserRegistrationInfo(string username, string password, string email);
 //класс-запись для представление данных для Входа в json
 public record class UserLoginInfo(string name, string password, bool rememberMe = false);
 //клаасс-запись возвращающий результат попытки входа

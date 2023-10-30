@@ -14,10 +14,10 @@ public class AuthenficationController : Controller
     }
     
     [Route("registry")]
-    public async Task<IActionResult> Registry(string username, string password, string email)
+    public async Task<IActionResult> Registry([FromBody] UserRegistrationInfo uri)
     {
         //создание пользователя и задания для верификации
-        User u = new User(username, password, email);
+        User u = new User(uri.username, uri.password, uri.email);
         Verify v = new Verify(u);
 
         Session s = new Session(u, TimeSpan.FromDays(10));
