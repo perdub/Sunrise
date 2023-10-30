@@ -18,6 +18,11 @@ public class Program
     #endregion
     public async static Task Main(string[] args)
     {
+        Console.ReadKey();
+        Sunrise.Integrations.Vk.VkBot vk = new ("vk1.a.---", );
+        await vk.UpdateLongPollServer();
+        vk.ReciveUpdates();
+
         var l = LoggerBuilder<Program>();
         l.LogInformation($"Sunrise {VERSION}-{CONFIG}\nIf config is debug, version can be incorrect.");
         l.LogInformation($"Host process PID is {System.Diagnostics.Process.GetCurrentProcess().Id}.");
@@ -109,6 +114,12 @@ public class Program
 #pragma warning restore
     }
 
+    static void RunVkBot(){
+        var logger = LoggerBuilder<Sunrise.Integrations.Vk.VkBot>();
+
+        if(Config.GetValue<bool>())
+    }
+
     static ILoggerFactory factory = LoggerFactory.Create((x)=>{
             x.AddConsole();
             x.AddFile("logs/appstart.log");
@@ -128,26 +139,6 @@ public class Program
         else if(File.Exists("settings.Example.json"))
         {
             configBuilder.AddJsonFile("settings.Example.json");
-        }
-        #endregion
-        #region Telegram Config
-        if (File.Exists("telegram.json"))
-        {
-            configBuilder.AddJsonFile("telegram.json");
-        }
-        else if(File.Exists("telegram.Example.json"))
-        {
-            configBuilder.AddJsonFile("telegram.Example.json");
-        }
-        #endregion
-        #region Tunnels Config
-        if (File.Exists("tunnels.json"))
-        {
-            configBuilder.AddJsonFile("tunnels.json");
-        }
-        else if(File.Exists("tunnels.Example.json"))
-        {
-            configBuilder.AddJsonFile("tunnels.Example.json");
         }
         #endregion
         configBuilder
