@@ -25,6 +25,6 @@ public class SunriseContext: DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=usersdb;Username=postgres;Password=пароль_от_postgres");
+        optionsBuilder.UseNpgsql(_config.GetValue<string>("ConnectionString"));
     }
 }
