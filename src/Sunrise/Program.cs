@@ -37,6 +37,10 @@ public class Program
                 fixedOptions.Window = TimeSpan.FromMinutes(1);
                 fixedOptions.PermitLimit = 1;
             });
+            options.AddFixedWindowLimiter("AccountLogin", (fixedOptions)=>{
+                fixedOptions.Window = TimeSpan.FromSeconds(30);
+                fixedOptions.PermitLimit = 1;
+            });
         });
 
         
@@ -47,15 +51,17 @@ public class Program
         db.Database.EnsureCreated();
         db.Dispose();
 
+
+        app.UseMiddleware<Middleware.SessionMiddleware>();
+
         app.UseRouting();
+        
+        app.UseRateLimiter();
+
         app.UseEndpoints((a)=>{
             a.MapControllers();
             a.MapRazorPages();
         });
-
-        app.UseRateLimiter();
-
-        app.UseMiddleware<Middleware.SessionMiddleware>();
 
         app.Run();
     }

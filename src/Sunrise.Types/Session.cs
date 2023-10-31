@@ -9,6 +9,6 @@ public class Session{
     public Account Account{get;init;}
 
     //ip адреса, с которых на эту сессию были выполнены подключения
-    public System.Net.IPAddress[] IPAddresses{get;set;}
+    public List<System.Net.IPAddress> IPAddresses{get;set;} = new ();
     
 }

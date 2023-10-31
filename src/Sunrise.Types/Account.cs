@@ -13,8 +13,8 @@ public class Account{
 
     public string Email {get;private set;}
 
-    public Post[] Posts{get;private set;}
-    public Session[] Sessions{get;private set;}
+    public List<Post> Posts{get;private set;}
+    public List<Session> Sessions{get;private set;}
 
     public DateTime RegistrationDate{get;private set;}
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Sunrise.Types;
@@ -24,6 +25,7 @@ public class AccountController : Controller{
 
     [Route("create")]
     [HttpPost]
+    [EnableRateLimiting("AccountCreate")]
     public async Task<IActionResult> CreateAccount(string username, string password, string email){
         var a = _context.Accounts.Where(a=>a.Username == username).FirstOrDefault();
         #region Error if username is already taken
@@ -42,6 +44,35 @@ public class AccountController : Controller{
 
         var sessionBuilder = (Sunrise.Builders.SessionBuilder)_provider.GetService(typeof(Sunrise.Builders.SessionBuilder));
         var newSession = sessionBuilder.BuildSession(newAccount);
+
+        HttpContext.Response.Cookies.Append("Suntoken", newSession.SessionId);
+
+        return Ok();
+    }
+    
+    [HttpPost]
+    [Route("login")]
+    [EnableRateLimiting("AccountLogin")]
+    public async Task<IActionResult> Login(string username, string password){
+        var a = _context.Accounts.Where(a=>a.Username == username).FirstOrDefault();
+        if(a is null){
+            return Conflict(
+                EndpointError.BuildError(
+                    "Invalid credentails.",
+                    "Incorrect login or password.")
+            );
+        }
+        bool isAllow = a.CheckPassword(password, _config.GetValue<string>("GlobalSalt"));
+        if(!isAllow){
+            return Conflict(
+                EndpointError.BuildError(
+                    "Invalid credentails.",
+                    "Incorrect login or password.")
+            );
+        }
+
+        var sessionBuilder = (Sunrise.Builders.SessionBuilder)_provider.GetService(typeof(Sunrise.Builders.SessionBuilder));
+        var newSession = sessionBuilder.BuildSession(a);
 
         HttpContext.Response.Cookies.Append("Suntoken", newSession.SessionId);
 

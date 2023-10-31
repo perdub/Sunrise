@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Sunrise.Types;
 
@@ -10,7 +11,7 @@ public class Post{
 
     public File LinkedFile{get;set;}
 
-    public Tag[] Tags{get;set;}
+    public List<Tag> Tags{get;set;}
 
     public DateTime CreationDate{get;private set;}
 
