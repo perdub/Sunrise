@@ -12,6 +12,7 @@ public class File{
     public string fullPath {get;init;}
 
     public Post LinkedPost{get;private set;}
+    public Guid PostId{get;private set;} = Guid.Empty;
 
     [Key]
     public Guid FileId {get;set;} = Guid.Empty;

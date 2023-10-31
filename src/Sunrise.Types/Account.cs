@@ -7,7 +7,7 @@ using SharpHash.Base;
 public class Account{
     public string Username {get; private set;}
     [Key]
-    public Guid AccountId {get;} = Guid.Empty;
+    public Guid AccountId {get;private set;} = Guid.Empty;
 
     public string PasswordHash {get;private set;}
 
