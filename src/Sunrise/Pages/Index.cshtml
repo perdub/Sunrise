@@ -1,0 +1,62 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Sunrise";
+}
+<link href="/css/tagsautocomplete.css" type="text/css" rel="stylesheet" />
+<script src="/js/autocomplete.js"></script>
+<div class="text-center">
+    <h1 class="text">Sunrise</h1>
+    <div style="display: flex; justify-content: center;">
+        <div>
+            <div>
+                <input type="text" id="find">
+            </div>
+            <div id="autocomplete" class="autocomplete-div-list"></div>
+        </div>
+        <input type="button" id="search" value="Find">
+        <script>
+            document.getElementById("search").onclick = () => {
+                var geturl = "/?";
+                document.getElementById("find").value.split(' ').forEach((i) => {
+                    geturl += "tags=" + i + "&";
+                });
+                window.open(geturl, "_self");
+            };
+        </script>
+    </div>
+    <div id="result">
+        <div class="tags-flex" style="justify-content: space-around;">
+            @foreach (var item in Model.posts)
+            {
+                <div style="">
+                    <a href="/post/@item.Id">
+                        <img src="@Model.getPreview(item.File)">
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="page-change-flex">
+        @if (Model.Page > 0)
+        {
+            <a href="@Model.BuildUrl(Model.Page-1)">
+                <p class="text">&#8592;</p>
+            </a>
+        }
+        @if (!Model.IsLastPage(Model.Page))
+        {
+            <a href="@Model.BuildUrl(Model.Page+1)">
+                <p class="text">&#8594;</p>
+            </a>
+        }
+    </div>
+</div>
+<script>
+    eventSubscribe();
+</script>
+@section ChangeView{
+    <a href="/scroll">
+        <p class="text">To Scroll View</p>
+    </a>
+}

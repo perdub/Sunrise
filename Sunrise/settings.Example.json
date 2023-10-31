@@ -1,4 +1,0 @@
-{
-    "dbConnectionString":"Data Source=app.db",
-    "createDbIfFall":true
-}
