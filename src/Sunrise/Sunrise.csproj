@@ -4,6 +4,8 @@
     <ProjectReference Include="..\Sunrise.Pages\Sunrise.Pages.csproj" />
     <ProjectReference Include="..\Sunrise.Database\Sunrise.Database.csproj" />
     <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
+    <ProjectReference Include="..\Sunrise.Mvc\Sunrise.Mvc.csproj" />
+    <ProjectReference Include="..\Sunrise.Builders\Sunrise.Builders.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,5 +17,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="SunriseConfig*.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

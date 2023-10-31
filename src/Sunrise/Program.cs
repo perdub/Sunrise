@@ -1,21 +1,61 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Reflection;
 
 namespace Sunrise;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
+#region Config
+        if(File.Exists("SunriseConfig.json")){
+            builder.Configuration.AddJsonFile("SunriseConfig.json");
+        }
+        else if(File.Exists("SunriseConfig.Example.json")){
+            builder.Configuration.AddJsonFile("SunriseConfig.Example.json");
+        }
+        #endregion
+
         builder.Services.AddRazorPages();
+
+        builder.Services.AddScoped<Sunrise.Builders.SessionBuilder>();
+
+        //добавление контроллеров из Sunrise.Mvc
+        builder.Services.AddMvc()
+            .AddApplicationPart(Assembly.Load(new AssemblyName("Sunrise.Mvc")));
+
         builder.Services.AddDbContext<Sunrise.Database.SunriseContext>();
+
+        //регистрация политик ограничений запросов
+        builder.Services.AddRateLimiter((options)=>{
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            //ограничение на вызов эндпоинта для создания аккаунта (1 запрос в минуту)
+            options.AddFixedWindowLimiter("AccountCreate", (fixedOptions)=>{
+                fixedOptions.Window = TimeSpan.FromMinutes(1);
+                fixedOptions.PermitLimit = 1;
+            });
+        });
+
+        
 
         var app = builder.Build();
 
-        app.MapRazorPages();
+        var db = app.Services.GetService<Sunrise.Database.SunriseContext>();
+        db.Database.EnsureCreated();
+        db.Dispose();
 
-        app.MapGet("/", () => "Hello World!");
+        app.UseRouting();
+        app.UseEndpoints((a)=>{
+            a.MapControllers();
+            a.MapRazorPages();
+        });
+
+        app.UseRateLimiter();
+
+        app.UseMiddleware<Middleware.SessionMiddleware>();
 
         app.Run();
     }
