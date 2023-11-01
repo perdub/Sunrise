@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace Sunrise.Database;
 
-public class SunriseContext: DbContext
+public class SunriseContext : DbContext
 {
     private IConfiguration _config;
     private ILogger<SunriseContext> _logger;
@@ -17,14 +17,21 @@ public class SunriseContext: DbContext
         _logger = logger;
     }
 
-    public DbSet<Account> Accounts{get;set;}
-    public DbSet<Sunrise.Types.File> Files{get;set;}
-    public DbSet<Tag> Tags{get;set;}
-    public DbSet<Post> Posts{get;set;}
-    public DbSet<Session> Sessions{get;set;}
+    public SunriseContext(DbContextOptions<SunriseContext> options) : base(options)
+    {
+    }
+
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Sunrise.Types.File> Files { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<Post> Posts { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_config.GetValue<string>("ConnectionString"));
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql(_config.GetValue<string>("ConnectionString"));
+        }
     }
 }
