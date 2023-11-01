@@ -48,6 +48,10 @@ public class Storage
                 converter = new ImageConverter(globalPathPrefix, post, format.fileExtension);
                 break;
 
+            case PostType.Video:
+                converter = new VideoConverter(globalPathPrefix, post, format.fileExtension);
+                break;
+
             default:
                 throw new Exception("Converter not found.");
         }

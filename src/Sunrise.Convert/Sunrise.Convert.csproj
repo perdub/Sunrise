@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="SharpHash" Version="1.2.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+    <PackageReference Include="xFFmpeg.NET" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>

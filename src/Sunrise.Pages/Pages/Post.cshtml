@@ -11,5 +11,10 @@
         case Sunrise.Types.Enums.PostType.Image:
             <img class="post-content" src="@Model.baseUrl"/>
             break;
+        case Sunrise.Types.Enums.PostType.Video:
+            <video controls class="post-content" autoplay muted loop >
+                    <source src="@Model.baseUrl" type="video/mp4">
+            </video>
+            break;
     }
 </div>
