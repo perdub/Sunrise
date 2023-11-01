@@ -17,7 +17,7 @@ public class TagBuilder{
         foreach(var tag in tags){
             var sTag = _context.Tags.Where(a=>a.TagText==tag).FirstOrDefault();
             if(sTag is null){
-                sTag = new Tag("tag");
+                sTag = new Tag(tag);
                 _context.Tags.Add(sTag);
             }
             rTag.Add(sTag);

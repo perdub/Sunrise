@@ -55,6 +55,7 @@ public abstract class AbstractConverter : IDisposable{
         Directory.CreateDirectory(gP);
 
         sb.Append(gP);
+        sb.Append(Path.DirectorySeparatorChar);
         sb.Append(sHash);
         sb.Append('.');
         sb.Append(DateTime.UtcNow.Ticks);

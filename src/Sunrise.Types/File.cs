@@ -25,4 +25,10 @@ public class File{
     public File(Post p){
         LinkedPost = p;
     }
+
+    public string GetBaseLink(){
+        if(isSampleExsist)
+            return samplePath;
+        return fullPath;
+    }
 }

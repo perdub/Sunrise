@@ -11,7 +11,7 @@ public class Post{
 
     public File LinkedFile{get;set;}
 
-    public List<Tag> Tags{get;set;}
+    public List<Tag> Tags{get;set;} = new ();
 
     public DateTime CreationDate{get;private set;}
 
