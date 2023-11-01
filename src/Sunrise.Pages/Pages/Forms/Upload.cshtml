@@ -1,0 +1,9 @@
+@page
+
+@model Sunrise.Pages.Forms.UploadPostModel
+
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="uploads"  /><br>
+    <input name="tags"  /><br>
+    <input type="submit" value="Upload" />
+</form>

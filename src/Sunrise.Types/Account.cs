@@ -11,6 +11,11 @@ public class Account{
 
     public string PasswordHash {get;private set;}
 
+    public Sunrise.Types.Enums.PrivilegeLevel PrivilegeLevel{get;set;} = Enums.PrivilegeLevel.Default;
+    //два значения которые отвечают за уровнь доступа
+    public bool CheckedUser {get;set;} //true если пользователь прошёл верификацию по емайлу 
+    public bool VerifyUser {get;set;} //true когда пользователь загрузил некоторое количество постов и вызывает доверие
+
     public string Email {get;private set;}
 
     public List<Post> Posts{get;private set;}

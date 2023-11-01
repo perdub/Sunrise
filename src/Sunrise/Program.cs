@@ -29,7 +29,7 @@ public class Program
         builder.Services.AddMvc()
             .AddApplicationPart(Assembly.Load(new AssemblyName("Sunrise.Mvc")));
 
-        builder.Services.AddDbContext<Sunrise.Database.SunriseContext>();
+        builder.Services.AddDbContext<Sunrise.Database.SunriseContext>(ServiceLifetime.Transient);
 
         //регистрация политик ограничений запросов
         builder.Services.AddRateLimiter((options)=>{
@@ -49,16 +49,21 @@ public class Program
 
         var app = builder.Build();
 
-        var db = app.Services.GetService<Sunrise.Database.SunriseContext>();
+#region Ensure Create
+        var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetService<Sunrise.Database.SunriseContext>();
         db.Database.EnsureCreated();
         db.Dispose();
-
+        scope.Dispose();
+        #endregion
 
         app.UseMiddleware<Middleware.SessionMiddleware>();
 
         app.UseRouting();
         
         app.UseRateLimiter();
+
+        app.UseStaticFiles();
 
         app.UseEndpoints((a)=>{
             a.MapControllers();
