@@ -43,7 +43,7 @@ async function fill(){
     
     //создание элементов
     b.forEach(c => {
-        scrollBuild(c.postId, '/'+c.baseLink, c.contentType);
+        scrollBuild(c.postId, c.baseLink, c.contentType);
     });
 }
 function scroll(){

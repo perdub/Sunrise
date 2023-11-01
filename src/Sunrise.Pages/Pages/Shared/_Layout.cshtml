@@ -14,6 +14,9 @@
     <meta name="keywords" content="Booru, Image, Images, Imageboard, Sunrise">
 
     <link rel="stylesheet" type="text/css" href="/css/global.css"/>
+
+    @RenderSection("CSS", false)
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <!--cdn-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -28,7 +31,7 @@
         </div>
 
         <div class="left-flex">
-            <a href="/">
+            <a href="/forms/upload">
                 <p>Upload</p>
             </a>
         </div>
@@ -46,5 +49,7 @@
     </div>
 
 </body>
+
+<script src="/js/base.js"></script>
 
 </html>

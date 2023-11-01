@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 
 namespace Sunrise;
@@ -9,6 +10,11 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.WebHost.ConfigureKestrel((kestrel)=>{
+            kestrel.ListenAnyIP(3269);
+            kestrel.Limits.MaxRequestBodySize = (512*1024*1024);
+        });
 
 #region Config
         if(File.Exists("SunriseConfig.json")){
@@ -64,6 +70,15 @@ public class Program
         app.UseRateLimiter();
 
         app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions{
+            FileProvider = new PhysicalFileProvider(
+                app.Configuration.GetValue<string>("StoragePath")
+            ),
+            RequestPath = "/sunrise",
+            OnPrepareResponse = (a)=>{
+                a.Context.Response.Headers.CacheControl = "public, max-age=43200";
+            }            
+        });
 
         app.UseEndpoints((a)=>{
             a.MapControllers();

@@ -1,0 +1,15 @@
+@page "{postid?}"
+@model Sunrise.Pages.PostModel
+
+@section CSS{
+    <link rel="stylesheet" type="text/css" href="/css/post.css"/>
+}
+
+<div class="center-post">
+    @switch (Model.PostType)
+    {
+        case Sunrise.Types.Enums.PostType.Image:
+            <img class="post-content" src="@Model.baseUrl"/>
+            break;
+    }
+</div>

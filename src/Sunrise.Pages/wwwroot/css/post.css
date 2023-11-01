@@ -1,0 +1,8 @@
+.post-content{
+    height: auto;
+    max-width: 90%;
+}
+.center-post{
+    display: flex;
+    justify-content: center;
+}
