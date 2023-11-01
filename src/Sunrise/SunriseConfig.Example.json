@@ -8,5 +8,6 @@
     },
     
     "ConnectionString": "Host=localhost;Port=5432;Database=MyDb;Username=postgres;Password=root",
-    "GlobalSalt": "Your_Random_G1obal_8a1t"
+    "GlobalSalt": "Your_Random_G1obal_8a1t",
+    "StoragePath": "C:\\Sunrise\\Storage"
 }

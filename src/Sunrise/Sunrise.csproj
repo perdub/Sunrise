@@ -6,6 +6,7 @@
     <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
     <ProjectReference Include="..\Sunrise.Mvc\Sunrise.Mvc.csproj" />
     <ProjectReference Include="..\Sunrise.Builders\Sunrise.Builders.csproj" />
+    <ProjectReference Include="..\Sunrise.Storage\Sunrise.Storage.csproj" />
   </ItemGroup>
 
   <ItemGroup>

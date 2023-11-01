@@ -6,6 +6,8 @@ public class Tag{
     [Key]
     public int TagId{get;private set;}
 
+    public int PostCount{get;set;}
+
     public string TagText{get;set;}
 
     public string TagDescription {get;set;}

@@ -22,6 +22,8 @@ public class Program
         builder.Services.AddRazorPages();
 
         builder.Services.AddScoped<Sunrise.Builders.SessionBuilder>();
+        builder.Services.AddScoped<Sunrise.Builders.TagBuilder>();
+        builder.Services.AddScoped<Sunrise.Storage.Storage>();
 
         //добавление контроллеров из Sunrise.Mvc
         builder.Services.AddMvc()

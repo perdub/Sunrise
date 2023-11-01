@@ -16,5 +16,11 @@ public class Post{
     public DateTime CreationDate{get;private set;}
 
     public string Description{get;set;}
-
+    private Post(){}
+    public Post(Account author)
+    {
+        PostCreator =  author;
+        Description = "Your description";
+        CreationDate = DateTime.UtcNow;
+    }
 }

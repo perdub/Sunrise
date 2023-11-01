@@ -11,6 +11,8 @@ public class File{
     public bool isSampleExsist {get;init;} = false;
     public string fullPath {get;init;}
 
+    public string Sha256{get;init;}
+
     public Post LinkedPost{get;private set;}
     public Guid PostId{get;private set;} = Guid.Empty;
 
