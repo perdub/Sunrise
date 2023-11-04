@@ -12,7 +12,12 @@ public struct ConvertedResult{
         ConvertedResult r;
         r.sampleExsist = sampleExsist;
         r.previewPath = REQUEST_PATH + previewPath.Substring(globalPrefix.Length);
-        r.samplePath = REQUEST_PATH + samplePath.Substring(globalPrefix.Length);
+
+        if(sampleExsist)
+            r.samplePath = REQUEST_PATH + samplePath.Substring(globalPrefix.Length);
+        else
+            r.samplePath = samplePath;
+
         r.originalPath = REQUEST_PATH + originalPath.Substring(globalPrefix.Length);
         return r;
     }

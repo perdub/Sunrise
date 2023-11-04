@@ -11,7 +11,7 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/Sunrise/bin/Debug/net7.0/Sunrise.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/Sunrise",
+            "cwd": "${workspaceFolder}/src/Sunrise/bin/Debug/net7.0",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

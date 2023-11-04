@@ -40,7 +40,7 @@ public abstract class AbstractConverter : IDisposable{
     //метод для создания имён файлов
     public string GenerateFileName(string fileExtension, bool isOriginal = false){
         var iHash = SharpHash.Base.HashFactory.Crypto.CreateSHA2_256();
-        var hash = iHash.ComputeString((DateTime.UtcNow.Ticks % DateTime.UtcNow.Microsecond).ToString(), System.Text.Encoding.UTF8);
+        var hash = iHash.ComputeString((DateTime.UtcNow.Ticks / DateTime.UtcNow.Microsecond).ToString(), System.Text.Encoding.UTF8);
         var sHash = hash.ToString();
         StringBuilder sb = new StringBuilder();
 
