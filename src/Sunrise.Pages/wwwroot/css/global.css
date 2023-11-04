@@ -49,3 +49,8 @@ p{
 .header-class{
     font-size: x-large;
 }
+
+.flex-topbar-part{
+    display: flex;
+    gap: 10px;
+}
