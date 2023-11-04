@@ -7,11 +7,18 @@ public class SessionMiddleware{
     private readonly RequestDelegate _next;
     private ILogger<SessionMiddleware> _logger;
 
+    private CookieOptions _SunidCookieOptions;
+
     public SessionMiddleware(RequestDelegate next,
         ILogger<SessionMiddleware> logger)
     {
         _next = next;
         _logger = logger;
+
+        _SunidCookieOptions = new CookieOptions{
+            MaxAge = TimeSpan.FromHours(1),
+            SameSite = SameSiteMode.Strict
+        };
     }
 
     public async Task InvokeAsync(HttpContext content, SunriseContext _context){
@@ -32,6 +39,10 @@ public class SessionMiddleware{
                 goto invoke;
             }
             var account = session.Account;
+            //set accout id in cookie 
+            content.Response.Cookies.Append("Sunid", account.AccountId.ToString(), _SunidCookieOptions);
+            content.Response.Cookies.Append("Sunname", account.Username, _SunidCookieOptions);
+            //set params
             IsLogged = true;
             content.Items.Add("PrivilegeLevel", (int)account.PrivilegeLevel);
         }

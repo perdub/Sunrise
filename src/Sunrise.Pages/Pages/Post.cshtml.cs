@@ -13,6 +13,7 @@ public class PostModel : PageModel
 
     public string baseUrl{get;private set;}
     public Sunrise.Types.Enums.PostType PostType{get;private set;}
+    public string Description{get;private set;}
 
     public PostModel(ILogger<PostModel> logger, SunriseContext context)
     {
@@ -35,6 +36,7 @@ public class PostModel : PageModel
 
         baseUrl = post.LinkedFile.GetBaseLink();
         PostType = post.LinkedFile.PostType;
+        Description = post.Description;
 
         return Page();
     }

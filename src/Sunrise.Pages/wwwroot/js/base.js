@@ -1,6 +1,12 @@
 function loopVideoPreview(time){
     
 }
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+      "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
 function grabQueryString(){
     if(window.location.search===''){
         return '?';
@@ -27,12 +33,13 @@ function getRandomBackground() {
         background.style.setProperty("background-position", "center "+getRandomInt(101)+"%");
     });
 }
-async function setUserButton(){
+function setUserButton(){
     //функция которая заменяет переход на страницу логина ссылкой на пользователя
-    let a = await getUser();
-    if(a.ok===true){
-        var b = document.getElementById('topbarloginuser').children[0];
-        b.href = "/users/"+a.id;
-        b.children[0].innerText  = a.name;
+    let a = getCookie('Sunid');
+    if(a!==undefined){
+        var b = document.getElementById('userPage');
+        b.href = "/users/"+a;
+        b.children[0].innerText  = getCookie('Sunname');
     }
 }
+setUserButton();
