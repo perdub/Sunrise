@@ -38,4 +38,32 @@ public class UploadController : Controller{
 
         return Ok();
     }
+
+    [Route("/api/upload")]
+    [HttpPost]
+    //set max request size to 1GB
+    [RequestSizeLimit(1024*1024*1024)]
+    public async Task<IActionResult> ApiUpload(){
+        var sessionKey = HttpContext.Request.Cookies["Suntoken"];
+
+        if(sessionKey is null){
+            return Unauthorized();
+        }
+
+        var isSessionExsist = (_context.Sessions.Where(a=>a.SessionId == sessionKey).FirstOrDefault()) != null;
+        
+        if(!isSessionExsist){
+            return Unauthorized();
+        }
+
+
+        var ms = new MemoryStream();
+        await HttpContext.Request.Body.CopyToAsync(ms);
+        ms.Position = 0;
+        var tags = HttpContext.Request.Headers["Tags"].ToArray();
+
+        await _storage.SavePost(ms.ToByteArray(), sessionKey, tags);
+
+        return Ok();
+    }
 }
