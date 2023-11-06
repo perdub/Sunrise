@@ -1,0 +1,21 @@
+name: "Build"
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Clone
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: dotnet publish src/Sunrise/Sunrise.csproj -c Release --force
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: Binarys
+          path: src/Sunrise/bin/Release/net7.0/publish
