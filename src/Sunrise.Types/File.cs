@@ -1,6 +1,7 @@
 namespace Sunrise.Types;
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Configuration;
 using Sunrise.Types.Enums;
 
 public class File{
@@ -19,10 +20,12 @@ public class File{
     [Key]
     public Guid FileId {get;set;} = Guid.Empty;
     private File(){
-
+        if(pathPrefix == null){
+            pathPrefix = appConfiguration.GetValue<string>("RequestPath");
+        }
     }
 
-    public File(Post p){
+    public File(Post p) : this(){
         LinkedPost = p;
     }
 
@@ -31,4 +34,25 @@ public class File{
             return samplePath;
         return fullPath;
     }
+
+    public string GetItemPath(ContentVariant variant){
+        switch(variant){
+            case ContentVariant.Preview:
+                return pathPrefix + previewPath;
+            case ContentVariant.Sample:
+                if(isSampleExsist){
+                    return pathPrefix + samplePath;
+                }
+                goto case ContentVariant.Original;
+            case ContentVariant.Original:
+                return pathPrefix + fullPath;
+            default:
+                throw new Exception("Unknown variant.");
+        }
+    }
+    private static IConfiguration appConfiguration;
+    public static void SetConfiguration(IConfiguration configuration){
+        appConfiguration = configuration;
+    }
+    private static string? pathPrefix = null;
 }

@@ -11,14 +11,14 @@ public struct ConvertedResult{
     public ConvertedResult DeletePrefix(string globalPrefix){
         ConvertedResult r;
         r.sampleExsist = sampleExsist;
-        r.previewPath = REQUEST_PATH + previewPath.Substring(globalPrefix.Length);
+        r.previewPath = previewPath.Substring(globalPrefix.Length);
 
         if(sampleExsist)
-            r.samplePath = REQUEST_PATH + samplePath.Substring(globalPrefix.Length);
+            r.samplePath = samplePath.Substring(globalPrefix.Length);
         else
             r.samplePath = samplePath;
 
-        r.originalPath = REQUEST_PATH + originalPath.Substring(globalPrefix.Length);
+        r.originalPath = originalPath.Substring(globalPrefix.Length);
         return r;
     }
 }

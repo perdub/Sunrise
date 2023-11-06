@@ -123,7 +123,7 @@ public class FindController : Controller
         foreach(var f in final){
             items.Add(new ScrollItem(
                 f.PostId,
-                f.LinkedFile.GetBaseLink(),
+                f.LinkedFile.GetItemPath(Types.Enums.ContentVariant.Sample),
                 (int)f.LinkedFile.PostType
             ));
         }

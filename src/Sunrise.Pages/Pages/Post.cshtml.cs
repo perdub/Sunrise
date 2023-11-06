@@ -1,4 +1,5 @@
 using Sunrise.Database;
+using Sunrise.Types.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -36,8 +37,8 @@ public class PostModel : PageModel
             return NotFound();
         }
 
-        baseUrl = post.LinkedFile.GetBaseLink();
-        originalUrl = post.LinkedFile.fullPath;
+        baseUrl = post.LinkedFile.GetItemPath(ContentVariant.Sample);
+        originalUrl = post.LinkedFile.GetItemPath(ContentVariant.Original);
         PostType = post.LinkedFile.PostType;
         Description = post.Description;
         Tags = post.Tags.ToArray();

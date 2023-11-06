@@ -70,11 +70,17 @@ public class Program
         app.UseRateLimiter();
 
         app.UseStaticFiles();
+
+        Sunrise.Types.File.SetConfiguration(app.Configuration);
+
+        string storagePath = app.Configuration.GetValue<string>("StoragePath") ?? "/storage";
+        Directory.CreateDirectory(storagePath);
+
         app.UseStaticFiles(new StaticFileOptions{
             FileProvider = new PhysicalFileProvider(
-                app.Configuration.GetValue<string>("StoragePath")
+                storagePath
             ),
-            RequestPath = "/sunrise",
+            RequestPath = app.Configuration.GetValue<string>("RequestPath"),
             OnPrepareResponse = (a)=>{
                 a.Context.Response.Headers.CacheControl = "public, max-age=43200";
             }            
