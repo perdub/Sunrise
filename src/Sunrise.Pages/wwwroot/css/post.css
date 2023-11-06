@@ -10,3 +10,7 @@
     margin-left: 5%;
     margin-right: 5%;
 }
+.download-block-flex{
+    display: flex;
+    gap: 3%;
+}

@@ -19,4 +19,20 @@
     }
 
 </div>
+
+<div class="post-item-margin download-block-flex">
+    <a href="@Model.originalUrl">
+        <p>Original</p>
+    </a>
+    <a href="@Model.originalUrl" download>
+        <p>Download</p>
+    </a>
+</div>
+
 <p class="post-item-margin">@Model.Description</p>
+<div class="post-item-margin">
+    @foreach (var Tag in Model.Tags)
+    {
+        <p>@Tag.TagText</p>
+    }
+</div>
