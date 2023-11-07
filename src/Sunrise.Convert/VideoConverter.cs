@@ -1,18 +1,20 @@
-using FFmpeg.NET;
+using FFMpegCore;
+using FFMpegCore.Pipes;
 
 namespace Sunrise.Convert;
 
 public class VideoConverter : AbstractConverter
 {
     private string _fileExtension;
-    private StreamInput _input;
+    private Stream _input;
     private byte[] _video;
-    private Engine _ffmpegEngine;
-    public VideoConverter(string globalPrefixPath, byte[] video, string fileExtension) : base(globalPrefixPath){
-        _input = new StreamInput(video.ToStream());
+    private string fullOriginalPath;
+    private Action<string> _log;
+    public VideoConverter(string globalPrefixPath, byte[] video, string fileExtension, Action<string> log) : base(globalPrefixPath){
+        _input = video.ToStream();
         _video = video;
         _fileExtension = fileExtension;
-        _ffmpegEngine = new Engine();
+        _log = log;
     }
 
     public override void Dispose()
@@ -23,6 +25,7 @@ public class VideoConverter : AbstractConverter
     internal override string BuildOriginal()
     {
         string fN = GenerateFileName(_fileExtension, true);
+        fullOriginalPath = fN;
         File.WriteAllBytes(fN, _video);
         return fN;
     }
@@ -30,8 +33,16 @@ public class VideoConverter : AbstractConverter
     internal override string BuildPreview()
     {
         string fN = GenerateFileName("png");
-        var convertTask = _ffmpegEngine.GetThumbnailAsync(_input, new OutputFile(fN), CancellationToken.None);
-        convertTask.Wait();
+
+        _input.Position = 0;
+
+        FFMpegArguments
+            .FromFileInput(fullOriginalPath)
+            .OutputToFile(fN, false, (o)=>{
+                o.WithCustomArgument("-frames:v 1");
+            })
+            .ProcessSynchronously();
+
         return fN;
     }
 
@@ -39,22 +50,35 @@ public class VideoConverter : AbstractConverter
     {
         string fN = GenerateFileName("mp4");
 
-        /*var opt = new ConversionOptions{
-            VideoCodec = FFmpeg.NET.Enums.VideoCodec.h264_amf,
-            VideoFormat = FFmpeg.NET.Enums.VideoFormat.mp4,
-            VideoSize = FFmpeg.NET.Enums.VideoSize.Hd720
-        };*/
+        _input.Position = 0;
 
-        var task = _ffmpegEngine.ConvertAsync(_input, new OutputFile(fN), CancellationToken.None);
-        task.Wait();
+        Guid convertId = Guid.NewGuid();
+
+        FFMpegArguments
+            .FromFileInput(fullOriginalPath)
+            .OutputToFile(fN, false, (o)=>{
+                o.WithVideoCodec(FFMpegCore.Enums.VideoCodec.LibX264);
+                o.WithoutMetadata();
+                o.WithFastStart();
+                o.WithSpeedPreset(FFMpegCore.Enums.Speed.SuperFast);
+                o.WithCustomArgument($"-metadata comment=\"Sunrise\"");
+                o.WithCustomArgument($"-crf 28 -profile:v baseline -level 1");
+            })
+            .NotifyOnProgress((p)=>{
+                _log($"{convertId}:{p}% are ready!");
+            })
+            .ProcessSynchronously();
+
         return fN;
     }
 
     internal override bool NeedToCreateSample()
     {
-        var meta = _input.MetaData;
-        //if(meta.Duration > TimeSpan.FromMinutes(5) || (meta.VideoData.BitRateKbs != null && meta.VideoData.BitRateKbs > 1536))
-            return true;
-        return false;
+        var meta = FFProbe.Analyse(_input);
+        _input.Position = 0;
+        //если длинна больше 5 минут или вес больше 100 мб мы пропускаем потому что у меня нет столько вычислительных ресурсов((
+        if(meta.Duration > TimeSpan.FromMinutes(5) || _video.Length > 100*1024*1024)
+            return false;
+        return true;
     }
 }

@@ -5,6 +5,7 @@ using Sunrise.Convert;
 using Sunrise.Builders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Sunrise.Storage;
 
@@ -15,13 +16,16 @@ public class Storage
     private TagBuilder _tagBuilder;
     private string globalPathPrefix;
 
-    public Storage(SunriseContext context, IConfiguration config, TagBuilder tagBuilder)
+    private ILogger<VideoConverter> _videoLogger;
+
+    public Storage(SunriseContext context, IConfiguration config, TagBuilder tagBuilder, ILogger<VideoConverter> videoLogger)
     {
         _context = context;
         _config = config;
         _tagBuilder = tagBuilder;
         globalPathPrefix = _config.GetValue<string>("StoragePath");
         Directory.CreateDirectory(globalPathPrefix);
+        _videoLogger = videoLogger;
     }
 
     public async Task SavePost(byte[] post,
@@ -49,7 +53,9 @@ public class Storage
                 break;
 
             case PostType.Video:
-                converter = new VideoConverter(globalPathPrefix, post, format.fileExtension);
+                converter = new VideoConverter(globalPathPrefix, post, format.fileExtension, (l)=>{
+                    _videoLogger.LogTrace(l);
+                });
                 break;
 
             default:
