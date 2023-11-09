@@ -29,10 +29,22 @@
     </a>
 </div>
 
+<p class="post-item-margin">Upload at @Model.uploadTime</p>
+
+<p class="post-item-margin">
+    Author:<a href="/account/@Model.authorId">
+        @Model.authorUsername
+    </a>
+</p>
+
 <p class="post-item-margin">@Model.Description</p>
 <div class="post-item-margin">
     @foreach (var Tag in Model.Tags)
     {
-        <p>@Tag.TagText</p>
+        <p>
+            <a href="/tag/@Tag.TagText">
+                @Tag.TagText
+            </a>
+        </p>
     }
 </div>

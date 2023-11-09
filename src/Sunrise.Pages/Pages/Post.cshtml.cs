@@ -17,6 +17,9 @@ public class PostModel : PageModel
     public string Description{get;private set;}
     public Types.Tag[] Tags{get; private set;}
     public string originalUrl{get;private set;}
+    public string uploadTime{get;private set;}
+    public string authorUsername{get;private set;}
+    public Guid authorId{get;private set;}
 
     public PostModel(ILogger<PostModel> logger, SunriseContext context)
     {
@@ -27,6 +30,7 @@ public class PostModel : PageModel
     public async Task<IActionResult> OnGet(Guid postid)
     {
         var post = _context.Posts
+            .AsNoTracking()
             .Include(a=>a.LinkedFile)
             .Include(a=>a.Tags)
             .Include(a=>a.PostCreator)
@@ -42,6 +46,9 @@ public class PostModel : PageModel
         PostType = post.LinkedFile.PostType;
         Description = post.Description;
         Tags = post.Tags.ToArray();
+        uploadTime = post.CreationDate.ToString();
+        authorId = post.PostCreator.AccountId;
+        authorUsername = post.PostCreator.Username;
 
         return Page();
     }
