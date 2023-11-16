@@ -83,7 +83,8 @@ public class Program
             RequestPath = app.Configuration.GetValue<string>("RequestPath"),
             OnPrepareResponse = (a)=>{
                 a.Context.Response.Headers.CacheControl = "public, max-age=43200";
-            }            
+            },
+            ServeUnknownFileTypes = true            
         });
 
         app.UseEndpoints((a)=>{
