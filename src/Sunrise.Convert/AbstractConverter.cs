@@ -58,7 +58,13 @@ public abstract class AbstractConverter : IDisposable{
         sb.Append(Path.DirectorySeparatorChar);
         sb.Append(sHash);
         sb.Append('.');
+        if(isOriginal){
+            sb.Append('o');
+        }
+        else{
         sb.Append(DateTime.UtcNow.Ticks);
+
+        }
         sb.Append('.');
         sb.Append(fileExtension);
 
