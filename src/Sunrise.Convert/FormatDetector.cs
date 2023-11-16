@@ -48,7 +48,15 @@ public static class FormatDetector{
         //matroska media container(mkv, webm, mka, mks, mk3d)
         //header is 0x1A 45 DF A3
         if(arr.Length>4 && arr[0]==0x1A && arr[1]==0x45 && arr[2]==0xDF && arr[3]==0xA3){
-            return new Format(PostType.Video, "mkv");
+            //mkv
+            if(arr.Length>31 && arr[24]==0x6D && arr[25]==0x61 && arr[26]==0x74 && arr[27]==0x72 &&
+                arr[28]==0x6F && arr[29]==0x73 && arr[30]==0x6B && arr[31]==0x61){
+                return new Format(PostType.Video, "mkv");
+            }
+            //webm
+            if(arr.Length>28 && arr[24]==0x77 && arr[25]==0x65 && arr[26]==0x62 && arr[27]==0x6D){
+                return new Format(PostType.Video, "webm");
+            }
         }
 
         return new Format(PostType.Unknown, "");
