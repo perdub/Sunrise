@@ -40,27 +40,6 @@ public class Program
         builder.Services.AddScoped<Sunrise.Builders.TagBuilder>();
         builder.Services.AddScoped<Sunrise.Storage.Storage>();
 
-        builder.Services.AddResponseCompression(options =>
-        {
-            //really, website with anime images wont be attack with CRIME/BREACH (i`m hope)
-            options.EnableForHttps = true;
-            options.Providers.Add<BrotliCompressionProvider>();
-            options.Providers.Add<GzipCompressionProvider>();
-            options.MimeTypes = ResponseCompressionDefaults.MimeTypes;
-        });
-#region Set Compression Levels
-        //maybe i should change CompressionLevel
-        builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
-        {
-            options.Level = CompressionLevel.SmallestSize;
-        });
-
-        builder.Services.Configure<GzipCompressionProviderOptions>(options =>
-        {
-           options.Level = CompressionLevel.SmallestSize;
-        }   );
-    #endregion
-
         //добавление контроллеров из Sunrise.Mvc
         builder.Services.AddMvc()
             .AddApplicationPart(Assembly.Load(new AssemblyName("Sunrise.Mvc")));
@@ -95,8 +74,6 @@ public class Program
         db.Dispose();
         scope.Dispose();
         #endregion
-
-        app.UseResponseCompression();
 
         app.UseMiddleware<Middleware.SessionMiddleware>();
 
