@@ -5,6 +5,21 @@
     <link rel="stylesheet" type="text/css" href="/css/post.css"/>
 }
 
+@section OpenGraph{
+    @switch(Model.PostType){
+        case Sunrise.Types.Enums.PostType.Image:
+            <meta property="og:image" content="@string.Concat(Model.GetHostUrl(), Model.baseUrl)" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:image" content="@string.Concat(Model.GetHostUrl(), Model.baseUrl)" />
+            break;
+        case Sunrise.Types.Enums.PostType.Video:
+            <meta property="og:image" content="@Model.baseUrl" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:image" content="@Model.baseUrl" />
+            break;
+    }
+}
+
 <div class="center-post">
     @switch (Model.PostType)
     {

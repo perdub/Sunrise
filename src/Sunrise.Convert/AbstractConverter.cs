@@ -50,12 +50,12 @@ public abstract class AbstractConverter : IDisposable{
 
         string subDirs = Path.Combine(fDir,sDir,tDir);
 
-        string gP = Path.Combine(globalPathPrefix, subDirs);
+        string gP = Path.Combine(globalPathPrefix, subDirs).Replace("\\", "/");
 
         Directory.CreateDirectory(gP);
 
         sb.Append(gP);
-        sb.Append(Path.DirectorySeparatorChar);
+        sb.Append('/');
         sb.Append(sHash);
         sb.Append('.');
         if(isOriginal){

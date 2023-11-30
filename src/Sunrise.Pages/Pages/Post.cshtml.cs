@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Sunrise.Pages;
 
-public class PostModel : PageModel
+public class PostModel : SunModel
 {
     private readonly ILogger<PostModel> _logger;
     private SunriseContext _context;
@@ -41,8 +41,8 @@ public class PostModel : PageModel
             return NotFound();
         }
 
-        baseUrl = post.LinkedFile.GetItemPath(ContentVariant.Sample);
-        originalUrl = post.LinkedFile.GetItemPath(ContentVariant.Original);
+        baseUrl = post.LinkedFile.GetItemPath(ContentVariant.Sample).Replace("\\", "/");
+        originalUrl = post.LinkedFile.GetItemPath(ContentVariant.Original).Replace("\\", "/");
         PostType = post.LinkedFile.PostType;
         Description = post.Description;
         Tags = post.Tags.ToArray();
