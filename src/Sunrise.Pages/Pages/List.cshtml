@@ -1,0 +1,16 @@
+@page
+@model Sunrise.Pages.ListModel
+
+@section CSS{
+    <link rel="stylesheet" type="text/css" href="/css/list.css"/>
+}
+
+<div class="main">
+    @foreach(var post in Model.Posts){
+        <div class="item">
+            <a href="/post/@post.PostId">
+                <img class="image" src="@post.LinkedFile.GetItemPath(Sunrise.Types.Enums.ContentVariant.Preview)">
+            </a>
+        </div>
+    }
+</div>

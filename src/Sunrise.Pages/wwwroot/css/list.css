@@ -1,0 +1,30 @@
+.main{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+}
+/* Стиль для сетки при ширине окна меньше 600 пикселей */
+@media only screen and (min-width : 768px) {
+  .main {
+    grid-template-columns: repeat(2, 1fr); /* Две колонки одинаковой ширины */
+  }
+}
+
+@media only screen and (min-width : 1200px) {
+    .main{
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+  /* Стиль для сетки при ширине окна меньше 400 пикселей */
+  @media only screen and (min-width : 480px) {
+    .main {
+      grid-template-columns: 1fr; /* Одна колонка */
+    }
+}
+
+.item{
+    display: flex;
+}
+.image{
+    width: 100%;
+}

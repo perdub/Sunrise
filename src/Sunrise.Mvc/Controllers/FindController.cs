@@ -17,6 +17,11 @@ public class FindController : Controller
         logger = l;
     }
 
+    public static FindController GetController(SunriseContext sc, ILogger<FindController> l)
+    {
+        return new FindController(sc, l);
+    }
+
     [Route("/find")]
     public async Task<IActionResult> Find(
         string[] tag, //набор тегов для поиска
@@ -25,12 +30,31 @@ public class FindController : Controller
         bool randomOrder = false //сортировать в случайном порядке
         )
     {
-        //все посты которые будут отданы методом
+       var final = await FindPosts(tag, offset, count, randomOrder);
+        //создание промежуточных обьектов
+        List<ScrollItem> items = new List<ScrollItem>(final.Length);
+        foreach(var f in final){
+            items.Add(new ScrollItem(
+                f.PostId,
+                f.LinkedFile.GetItemPath(Types.Enums.ContentVariant.Sample),
+                (int)f.LinkedFile.PostType
+            ));
+        }
+        return Ok(items);
+    }
+
+    public async Task<Post[]> FindPosts(
+        string[] tag, //набор тегов для поиска
+        int offset = 0, //сколько постов надо пропустить
+        int count = 20, //сколько постов надо получить
+        bool randomOrder = false //сортировать в случайном порядке
+        ){
+             //все посты которые будут отданы методом
         List<Post> final = new List<Post>(count);
         int skiped = 0;
         
         //проверка на то есть ли в массиве с тегами сами теги и на то пустые ли они
-        if (tag.Length != 0 && !tag.All(a=>string.IsNullOrWhiteSpace(a)))
+        if (tag is not null && tag.Length != 0 && !tag.All(a=>string.IsNullOrWhiteSpace(a)))
         {
             //загрузка всех тегов из бд
             Tag[] tags = new Tag[tag.Length];
@@ -38,6 +62,7 @@ public class FindController : Controller
             {
                 //todo: change load type(from eager to lazy/explict)
                 tags[i] = sc.Tags
+                    .AsNoTracking()
                     .Include(a => a.Posts)
                         .ThenInclude(b => b.LinkedFile)
                     .Where(a => a.TagText == tag[i])
@@ -98,6 +123,7 @@ public class FindController : Controller
         {
             //если нет, мы просто сортируем посты, пропускаем и забираем их
             var posts = sc.Posts
+                .AsNoTracking()
                 //.Where(a=>(int)a.Status>0)
                 .Include(a=>a.LinkedFile);
             System.Linq.IOrderedQueryable<Sunrise.Types.Post> tempQuery;
@@ -118,15 +144,6 @@ public class FindController : Controller
                 .Take(count);
             final.AddRange(finalCol);
         }
-        //создание промежуточных обьектов
-        List<ScrollItem> items = new List<ScrollItem>(final.Capacity);
-        foreach(var f in final){
-            items.Add(new ScrollItem(
-                f.PostId,
-                f.LinkedFile.GetItemPath(Types.Enums.ContentVariant.Sample),
-                (int)f.LinkedFile.PostType
-            ));
-        }
-        return Ok(items);
+        return final.ToArray();
     }
 }
