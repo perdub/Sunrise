@@ -1,30 +1,74 @@
-.main{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
+* {
+  box-sizing: border-box;
 }
-/* Стиль для сетки при ширине окна меньше 600 пикселей */
-@media only screen and (min-width : 768px) {
+
+/* Create a container that displays the images in a grid layout */
+.main {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 20px;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+/* Create a sub-container for each image */
+.item {
+  position: relative;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+.image-item{
+  border: 2px solid chocolate;
+  background: radial-gradient(circle, rgba(125,121,190,0) 12%, chocolate 80%);
+}
+
+/* Style the images */
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Add a heart icon in the top right corner of the sub-containers 
+.item::after {
+  content: "\2665";
+  color: pink;
+  font-size: 30px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+*/
+
+@media screen and (max-width: 1000px) {
   .main {
-    grid-template-columns: repeat(2, 1fr); /* Две колонки одинаковой ширины */
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media only screen and (min-width : 1200px) {
-    .main{
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-  /* Стиль для сетки при ширине окна меньше 400 пикселей */
-  @media only screen and (min-width : 480px) {
-    .main {
-      grid-template-columns: 1fr; /* Одна колонка */
-    }
+/* Responsive layout - makes the grid have two columns instead of four */
+@media screen and (max-width: 800px) {
+  .main {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.item{
-    display: flex;
+/* Responsive layout - makes the grid have one column instead of two */
+@media screen and (max-width: 600px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+  .item{
+    max-width: 100%;
+  }
 }
-.image{
-    width: 100%;
+
+.page-change-flex{
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.page-change-link{
+  color: inherit;
 }

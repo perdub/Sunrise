@@ -9,9 +9,12 @@ using Microsoft.Extensions.Logging;
 namespace Sunrise.Pages;
 
 public class ListModel : SunModel{
-    const int POST_PER_PAGE = 50;
+    //60 because is divided by 1, 2, 3 and 5
+    const int POST_PER_PAGE = 60;
 
     public Post[] Posts{get;set;}
+    public string? nextPageUrl{get;set;} = null;
+    public string? prevPageUrl{get;set;} = null;
 
     private SunriseContext _context;
     private IServiceProvider _provider;
@@ -27,6 +30,14 @@ public class ListModel : SunModel{
         [FromQuery] bool randomOrder = false
         ){
         pageNumber--;
+
+        if(pageNumber > 0){
+            prevPageUrl = "/list?pageNumber=" + (pageNumber);
+        }
+        //todo: add statement here
+        if(true){
+            nextPageUrl = "/list?pageNumber=" + (pageNumber + 2);
+        }
             
         //build controller
         var sunriseContext = _provider.GetRequiredService<SunriseContext>();
