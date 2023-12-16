@@ -1,0 +1,46 @@
+//function to get suggestions from server
+const sunriseTagsComplete = async (tag) => {
+    var r = await fetch("/tags/complete?tag="+tag);
+    var d = await r.json();
+    let tags = [];
+    for(let o of d){
+        if(o===null)
+          break;
+        tags.push(o.tagText);
+    }
+    return tags;
+}
+
+const input = document.getElementById("find");
+
+const suggestions = [];
+
+const awesomplete = new Awesomplete(input, {
+  /*filter: () => { // We will provide a list that is already filtered ...
+    return true;
+  },*/
+  sort: false,    // ... and sorted.
+  list: [],
+  minChars: 1,
+  filter: function(text, input) {
+		return Awesomplete.FILTER_CONTAINS(text, input.match(/[^ ]*$/)[0]);
+	},
+
+	item: function(text, input) {
+		return Awesomplete.ITEM(text, input.match(/[^ ]*$/)[0]);
+	},
+
+	replace: function(text) {
+		var before = this.input.value.match(/^.+ \s*|/)[0];
+		this.input.value = before + text + " ";
+	}
+});
+
+input.addEventListener("input", async (event) => {
+  const inputText = event.target.value;
+  const tags = inputText.split(" ");
+  const lastTag = tags[tags.length - 1].trim().toLowerCase();
+  // Process inputText as you want, e.g. make an API request.
+  awesomplete.list = await sunriseTagsComplete(lastTag);
+  awesomplete.evaluate();
+});

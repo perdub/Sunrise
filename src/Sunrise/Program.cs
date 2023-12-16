@@ -46,6 +46,9 @@ public class Program
 
         builder.Services.AddDbContext<Sunrise.Database.SunriseContext>(ServiceLifetime.Transient);
 
+        builder.Services.AddMemoryCache();
+        builder.Services.AddTransient<Sunrise.Database.TagsCache>();
+
         //регистрация политик ограничений запросов
         builder.Services.AddRateLimiter((options) =>
         {

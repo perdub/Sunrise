@@ -5,7 +5,7 @@
     @{
         //render page title
         var title = ViewData["title"] ?? "Sunrise";
-        <title>title</title>
+        <title>@title</title>
     }
     <!--метаданные-->
     <meta charset="utf-8">
@@ -24,6 +24,9 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <!--cdn-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LeaVerou/awesomplete@fc9f00f14323b2200e7752c09a0014883efb2d0b/awesomplete.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/gh/LeaVerou/awesomplete@fc9f00f14323b2200e7752c09a0014883efb2d0b/awesomplete.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </head>
 
 <body class="background">
