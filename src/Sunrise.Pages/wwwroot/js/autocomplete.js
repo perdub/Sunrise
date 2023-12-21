@@ -11,6 +11,14 @@ const getTags = async () => {
   return tags;
 }
 
+const sortSuggestions = (a, b) => {
+  let c = (a.indexOf(activeSuggestion) - b.indexOf(activeSuggestion));
+  if(c === 0){
+    return a.localeCompare(b);
+  }
+  return c;
+}
+
 const input = document.getElementById("find");
 
 const suggestions = [];
@@ -21,7 +29,7 @@ const awesomplete = new Awesomplete(input, {
   /*filter: () => { // We will provide a list that is already filtered ...
     return true;
   },*/
-  sort: false,    // ... and sorted.
+  sort: sortSuggestions,    // ... and sorted.
   list: [],
   minChars: 1,
   filter: function(text, input) {
@@ -38,8 +46,14 @@ const awesomplete = new Awesomplete(input, {
 	}
 });
 
+var activeSuggestion = "";
+
 input.addEventListener("input", async (event) => {
   const inputText = event.target.value;
+  const tags = inputText.split(" ");
+  const lastTag = tags[tags.length - 1].trim().toLowerCase();
+
+  activeSuggestion = lastTag;
 
   if(rawTags.length===0){
     rawTags = await getTags();
