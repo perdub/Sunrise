@@ -27,14 +27,15 @@ public class FindController : Controller
         string[] tag, //набор тегов для поиска
         int offset = 0, //сколько постов надо пропустить
         int count = 20, //сколько постов надо получить
-        bool randomOrder = false //сортировать в случайном порядке
+        bool randomOrder = false, //сортировать в случайном порядке
+        int allowRatings = 4
         )
     {
         if(count>75){
             return BadRequest("Invalid params.");
         }
 
-       var final = await FindPosts(tag, offset, count, randomOrder);
+       var final = await FindPosts(tag, offset, count, randomOrder, allowRatings);
         //создание промежуточных обьектов
         List<ScrollItem> items = new List<ScrollItem>(final.Length);
         foreach(var f in final){
@@ -51,10 +52,12 @@ public class FindController : Controller
         string[] tag, //набор тегов для поиска
         int offset = 0, //сколько постов надо пропустить
         int count = 20, //сколько постов надо получить
-        bool randomOrder = false //сортировать в случайном порядке
+        bool randomOrder = false, //сортировать в случайном порядке
+        int allowRatings = 4 //какой максимальный рейтинг может быть получен(TODO: сделать для каждого рейтинга отдельно)
         ){
              //все посты которые будут отданы методом
         List<Post> final = new List<Post>(count);
+
         int skiped = 0;
         
         //проверка на то есть ли в массиве с тегами сами теги и на то пустые ли они
@@ -76,6 +79,11 @@ public class FindController : Controller
             tags = tags.OrderBy(a => a.PostCount).ToArray();
             //извлечение всех постов и сортировка
             List<Post> posts = new List<Post>(tags[0].Posts);
+
+            posts = posts //сортировка по рейтингу постов
+                .Where(a=>(int)a.Rating<=allowRatings)
+                .ToList();
+
             if(randomOrder){
                 Random r = new ();
                 posts = posts
@@ -128,6 +136,7 @@ public class FindController : Controller
             //если нет, мы просто сортируем посты, пропускаем и забираем их
             var posts = sc.Posts
                 .AsNoTracking()
+                .Where(a=>(int)a.Rating<=allowRatings)
                 //.Where(a=>(int)a.Status>0)
                 .Include(a=>a.LinkedFile);
             System.Linq.IOrderedQueryable<Sunrise.Types.Post> tempQuery;

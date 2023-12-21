@@ -46,6 +46,8 @@
 
 <p class="post-item-margin">Upload at @Model.uploadTime</p>
 
+<p class="post-item-margin">Rating: @Model.GetStringRatingRepresentation(Model.Rating)</p>
+
 <p class="post-item-margin">
     Author:<a href="/account/@Model.authorId">
         @Model.authorUsername

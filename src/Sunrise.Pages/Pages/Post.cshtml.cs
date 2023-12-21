@@ -20,6 +20,7 @@ public class PostModel : SunModel
     public string uploadTime{get;private set;}
     public string authorUsername{get;private set;}
     public Guid authorId{get;private set;}
+    public PostRating Rating{get;private set;}
 
     public PostModel(ILogger<PostModel> logger, SunriseContext context)
     {
@@ -49,6 +50,7 @@ public class PostModel : SunModel
         uploadTime = post.CreationDate.ToString();
         authorId = post.PostCreator.AccountId;
         authorUsername = post.PostCreator.Username;
+        Rating = post.Rating;
 
         return Page();
     }

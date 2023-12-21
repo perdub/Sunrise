@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Sunrise.Database;
@@ -13,9 +14,11 @@ using Sunrise.Database;
 namespace Sunrise.Database.Migrations
 {
     [DbContext(typeof(SunriseContext))]
-    partial class SunriseContextModelSnapshot : ModelSnapshot
+    [Migration("20231221130243_AddRatingToPosts")]
+    partial class AddRatingToPosts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

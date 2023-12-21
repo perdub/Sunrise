@@ -22,4 +22,21 @@ public abstract class SunModel : PageModel
 
         return sb.ToString();
     }
+
+    public string GetStringRatingRepresentation(Sunrise.Types.Enums.PostRating rating){
+        switch(rating){
+            case Sunrise.Types.Enums.PostRating.VerySafe:
+                return "Very safe";
+            case Sunrise.Types.Enums.PostRating.Save:
+                return "Save";
+            case Sunrise.Types.Enums.PostRating.Warning:
+                return "Warning";
+            case Sunrise.Types.Enums.PostRating.Explicit:
+                return "Explicit";
+            case Sunrise.Types.Enums.PostRating.Guro:
+                return "Guro";
+            default:
+                return "Unknown";
+        }
+    }
 }
