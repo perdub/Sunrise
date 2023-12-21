@@ -30,6 +30,10 @@ public class FindController : Controller
         bool randomOrder = false //сортировать в случайном порядке
         )
     {
+        if(count>75){
+            return BadRequest("Invalid params.");
+        }
+
        var final = await FindPosts(tag, offset, count, randomOrder);
         //создание промежуточных обьектов
         List<ScrollItem> items = new List<ScrollItem>(final.Length);
