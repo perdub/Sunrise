@@ -1,8 +1,7 @@
-namespace Sunrise.Types;
+namespace Sunrise.Types.Enums;
 
 public enum PrivilegeLevel
 {
-    
     Unregistry=0,
     Default=1,
     Moderator=2,

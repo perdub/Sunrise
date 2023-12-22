@@ -1,0 +1,21 @@
+@page
+
+@{
+    ViewData["title"] = "Login";
+}
+
+<div class="center-div">
+    <p align="center" class="header-class">Регистрация</p>
+    <form method="post" action="/account/create">
+        <p>Login:</p>
+        <input type="text" name="username">
+        <br/>
+        <p>Password:</p>
+        <input type="password" name="password">
+        <br/>
+        <p>Email:</p>
+        <input type="email" name="email">
+        <br/>
+        <input type="submit" value="Зарегестрировать">
+    </form>
+</div>

@@ -1,0 +1,73 @@
+@page
+@model Sunrise.Pages.ReviewModel
+
+
+@section CSS{
+    <link rel="stylesheet" type="text/css" href="/css/post.css" />
+    <link rel="stylesheet" type="text/css" href="/css/find.css" />
+}
+
+@switch (Model.Post.LinkedFile.PostType)
+{
+    case Sunrise.Types.Enums.PostType.Image:
+        <img class="post-content" src="@Model.Post.LinkedFile.GetItemPath(Sunrise.Types.Enums.ContentVariant.Sample)" />
+        break;
+    case Sunrise.Types.Enums.PostType.Video:
+        <video controls class="post-content" loop>
+            <source src="@Model.Post.LinkedFile.GetItemPath(Sunrise.Types.Enums.ContentVariant.Sample)" type="video/mp4">
+        </video>
+        break;
+    default:
+        <p class="post-item-margin" style="color:red;">Fall to render content.</p>
+        break;
+}
+<div>
+    <p>Author: @Model.Post.PostCreator.Username</p>
+
+    <p>Uploaded: @Model.Post.CreationDate.ToString()</p>
+</div>
+
+<form action="" method="post"> 
+    <input type="hidden" name="id" value="@Model.Post.PostId" />
+    <input type="hidden" name="randomTake" value="@Model.RandomTake" />
+    <div>
+        <div style="display: flex;">
+            <input type="radio" id="1" value="1" name="rating">
+            <p>VerySafe</p>
+            </input>
+            <input type="radio" id="2" value="2" name="rating">
+            <p>Save</p>
+            </input>
+            <input type="radio" id="3" value="3" name="rating">
+            <p>Warning</p>
+            </input>
+            <input type="radio" id="4" value="4" name="rating">
+            <p>Explicit</p>
+            </input>
+            <input type="radio" id="5" value="5" name="rating">
+            <p>Guro</p>
+            </input>
+        </div>
+        <script>
+            document.getElementById('@((int)(Model.Post.Rating))').checked = true;
+        </script>
+    </div>
+
+    @{
+        System.Text.StringBuilder bl = new();
+        foreach (var a in Model.Post.Tags)
+        {
+            bl.Append(a.TagText);
+            bl.Append(' ');
+        }
+        string tags = bl.ToString().Trim();
+    }
+    <div style="wigth:90%;">
+        <textarea name="description">@Model.Post.Description</textarea>
+        <br />
+        <input name="tags" type="text" id="find" class="find-class awesomplete" value="@tags" />
+    </div>
+    <br/>
+    <input type="submit" value="Review!" />
+</form>
+<script src="/js/autocomplete.js"></script>

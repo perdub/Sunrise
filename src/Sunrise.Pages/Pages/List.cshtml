@@ -1,0 +1,35 @@
+@page
+@model Sunrise.Pages.ListModel
+
+@section CSS{
+    <link rel="stylesheet" type="text/css" href="/css/list.css"/>
+}
+
+<div class="main">
+    @foreach(var post in Model.Posts){
+        <div class="item image-item">
+            <a href="/post/@post.PostId">
+                <img class="" src="@post.LinkedFile.GetItemPath(Sunrise.Types.Enums.ContentVariant.Preview)">
+            </a>
+            @if((int)post.LinkedFile.PostType == 1){
+                @Html.Raw(Sunrise.Pages.GlobalItems.SVGVideo);
+            }
+        </div>
+    }
+</div>
+<div class="page-change-flex">
+    @if(Model.prevPageUrl is not null){
+    <p>
+        <a class="page-change-link" href="@Model.prevPageUrl">
+            &#x2190;
+        </a>
+    </p>
+    }
+    @if(Model.nextPageUrl is not null){
+    <p>
+        <a class="page-change-link" href="@Model.nextPageUrl">
+            &#x2192;
+        </a>
+    </p>
+    }
+</div>

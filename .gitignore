@@ -1,16 +1,3 @@
 [Bb]in/
-[Ll]og/
 [Oo]bj/
-app.db
-storage/
-[Ll]ogs/
-app.db-shm
-app.db-wal
-src/Sunrise/tokens.json
-src/Sunrise/telegram.json
-src/Sunrise/binarys/
-src/Sunrise/settings.json
-src/Sunrise/tunnels.json
-src/Sunrise/localTelegramBotServer/
-tests/Sunrise.Tests/TestResults/
-tests/Sunrise.Tests/appsettings.json
+src/Sunrise/SunriseConfig.json

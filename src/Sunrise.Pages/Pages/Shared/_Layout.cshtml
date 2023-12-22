@@ -1,0 +1,72 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    @{
+        //render page title
+        var title = ViewData["title"] ?? "Sunrise";
+        <title>@title</title>
+    }
+    <!--метаданные-->
+    <meta charset="utf-8">
+    <meta name="application-name" content="Sunrise">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Booru, Image, Images, Imageboard, Sunrise">
+
+    <link rel="stylesheet" type="text/css" href="/css/global.css"/>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sunrise" />
+    @RenderSection("OpenGraph", false)
+
+    @RenderSection("CSS", false)
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!--cdn-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LeaVerou/awesomplete@fc9f00f14323b2200e7752c09a0014883efb2d0b/awesomplete.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/gh/LeaVerou/awesomplete@fc9f00f14323b2200e7752c09a0014883efb2d0b/awesomplete.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</head>
+
+<body class="background">
+    <div class="topbar flex-topbar">
+        <div class="center-flex">
+            <a href="/">
+                <img src="/images/icon.png">
+            </a>
+        </div>
+
+        <div class="left-flex">
+            <div class="flex-topbar-part">
+                <a href="/forms/upload">
+                    <p>Upload</p>
+                </a>
+                <a href="/scroll">
+                    <p>Scroll</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="right-flex">
+            <a href="/forms/login" id="userPage">
+                <p>Login</p>
+            </a>
+        </div>
+
+    </div>
+    
+    <div class="horizontal-center">
+        <div class="center-div">
+            <p align="center" class="header-class">Sunrise</p>
+        </div>
+        @RenderBody()
+    </div>
+
+</body>
+
+<script src="/js/base.js"></script>
+
+</html>

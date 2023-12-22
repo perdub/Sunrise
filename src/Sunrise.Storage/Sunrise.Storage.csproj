@@ -1,16 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
     <ProjectReference Include="..\Sunrise.Convert\Sunrise.Convert.csproj" />
+    <ProjectReference Include="..\Sunrise.Database\Sunrise.Database.csproj" />
+    <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
+    <ProjectReference Include="..\Sunrise.Builders\Sunrise.Builders.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MemoryPack" Version="1.9.16" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

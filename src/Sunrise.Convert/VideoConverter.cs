@@ -1,81 +1,84 @@
 using FFMpegCore;
-using Sunrise.Types;
+using FFMpegCore.Pipes;
 
 namespace Sunrise.Convert;
 
-public class VideoConverter : AbstractConvert
+public class VideoConverter : AbstractConverter
 {
-    public override ContentType ContentType => ContentType.Video;
+    private string _fileExtension;
+    private Stream _input;
+    private byte[] _video;
+    private string fullOriginalPath;
+    private Action<string> _log;
+    public VideoConverter(string globalPrefixPath, byte[] video, string fileExtension, Action<string> log) : base(globalPrefixPath){
+        _input = video.ToStream();
+        _video = video;
+        _fileExtension = fileExtension;
+        _log = log;
+    }
 
-    public override async Task<string[]> Convert(string globalPath, Func<string, string> nameGenerator)
+    public override void Dispose()
     {
-        string[] fileNames = new string[]{
-            nameGenerator("png"),//ffmpegcore изза какихто причин принудительно меняет тип выходного файла снапшота на png
-            nameGenerator("mp4"),
-            globalPath
-        };
-        //анализ видеофайла
-        var media = FFProbe.Analyse(globalPath);
-        
-        //создание обьекта описывающий размер скриншота для превью
-        System.Drawing.Size s = new System.Drawing.Size(Constants.PREVIEW_SIZE, Constants.PREVIEW_SIZE);
+        throw new NotImplementedException();
+    }
 
-        int vid_h = 0;
-        int vid_w = 0;
+    internal override string BuildOriginal()
+    {
+        string fN = GenerateFileName(_fileExtension, true);
+        fullOriginalPath = fN;
+        File.WriteAllBytes(fN, _video);
+        return fN;
+    }
 
+    internal override string BuildPreview()
+    {
+        string fN = GenerateFileName("png");
 
-        //попытка симетрично заполнить размер относительно первого потока
-        var a = media.VideoStreams.FirstOrDefault();
-        if(a!=null){
-            if(a.Width>a.Height){
-                s.Width = Constants.PREVIEW_SIZE;
-                vid_w = Constants.VIDEO_CONVERTED_SIZE;
+        _input.Position = 0;
 
-                s.Height = (a.Height*Constants.PREVIEW_SIZE)/a.Width;
-                vid_h=global::System.Convert.ToInt32(Math.Round((a.Height*Constants.VIDEO_CONVERTED_SIZE)/(double)a.Width, MidpointRounding.ToEven));
-            }
-            else{
-                s.Height = Constants.PREVIEW_SIZE;
-                vid_h = Constants.VIDEO_CONVERTED_SIZE;
+        FFMpegArguments
+            .FromFileInput(fullOriginalPath)
+            .OutputToFile(fN, false, (o)=>{
+                o.WithCustomArgument("-frames:v 1");
+            })
+            .ProcessSynchronously();
 
-                s.Width = (a.Width*Constants.PREVIEW_SIZE)/a.Height;
-                vid_w=global::System.Convert.ToInt32(Math.Round((a.Width*Constants.VIDEO_CONVERTED_SIZE)/(double)a.Height, MidpointRounding.ToEven));
-                
-            }
-        }
-                if(vid_w%2!=0){
-                    vid_w--;
-                }
-                if(vid_h%2!=0){
-                    vid_h--;
-                }
+        return fN;
+    }
+
+    internal override string BuildSample()
+    {
+        string fN = GenerateFileName("mp4");
+
+        _input.Position = 0;
 
         Guid convertId = Guid.NewGuid();
-        Console.WriteLine($"New convert task with id {convertId} started.");
 
-        //сжатие в base.mp4
-        await FFMpegArguments
-            .FromFileInput(globalPath)
-            .OutputToFile(
-                fileNames[1],
-                true,
-                (options)=>{
-                    options.UsingThreads(Constants.FFMPEG_THREADS_COUNT);
-                    options.WithVideoCodec(FFMpegCore.Enums.VideoCodec.LibX264);
-                    options.WithFastStart();
-                    options.WithSpeedPreset(FFMpegCore.Enums.Speed.VeryFast);
-                    options.WithCustomArgument($"-metadata comment=\"{getMetadata()}\"");
-                    options.WithCustomArgument($"-crf 28 -profile:v baseline -level 1 -vf \"scale={vid_w}:{vid_h}\"");
-                }
-            )
-            .NotifyOnProgress((percentage)=>{
-                Console.WriteLine($"Convert task {convertId} complete on {percentage}%");
-            }, media.Duration)
-            .ProcessAsynchronously();
+        FFMpegArguments
+            .FromFileInput(fullOriginalPath)
+            .OutputToFile(fN, false, (o)=>{
+                o.WithVideoCodec(FFMpegCore.Enums.VideoCodec.LibX264);
+                o.WithoutMetadata();
+                o.WithFastStart();
+                o.WithSpeedPreset(FFMpegCore.Enums.Speed.SuperFast);
+                o.WithCustomArgument($"-metadata comment=\"Sunrise\"");
+                o.WithCustomArgument($"-crf 28 -profile:v baseline -level 1");
+            })
+            .NotifyOnProgress((p)=>{
+                _log($"{convertId}:{p}% are ready!");
+            })
+            .ProcessSynchronously();
 
-        //сохранение превью
-        FFMpeg.Snapshot(globalPath, fileNames[0], s);
+        return fN;
+    }
 
-        return fileNames;
+    internal override bool NeedToCreateSample()
+    {
+        var meta = FFProbe.Analyse(_input);
+        _input.Position = 0;
+        //если длинна больше 5 минут или вес больше 100 мб мы пропускаем потому что у меня нет столько вычислительных ресурсов((
+        if(meta.Duration > TimeSpan.FromMinutes(5) || _video.Length > 100*1024*1024)
+            return false;
+        return true;
     }
 }

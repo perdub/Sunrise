@@ -1,0 +1,18 @@
+@page
+
+@{
+    ViewData["title"] = "Login";
+}
+
+<div class="center-div">
+    <p align="center" class="header-class">Вход</p>
+    <form method="post" action="/account/login">
+        <p>Login:</p>
+        <input type="text" name="username">
+        <br/>
+        <p>Password:</p>
+        <input type="password" name="password">
+        <br/>
+        <input type="submit" value="Войти">
+    </form>
+</div>
