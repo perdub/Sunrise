@@ -25,7 +25,7 @@ public class TagsController(TagsCache cache, IMemoryCache mCache) : Controller{
         bld.Append(tags);
         bld.Append("\"}");
         string json = bld.ToString();
-        mCache.Set("all_tags_json", json, TimeSpan.FromMinutes(5));
+        mCache.Set("all_tags_json", json, TimeSpan.FromSeconds(20));
         return json;
     }
 }

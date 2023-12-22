@@ -26,7 +26,7 @@ public class TagsCache(SunriseContext context, IMemoryCache cache)
             bld.Append(';');
         }
         string raw = bld.ToString();
-        cache.Set("all_tags_raw", raw);
+        cache.Set("all_tags_raw", raw, TimeSpan.FromSeconds(20));
 
         return raw;
     }

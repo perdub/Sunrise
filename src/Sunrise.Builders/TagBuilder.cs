@@ -15,6 +15,7 @@ public class TagBuilder{
         List<Tag> rTag = new List<Tag>(tags.Length);
         //todo: может быть возможно получить все теги из бд одним запросом. надо будет попробывать потом.
         foreach(var tag in tags){
+            if(string.IsNullOrWhiteSpace(tag)) continue;
             var sTag = _context.Tags.Where(a=>a.TagText==tag).FirstOrDefault();
             if(sTag is null){
                 sTag = new Tag(tag);
