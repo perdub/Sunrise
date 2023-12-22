@@ -18,4 +18,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Binarys
-          path: src/Sunrise/bin/Release/net7.0/publish
+          path: src/Sunrise/bin/Release/net8.0/publish
