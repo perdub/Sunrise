@@ -7,7 +7,8 @@
         }
     },
     
-    "ConnectionString": "Host=localhost;Port=5432;Database=MyDb;Username=postgres;Password=root;KeepAlive=300;Timeout=300;Pooling=false;CommandTimeout=300",
+    "ConnectionString": "Host=localhost;Port=5432;Database=MySunriseDb;Username=postgres;Password=root;KeepAlive=300;Timeout=300;Pooling=false;CommandTimeout=300",
     "GlobalSalt": "Your_Random_G1obal_8a1t",
-    "StoragePath": "C:\\Sunrise\\Storage"
+    "StoragePath": "C:\\Sunrise\\Storage",
+    "RequestsPath": "/sunrise"
 }
