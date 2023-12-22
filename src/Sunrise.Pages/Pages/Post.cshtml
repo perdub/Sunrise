@@ -1,0 +1,67 @@
+@page "{postid?}"
+@model Sunrise.Pages.PostModel
+
+@section CSS{
+    <link rel="stylesheet" type="text/css" href="/css/post.css"/>
+}
+
+@section OpenGraph{
+    @switch(Model.PostType){
+        case Sunrise.Types.Enums.PostType.Image:
+            <meta property="og:image" content="@string.Concat(Model.GetHostUrl(), Model.baseUrl)" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:image" content="@string.Concat(Model.GetHostUrl(), Model.baseUrl)" />
+            break;
+        case Sunrise.Types.Enums.PostType.Video:
+            <meta property="og:image" content="@Model.baseUrl" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:image" content="@Model.baseUrl" />
+            break;
+    }
+}
+
+<div class="center-post">
+    @switch (Model.PostType)
+    {
+        case Sunrise.Types.Enums.PostType.Image:
+            <img class="post-content" src="@Model.baseUrl"/>
+            break;
+        case Sunrise.Types.Enums.PostType.Video:
+            <video controls class="post-content" autoplay muted loop >
+                    <source src="@Model.baseUrl" type="video/mp4">
+            </video>
+            break;
+    }
+
+</div>
+
+<div class="post-item-margin download-block-flex">
+    <a href="@Model.originalUrl">
+        <p>Original</p>
+    </a>
+    <a href="@Model.originalUrl" download>
+        <p>Download</p>
+    </a>
+</div>
+
+<p class="post-item-margin">Upload at @Model.uploadTime</p>
+
+<p class="post-item-margin">Rating: @Model.GetStringRatingRepresentation(Model.Rating)</p>
+
+<p class="post-item-margin">
+    Author:<a href="/account/@Model.authorId">
+        @Model.authorUsername
+    </a>
+</p>
+
+<p class="post-item-margin">@Model.Description</p>
+<div class="post-item-margin">
+    @foreach (var Tag in Model.Tags)
+    {
+        <p>
+            <a href="/tag/@Tag.TagText">
+                @Tag.TagText
+            </a>
+        </p>
+    }
+</div>

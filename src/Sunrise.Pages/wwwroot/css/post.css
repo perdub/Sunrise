@@ -1,0 +1,16 @@
+.post-content{
+    height: auto;
+    max-width: 90%;
+}
+.center-post{
+    display: flex;
+    justify-content: center;
+}
+.post-item-margin{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.download-block-flex{
+    display: flex;
+    gap: 3%;
+}

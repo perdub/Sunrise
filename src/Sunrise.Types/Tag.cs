@@ -1,32 +1,25 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Sunrise.Types;
 
 public class Tag{
-    [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
-    //индефикатор тега(каждый тег представляется уникальным числом)
-    public int TagId {get; set;}
-    //текстовое представление, используещеесе на странице (1 girl)
-    public string FullText {get; set;}
-    //представление, использующеесе для поиска (1_girl)
-    public string SearchText{get;  set;}
+    [Key]
+    public int TagId{get;private set;}
 
-    //описание тега
-    public string Description{get; set;}
-    //количество постов с этим тегом
-    public int PostCount {get; set;}
+    public int PostCount{get;set;}
 
-    //посты с этим тегом
+    public string TagText{get;set;}
+
+    public string TagDescription {get;set;}
     [JsonIgnore]
-    public List<Post> Post {get;set;}
+    public List<Post> Posts{get;set;} = new List<Post>();
 
-    public Tag(string tagSearch) : this()
-    {
-        FullText = Description = SearchText = tagSearch;
-        PostCount = 0;
-    }
     private Tag(){
-        Post = new List<Post>();}
-    
+
+    }
+
+    public Tag(string tag){
+        TagText = TagDescription = tag;
+    }
 }

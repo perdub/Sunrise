@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Sunrise/bin/Debug/net7.0/Sunrise.dll",
+            "program": "${workspaceFolder}/src/Sunrise/bin/Debug/net8.0/Sunrise.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Sunrise",
+            "cwd": "${workspaceFolder}/src/Sunrise/bin/Debug/net8.0",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

@@ -1,63 +1,71 @@
 using SixLabors.ImageSharp;
-using Sunrise.Types;
 
 namespace Sunrise.Convert;
 
-public class ImageConverter : AbstractConvert
+public class ImageConverter : AbstractConverter
 {
-    public override ContentType ContentType => ContentType.Image;
+    private Image _image;
+    private int _imageSize;
+    private string _fileExtension;
 
-    public override async Task<string[]> Convert(string globalPath, Func<string, string> nameGenerator)
+    public ImageConverter(string globalPathPrefix, byte[] image, string fileExtension) : base(globalPathPrefix)
     {
-        string[] fileNames = new string[]{
-            nameGenerator("jpg"),
-            nameGenerator("jpg"),
-            globalPath
-        };
-
-        var img = await Image.LoadAsync(globalPath);
-
-
-        var metadata = img.Metadata.IptcProfile;
-        if(metadata == null){
-            metadata = img.Metadata.IptcProfile = new SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcProfile();
-        }
-
-        metadata.SetValue(SixLabors.ImageSharp.Metadata.Profiles.Iptc.IptcTag.Caption, getMetadata());
-        
-        Size basesize = newSize(img.Size);
-        img.Mutate((x)=>{
-            x.Resize(basesize);
-        });
-        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, fileNames[1]));
-
-        img.Mutate((x)=>{
-            x.Resize(getPreviewSize(img.Size));
-        });
-
-        await img.SaveAsJpegAsync(getNewFileDirection(globalPath, fileNames[0]));
-        
-        img.Dispose();
-
-        return fileNames;
+        _image = Image.Load(image);
+        _imageSize = image.Length;
+        _fileExtension = fileExtension;
     }
 
-    //проверка на размер изображения, если ислишко большой для базового - урезаем
-    Size newSize(Size s){
-        if(s.Width>4096){
-            s.Height = (4096*s.Height)/s.Width;
-            s.Width = 4096;
+    internal override string BuildOriginal()
+    {
+        string fN = GenerateFileName(_fileExtension, true);
+        _image.Save(fN);
+        return fN;
+    }
+
+    internal override string BuildPreview()
+    {
+        string fN = GenerateFileName("jpg");
+        _image.Mutate(o=>o.Resize(getPreviewSize(_image.Size)));
+        _image.SaveAsJpeg(fN);
+        return fN;
+    }
+
+    internal override string BuildSample()
+    {
+        string fN = GenerateFileName("jpg");
+        _image.Mutate(o=>o.Resize(newSize(_image.Size)));
+        _image.SaveAsJpeg(fN, new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder{Quality = 70});
+        return fN;
+    }
+
+    internal override bool NeedToCreateSample()
+    {
+        if(_image.Height>2048 || _image.Width>2048 || _imageSize > 1024*1024){
+            return true;
         }
-        if(s.Height>4096){
-            s.Width = (4096*s.Width)/s.Height;
-            s.Height = 4096;
+        return false;
+    }
+
+    private Size newSize(Size s){
+        if(s.Width>2048){
+            s.Height = (2048*s.Height)/s.Width;
+            s.Width = 2048;
+        }
+        if(s.Height>2048){
+            s.Width = (2048*s.Width)/s.Height;
+            s.Height = 2048;
         }
         return s;
     }
-    Size getPreviewSize(Size s){
+    private Size getPreviewSize(Size s){
         if(s.Height>s.Width){
-            return new Size(0,Constants.PREVIEW_SIZE);
+            return new Size(0, 300);
         }
-        return new Size(Constants.PREVIEW_SIZE,0);
+        return new Size(300, 0);
+    }
+
+    public override void Dispose()
+    {
+        _image.Dispose();
     }
 }
