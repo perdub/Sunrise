@@ -59,7 +59,7 @@ public class Storage
                 break;
 
             default:
-                throw new Exception("Converter not found.");
+                throw new Exception("Converter not found. File header: "+format.fileExtension);
         }
         var paths = converter.Convert();
         paths = paths.DeletePrefix(globalPathPrefix);

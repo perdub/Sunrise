@@ -1,4 +1,5 @@
 using Sunrise.Types.Enums;
+using System.Text;
 
 namespace Sunrise.Convert;
 
@@ -59,6 +60,14 @@ public static class FormatDetector{
             }
         }
 
-        return new Format(PostType.Unknown, "");
+        //build byte header to unknown format
+
+        System.Text.StringBuilder bld = new System.Text.StringBuilder();
+
+        for(int i = 0; i<32; i++){
+            bld.Append(arr[i].ToString("X2"));
+        }
+
+        return new Format(PostType.Unknown, bld.ToString());
     }
 }
