@@ -40,6 +40,8 @@ public class Program
         builder.Services.AddScoped<Sunrise.Builders.TagBuilder>();
         builder.Services.AddScoped<Sunrise.Storage.Storage>();
 
+        builder.Services.AddSingleton<Sunrise.Grabber.Grabber>();
+
         //добавление контроллеров из Sunrise.Mvc
         builder.Services.AddMvc()
             .AddApplicationPart(Assembly.Load(new AssemblyName("Sunrise.Mvc")));

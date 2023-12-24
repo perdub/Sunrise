@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Sunrise.Types\Sunrise.Types.csproj" />
     <ProjectReference Include="..\Sunrise.Builders\Sunrise.Builders.csproj" />
     <ProjectReference Include="..\Sunrise.Storage\Sunrise.Storage.csproj" />
+    <ProjectReference Include="..\Sunrise.Grabber\Sunrise.Grabber.csproj" />
   </ItemGroup>
 
 </Project>

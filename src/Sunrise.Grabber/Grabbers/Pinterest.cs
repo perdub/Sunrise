@@ -19,7 +19,7 @@ internal partial class PinterestGrabber : ResourceGrabber
     }
 
     private string getFileUrl(string html){
-        var matches = MyRegex().Matches(html);
+        var matches = Regex.Matches(html, REGEX_PATTERN);
         var url = matches[^1].Value;
         url = url.Substring(1, url.Length - 2);
         return url;
@@ -30,8 +30,5 @@ internal partial class PinterestGrabber : ResourceGrabber
     {
         
     }
-
-    [GeneratedRegex(REGEX_PATTERN)]
-    private static partial Regex MyRegex();
-    private const string REGEX_PATTERN = "\"\"https://i.pinimg.com/originals.+?\"\"";
+    private const string REGEX_PATTERN = @"""https:\/\/i.pinimg.com\/originals.+?""";
 }
