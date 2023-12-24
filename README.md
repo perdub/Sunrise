@@ -5,7 +5,7 @@ Sunrise is a Danbooru-like image board to anime pictures. To work, its required 
 
 ### Features
 
-* Cringe design
+* Cringe and stupid design
 * Not optimized
 
 ### Real Features
