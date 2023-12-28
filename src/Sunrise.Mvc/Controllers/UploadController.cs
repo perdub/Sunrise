@@ -96,6 +96,6 @@ public class UploadController : Controller{
             await _storage.SavePost(result.Data, sessionKey, Array.Empty<string>());
         }
 
-        return Ok();
+        return Redirect("/forms/upload");
     }
 }

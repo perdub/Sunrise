@@ -9,3 +9,13 @@
 </form>
 
 <script src="/js/autocomplete.js"></script>
+
+<h3>Grab</h3>
+<input type="text" id="grab" />
+<input type="submit" value="Grab" id="grabButton" />
+<script>
+    document.getElementById('grabButton').onclick = async function() {
+        let url = document.getElementById('grab').value;
+        fetch('/grab?grabUrl='+url, { method: 'POST', redirect: 'follow'});
+    };
+</script>

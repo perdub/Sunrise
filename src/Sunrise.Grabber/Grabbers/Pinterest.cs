@@ -30,5 +30,5 @@ internal partial class PinterestGrabber : ResourceGrabber
     {
         
     }
-    private const string REGEX_PATTERN = @"""https:\/\/i.pinimg.com\/originals.+?""";
+    private const string REGEX_PATTERN = @"""https:\/\/(i|v1)\.pinimg\.com\/(originals|videos\/mc\/(expMp4|720p)).+?""";
 }
