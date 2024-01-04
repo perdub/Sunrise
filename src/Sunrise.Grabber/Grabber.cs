@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 using System.Reflection;
 
 namespace Sunrise.Grabber;
@@ -6,6 +8,7 @@ public class Grabber
 {
     private Dictionary<string, Type> _grabbers;
     private HttpClient _client;
+    private IServiceProvider _provider;
 
     private void MapGrabbers(){
         var assm = Assembly.GetExecutingAssembly();
@@ -24,7 +27,8 @@ public class Grabber
         if(!_grabbers.ContainsKey(domain)){
             return null;
         }
-        return (ResourceGrabber)Activator.CreateInstance(_grabbers[domain], new object[] { _client });
+        var instance = ActivatorUtilities.CreateInstance(_provider, _grabbers[domain], new object[] { _client });
+        return (ResourceGrabber)instance;
     }
 
     public async Task<GrabResult[]?> Grab(Uri uri){
@@ -37,9 +41,16 @@ public class Grabber
         return r;
     }
 
-    public Grabber(){
+    public Grabber(IServiceProvider provider){
+        _provider = provider;
         _grabbers = new Dictionary<string, Type>();
-        _client = new HttpClient();
+
+        var h = new HttpClientHandler();
+        h.AllowAutoRedirect = true;
+        h.CookieContainer.Capacity = 1024;
+        h.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli;
+        _client = new HttpClient(h);
+
         MapGrabbers();
     }
 }
