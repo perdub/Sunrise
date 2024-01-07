@@ -68,7 +68,7 @@ public class Program
             });
         });
 
-
+        builder.Services.AddHostedService<Sunrise.Services.BackupService>();
 
         var app = builder.Build();
 

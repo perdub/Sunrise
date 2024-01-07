@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <None Include="SunriseConfig*.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
