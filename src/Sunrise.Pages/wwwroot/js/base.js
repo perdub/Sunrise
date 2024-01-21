@@ -33,13 +33,3 @@ function getRandomBackground() {
         background.style.setProperty("background-position", "center "+getRandomInt(101)+"%");
     });
 }
-function setUserButton(){
-    //функция которая заменяет переход на страницу логина ссылкой на пользователя
-    let a = getCookie('Sunid');
-    if(a!==undefined){
-        var b = document.getElementById('userPage');
-        b.href = "/users/"+a;
-        b.children[0].innerText  = getCookie('Sunname');
-    }
-}
-setUserButton();
