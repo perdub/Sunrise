@@ -45,6 +45,7 @@ public class SessionMiddleware{
             content.Items.Add("PrivilegeLevel", (int)account.PrivilegeLevel);
             content.Items.Add("Id", account.AccountId);
             content.Items.Add("Name", account.Username);
+            
         }
         invoke:
         content.Items.Add("IsLogged", IsLogged);

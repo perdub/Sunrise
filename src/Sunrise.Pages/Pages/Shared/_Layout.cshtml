@@ -51,18 +51,19 @@
         </div>
 
         <div class="right-flex">
-            <div>
-                @if(((bool)Model.HttpContext.Items["IsLogged"])==true){
-                    var id = (Guid)Model.HttpContext.Items["Id"];
-                    <a href="/user/@id" id="userPage">
-                        <p>@((string)Model.HttpContext.Items["Name"])</p>
+            <div><!--
+                if(Model.HttpContext.Items.TryGetValue("IsLogged", out bool t)
+                    && Model.HttpContext.Items.TryGetValue("Id", out Guid id)
+                    && Model.HttpContext.Items.TryGetValue("Name", out string name)){
+                    <a href="/user/id" id="userPage">
+                        <p>(name)</p>
                     </a>
                 }
-                else{
+                else{}*/-->
                     <a href="/forms/login" id="userPage">
                         <p>Login</p>
                     </a>
-                }
+                
             </div>
         </div>
 
