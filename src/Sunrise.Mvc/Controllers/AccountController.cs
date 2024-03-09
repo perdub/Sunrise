@@ -53,7 +53,7 @@ public class AccountController : Controller{
     [HttpPost]
     [Route("login")]
     [EnableRateLimiting("AccountLogin")]
-    public async Task<IActionResult> Login(string username, string password){
+    public async Task<IActionResult> Login(string username, string password, string rto=null){
         var a = _context.Accounts.Where(a=>a.Username == username).FirstOrDefault();
         if(a is null){
             return Conflict(
@@ -76,6 +76,6 @@ public class AccountController : Controller{
 
         HttpContext.Response.Cookies.Append("Suntoken", newSession.SessionId);
 
-        return Ok();
+        return rto is not null ? Redirect(rto) : Ok();
     }
 }
