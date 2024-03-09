@@ -28,12 +28,22 @@ public class Storage
         _convertLogger = videoLogger;
     }
 
-    public async Task SavePost(byte[] post,
+    private string jsonUploadResult(string message = null){
+        if(message is null){
+            return "{\"result\": true}";
+        }
+        return "{\"result\": false, \"error\": \""+message+"\"}";
+    }
+
+    public async Task<(int httpCode, string message)> SavePost(byte[] post,
                                string sessionKey,
                                string[] tags){
+        
+        try
+        {
 
         if(post is null || post.Length == 0){
-            throw new NullReferenceException("Empry input.");
+            return (400, jsonUploadResult("No file."));
         }
 
         var account = _context.Sessions
@@ -42,7 +52,7 @@ public class Storage
             .FirstOrDefault().Account;
 
         if(account is null){
-            throw new NullReferenceException("Sessionkey invalid.");
+            return (401, jsonUploadResult("Unauthorized/Bad session key."));
         }
 
         Format format = post.GetFileFormat();
@@ -53,7 +63,7 @@ public class Storage
 
         _context.Files.Where(a=>a.Sha256 == fileHash).FirstOrDefault();
         if(_context.Files.Where(a=>a.Sha256 == fileHash).FirstOrDefault() != null){
-            throw new Exception("File with this hash already exists.");
+            return (409, jsonUploadResult("File with same hash already exists."));
         }
 
         AbstractConverter converter;
@@ -75,7 +85,7 @@ public class Storage
                 break;
 
             default:
-                throw new Exception("Converter not found. File header: "+format.fileExtension);
+                return (415, jsonUploadResult("Unsupported file type."));
         }
         var paths = converter.Convert();
         paths = paths.DeletePrefix(globalPathPrefix);
@@ -104,5 +114,14 @@ public class Storage
         _context.Files.Add(newFile);
         
         await _context.SaveChangesAsync();
+
+        return (200, jsonUploadResult());
+        }
+        catch(Exception ex){
+            #if DEBUG
+            return (500, jsonUploadResult(ex.Message));
+            #endif
+            return (500, jsonUploadResult("Internal server error."));
+        }
     }
 }

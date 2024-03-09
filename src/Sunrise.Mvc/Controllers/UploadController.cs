@@ -39,9 +39,9 @@ public class UploadController : Controller{
 
         var file = HttpContext.Request.Form.Files;
         var tags = HttpContext.Request.Form["tags"][0];
-        await _storage.SavePost(file[0].OpenReadStream().ToByteArray(), sessionKey, tags.Split(" "));
+        var responce = await _storage.SavePost(file[0].OpenReadStream().ToByteArray(), sessionKey, tags.Split(" "));
 
-        return Ok();
+        return StatusCode(responce.httpCode, responce.message);
     }
 
     [Route("/api/upload")]
@@ -67,9 +67,9 @@ public class UploadController : Controller{
         ms.Position = 0;
         var tags = HttpContext.Request.Headers["Tags"].ToArray();
 
-        await _storage.SavePost(ms.ToByteArray(), sessionKey, tags);
+        var responce = await _storage.SavePost(ms.ToByteArray(), sessionKey, tags);
 
-        return Ok();
+        return StatusCode(responce.httpCode, responce.message);
     }
 
     [Route("/grab")]
