@@ -1,5 +1,6 @@
 using Sunrise.Database;
 using Sunrise.Types;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sunrise.Builders;
 
@@ -12,19 +13,21 @@ public class TagBuilder{
     }
 
     public async Task<Tag[]> GetTags(params string[] tags){
-        List<Tag> rTag = new List<Tag>(tags.Length);
-        //todo: может быть возможно получить все теги из бд одним запросом. надо будет попробывать потом.
-        foreach(var tag in tags){
-            if(string.IsNullOrWhiteSpace(tag)) continue;
-            var sTag = _context.Tags.Where(a=>a.TagText==tag).FirstOrDefault();
-            if(sTag is null){
-                sTag = new Tag(tag);
-                _context.Tags.Add(sTag);
-            }
-            rTag.Add(sTag);
+        var dbTags = await _context.Tags
+            .Where(a => tags.Contains(a.TagText))
+            .ToListAsync();
+
+        var newTags = tags.Except(dbTags.Select(a => a.TagText)).ToArray();
+
+        foreach(var tag in newTags){
+            Tag newTag = new Tag(tag);
+            _context.Tags.Add(newTag);
+            dbTags.Add(newTag);
         }
+
         await _context.SaveChangesAsync();
-        return rTag.ToArray();
+
+        return dbTags.ToArray();
     }
 
 }
