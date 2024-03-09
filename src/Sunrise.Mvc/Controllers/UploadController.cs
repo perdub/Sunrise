@@ -15,13 +15,15 @@ public class UploadController : Controller{
     private IServiceProvider _provider;
     private SunriseContext _context;
     private Sunrise.Grabber.Grabber _grabber;
+    private ILogger<UploadController> _logger;
 
-    public UploadController(Storage.Storage storage, IServiceProvider provider, SunriseContext context, Sunrise.Grabber.Grabber grabber)
+    public UploadController(Storage.Storage storage, IServiceProvider provider, SunriseContext context, Sunrise.Grabber.Grabber grabber, ILogger<UploadController> logger)
     {
         _provider = provider;
         _storage = storage;
         _context = context;
         _grabber = grabber;
+        _logger = logger;
     }
 
 
@@ -93,6 +95,9 @@ public class UploadController : Controller{
             return BadRequest();
         }
         foreach(var result in grabResult){
+            if(!result.Success || result.Data is null || result.Data.Length == 0){
+                _logger.LogDebug(message:"Unsuccesful grab result", result);
+            }
             await _storage.SavePost(result.Data, sessionKey, Array.Empty<string>());
         }
 

@@ -41,16 +41,11 @@ public class Grabber
         return r;
     }
 
-    public Grabber(IServiceProvider provider){
+    public Grabber(IServiceProvider provider, HttpClient client){
         _provider = provider;
         _grabbers = new Dictionary<string, Type>();
 
-        var h = new HttpClientHandler();
-        h.AllowAutoRedirect = true;
-        h.CookieContainer.Capacity = 1024;
-        h.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli;
-        _client = new HttpClient(h);
-        _client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+        _client = client;
 
         MapGrabbers();
     }

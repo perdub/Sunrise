@@ -65,7 +65,7 @@ public class VideoConverter : AbstractConverter
                 o.WithCustomArgument($"-crf 28 -profile:v baseline -level 1");
             })
             .NotifyOnProgress((p)=>{
-                _log($"{convertId}:{p}% are ready!");
+                _log($"{convertId} : {p}% are ready!");
             })
             .ProcessSynchronously();
 

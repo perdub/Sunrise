@@ -16,7 +16,7 @@ public class Storage
     private TagBuilder _tagBuilder;
     private string globalPathPrefix;
 
-    private ILogger<VideoConverter> _videoLogger;
+    private ILogger<VideoConverter> _convertLogger;
 
     public Storage(SunriseContext context, IConfiguration config, TagBuilder tagBuilder, ILogger<VideoConverter> videoLogger)
     {
@@ -25,12 +25,17 @@ public class Storage
         _tagBuilder = tagBuilder;
         globalPathPrefix = _config.GetValue<string>("StoragePath");
         Directory.CreateDirectory(globalPathPrefix);
-        _videoLogger = videoLogger;
+        _convertLogger = videoLogger;
     }
 
     public async Task SavePost(byte[] post,
                                string sessionKey,
                                string[] tags){
+
+        if(post is null || post.Length == 0){
+            throw new NullReferenceException("Empry input.");
+        }
+
         var account = _context.Sessions
             .Include(a=>a.Account)
             .Where(a=>a.SessionId == sessionKey)
@@ -46,6 +51,11 @@ public class Storage
         var hashResult = iHash.ComputeBytes(post);
         string fileHash = hashResult.ToString();
 
+        _context.Files.Where(a=>a.Sha256 == fileHash).FirstOrDefault();
+        if(_context.Files.Where(a=>a.Sha256 == fileHash).FirstOrDefault() != null){
+            throw new Exception("File with this hash already exists.");
+        }
+
         AbstractConverter converter;
         switch(format.Type){
             case PostType.Image:
@@ -54,7 +64,13 @@ public class Storage
 
             case PostType.Video:
                 converter = new VideoConverter(globalPathPrefix, post, format.fileExtension, (l)=>{
-                    _videoLogger.LogTrace(l);
+                    _convertLogger.LogTrace(l);
+                });
+                break;
+
+            case PostType.Gif:
+                converter = new AnimationsConverter(globalPathPrefix, post, format.fileExtension, (l)=>{
+                    _convertLogger.LogTrace(l);
                 });
                 break;
 

@@ -8,6 +8,7 @@
 @section OpenGraph{
     @switch(Model.PostType){
         case Sunrise.Types.Enums.PostType.Image:
+        case Sunrise.Types.Enums.PostType.Gif:
             <meta property="og:image" content="@string.Concat(Model.GetHostUrl(), Model.baseUrl)" />
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:image" content="@string.Concat(Model.GetHostUrl(), Model.baseUrl)" />
@@ -24,6 +25,7 @@
     @switch (Model.PostType)
     {
         case Sunrise.Types.Enums.PostType.Image:
+        case Sunrise.Types.Enums.PostType.Gif:
             <img class="post-content" src="@Model.baseUrl"/>
             break;
         case Sunrise.Types.Enums.PostType.Video:

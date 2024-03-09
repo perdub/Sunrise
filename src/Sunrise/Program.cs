@@ -2,8 +2,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using System.Net;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using AngleSharp.Io;
+using AngleSharp;
 
 namespace Sunrise;
 
@@ -69,6 +72,20 @@ public class Program
         });
 
         builder.Services.AddHostedService<Sunrise.Services.BackupService>();
+
+        var h = new HttpClientHandler();
+        h.AllowAutoRedirect = true;
+        h.CookieContainer.Capacity = 1024;
+        h.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli;
+        h.UseCookies = true;
+        var client = new HttpClient(h);
+        client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+        
+        builder.Services.AddSingleton<HttpClient>(client);
+
+        builder.Services.AddSingleton<AngleSharp.IBrowsingContext>((ser)=>{
+            return BrowsingContext.New(Configuration.Default);
+        });
 
         var app = builder.Build();
 
