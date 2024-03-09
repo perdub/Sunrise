@@ -59,7 +59,7 @@ internal partial class IdolSankakuComplexGrabber : ResourceGrabber
         AngleSharp.Html.Dom.IHtmlAnchorElement srcAnchor = (AngleSharp.Html.Dom.IHtmlAnchorElement)src;
         var imageUrl = srcAnchor.Href;
         var imageRaw = await Client.GetByteArrayAsync(imageUrl);
-        return new GrabResult { Data = imageRaw, Success = true };
+        return new GrabResult { Data = imageRaw, Success = true, Tags = null };
     }
 
     public override void Initialize(string url)

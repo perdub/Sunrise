@@ -98,7 +98,8 @@ public class UploadController : Controller{
             if(!result.Success || result.Data is null || result.Data.Length == 0){
                 _logger.LogDebug(message:"Unsuccesful grab result", result);
             }
-            await _storage.SavePost(result.Data, sessionKey, Array.Empty<string>());
+            var tags = result.Tags is not null ? result.Tags.Split(" ") : Array.Empty<string>();
+            await _storage.SavePost(result.Data, sessionKey, tags);
         }
 
         return Redirect("/forms/upload");
